@@ -1,0 +1,54 @@
+#lx-app-intro-index {
+	max-width: 30em;
+	min-height: 450px;
+	overflow: hidden;
+}
+
+
+#lx-app-intro-index .app-frame {
+	text-align: center;
+	padding: 0;
+	overflow: hidden;
+}
+
+#lx-app-intro-index section {
+	padding: 0;
+}
+
+
+#lx-app-intro-index .logo {
+	width: 70px;
+	height: 70px;
+	margin-top: 2em;
+}
+
+section {
+	padding: 2em;
+}
+
+
+#lx-app-intro-index p {
+	padding: 1em;
+}
+
+#lx-app-intro-index .intro {
+	font-size: 0.9em;
+}
+
+#lx-app-intro-index .intro span {
+	font-weight: bold; 
+}
+
+#lx-app-intro-index .button-set, #lx-app-intro-index  .button-single {
+	margin-top: 1em;
+	padding: 1em;
+	max-width: 448px;
+	border-top: 1px solid #EEE;
+	border-bottom: 1px solid #EEE;
+	background: #F9F9F9;
+	width: 100%;
+}
+
+#lx-app-intro-index .button:last-child {
+	margin-top: 0.5em;
+}

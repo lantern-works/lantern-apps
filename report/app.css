@@ -1,0 +1,33 @@
+
+#lx-app-report-index {
+	max-width: 450px;
+	min-width: 320px;
+}
+
+#lx-app-report-index .app-frame {
+	padding: 0em;
+	margin-top: 5em;
+}
+
+
+#lx-app-report-index ul.menu .tag-icon {
+	margin-right: 1em;
+	padding-top: 3px;
+	margin-top: -2px;
+	border-radius: 3px;
+	float: left;
+	text-align: center;
+	width: 2em;
+}
+
+#lx-app-report-index .button-box {
+	padding: 1em;
+}
+#lx-app-report-index .button-box .button {
+	margin-bottom: 1em;
+	width: 100%;
+}
+
+#lx-app-report-index ul.menu li .tag-icon {
+	color: #FFF;
+}

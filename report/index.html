@@ -1,0 +1,31 @@
+<div class="app-center">
+	<transition name="fade">
+		<div class="app-frame" v-if="title" :data-marker="marker.id">
+			<h1>{{title}}</h1>
+
+			<div class="button-box" v-if="allow_save">
+				<div :class="(is_saving ? 'is-loading' : '') + ' button is-primary'" @click="saveMarker">Save</div>
+				<div class="button is-inverted is-outlined" :disabled="is_saving" @click="goBack">Back</div>
+			</div>
+
+			<ul class="menu" v-if="!allow_save">
+				<li v-for="item in menu" @click="chooseMenuItem(item)" >
+					<div v-if="item.icon_class" :class="item.tag_class"> 
+						<i :class="item.icon_class"></i>
+					</div>
+					<span> {{ item.label}} </span>
+
+					<span class="icon is-large">
+						<i class="fas fa-angle-right"></i>
+					</span>
+				</li>
+				<li class="inline-btn" v-if="prev_menu" @click="goBack">
+					Back
+				</li>
+				<li class="inline-btn" v-if="!prev_menu" @click="close">
+					Close
+				</li>
+			</ul>
+		</div>
+	</transition>
+</div>

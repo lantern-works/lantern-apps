@@ -1,0 +1,11 @@
+
+#lx-app-radiant-index {
+	max-width: 450px;
+	min-width: 320px;
+}
+
+
+#lx-app-radiant-index .app-frame {
+	padding: 0em;
+	margin-top: 5em;
+}
