@@ -65,6 +65,10 @@
     }
 
 
+    const checkForNewData = () => {
+        LT.user.feed.refreshData();
+    }
+
 
     //------------------------------------------------------------------------
     var self = {
@@ -122,6 +126,10 @@
             LT.atlas.on("marker-remove", () => {
                 this.marker_count = LT.atlas.getMarkerCount();
             });
+
+            // backup to handle cases where page is open but may be in background 
+            // and therefore does not receive event updates through gundb emitters
+            setInterval(checkForNewData, 10000);
 
 
         }
