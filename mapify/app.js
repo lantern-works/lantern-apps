@@ -65,15 +65,27 @@
     }
 
 
+
+    //------------------------------------------------------------------------
+    // manage case where browser is set in background on ios/android
+    let last_viewed = new Date().getTime();
     const checkForNewData = () => {
-        LT.user.feed.refreshData();
+        let now = new Date().getTime();
+        let diff = now - last_viewed;
+        if (diff > 5000) {
+            // more than 5 seconds
+            LT.user.feed.refreshData();
+        }
+        last_viewed = now;
     }
+
 
 
     //------------------------------------------------------------------------
     var self = {
         methods: {
             fitMap: () => {
+                LT.user.feed.refreshData();
                 LT.atlas.fitMapToAllMarkers();
             }
         },
@@ -127,9 +139,11 @@
                 this.marker_count = LT.atlas.getMarkerCount();
             });
 
+
+
             // backup to handle cases where page is open but may be in background 
             // and therefore does not receive event updates through gundb emitters
-            setInterval(checkForNewData, 10000);
+            setInterval(checkForNewData, 500);
 
 
         }

@@ -75,7 +75,6 @@
         $data.marker.layer.dragging.enable();
         let original_icon = $data.marker.getIcon();
         $data.marker.setIcon("arrows-alt");
-        $data.marker.owner = LT.user.username;
         $data.marker.once("move", (val) => {
             console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", $data.marker.tags.join(", "));
             $data.marker.setIcon(original_icon);
