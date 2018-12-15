@@ -48,6 +48,22 @@
     }
 
 
+    const setupData = () =>{
+        // make sure we have an organization to work with
+        let org = new LX.Organization("lnt-dev", LT.db);
+        org.getOrRegister("Project Lantern Development Team")
+            .then((res) => {
+                // make sure we have the demo package installed
+                org.publish(package_name, true)
+                    .then(() => {
+                        LT.user.install(package_name);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            });
+    }
+
 
 
     //------------------------------------------------------------------------
@@ -91,20 +107,12 @@
                 }
             });
 
-            // make sure we have an organization to work with
-            let org = new LX.Organization("lnt-dev", LT.db);
-            org.getOrRegister("Project Lantern Development Team").then((res) => {
-
-                // make sure we have the demo package installed
-                org.publish(package_name, true)
-                    .then(() => {
-                        LT.user.install(package_name);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    })
-            });
-
+            if (LT.user.username) {
+                setupData();
+            }
+            else {
+                LT.user.on("auth", setupData);
+            }
 
             // keep the UI up-to-date based on changes to marker count
             LT.atlas.on("marker-add", () => {
@@ -113,8 +121,7 @@
 
             LT.atlas.on("marker-remove", () => {
                 this.marker_count = LT.atlas.getMarkerCount();
-            })
-
+            });
 
 
         }
