@@ -12,6 +12,7 @@
 
     //------------------------------------------------------------------------
     const editMarker = (marker) => {
+        LT.view.menu.lock();
         setTimeout(() => {
             $data.title = "Marker";
         }, 200);
@@ -76,13 +77,11 @@
         $data.marker.setIcon("arrows-alt");
         $data.marker.owner = LT.user.username;
         $data.marker.once("move", (val) => {
-            console.log("[a:radiant] Moved marker", original_icon);
+            console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", $data.marker.tags.join(", "));
             $data.marker.setIcon(original_icon);
             $data.marker.layer.dragging.disable();
             $data.marker.save(package_name)
-                .then(() => {
-                    LT.view.menu.unlock();
-                });
+            LT.view.menu.unlock();
         });
     }
 
@@ -130,6 +129,9 @@
                 LT.view.menu.lock();
                 LT.view.menu.once("close", () => {
                     if (pointer) pointer.remove();
+                    setTimeout(() => {
+                        LT.view.menu.unlock();
+                    }, 50);
                 });
             });
     }
@@ -146,7 +148,6 @@
 
         $data.marker = marker;
         $data.marker.inspect();
-
         $data.title = "";
         moveFromEdge($data.marker.latlng)
             .then(moveFromEdge)
@@ -174,9 +175,16 @@
                 ];
                 LT.view.menu.open(menu_items, pos);
 
+                LT.view.menu.lock();
                 $data.marker.once("hide", () => {
                     LT.view.menu.close();
                     $data.title = "";
+                });
+
+                LT.view.menu.once("close", () => {
+                    setTimeout(() => {
+                        LT.view.menu.unlock();
+                    }, 50);
                 });
 
                 $data.marker.once("move", () => {
@@ -227,7 +235,7 @@
 
             // zoom out action
             LT.view.menu.on("zoom-out", () => {
-                LT.atlas.map.zoomOut(3);
+                LT.atlas.map.zoomOut(2);
             });
         }
     };

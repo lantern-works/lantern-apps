@@ -7,5 +7,8 @@
 
 #lx-app-radiant-index .app-frame {
 	padding: 0em;
-	margin-top: 5em;
+}
+
+#lx-app-radiant-index h1 {
+	border-bottom: 1px solid #EEE;
 }

@@ -1,6 +1,6 @@
 #lx-app-intro-index {
 	max-width: 30em;
-	min-height: 450px;
+	min-height: 400px;
 	overflow: hidden;
 }
 
@@ -19,11 +19,11 @@
 #lx-app-intro-index .logo {
 	width: 70px;
 	height: 70px;
-	margin-top: 2em;
+	margin-top: 1.5em;
 }
 
-section {
-	padding: 2em;
+#lx-app-intro-index section {
+	padding: 0em;
 }
 
 

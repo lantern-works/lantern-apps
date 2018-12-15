@@ -6,7 +6,10 @@
 
 #lx-app-report-index .app-frame {
 	padding: 0em;
-	margin-top: 5em;
+}
+
+#lx-app-report-index h1 {
+	border-bottom: 1px solid #EEE;
 }
 
 
@@ -21,10 +24,21 @@
 }
 
 #lx-app-report-index .button-box {
+	text-align: center;
+	padding: 1em;
+}
+
+#lx-app-report-index .button-box .icon {
+	margin: auto;
+	opacity: 0.9;
+	font-size: xx-large;
+}
+
+#lx-app-report-index .button-box p {
 	padding: 1em;
 }
 #lx-app-report-index .button-box .button {
-	margin-bottom: 1em;
+	margin-top: 1em;
 	width: 100%;
 }
 

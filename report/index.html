@@ -1,11 +1,15 @@
-<div class="app-center">
+<div class="app-bottom">
 	<transition name="fade">
 		<div class="app-frame" v-if="title" :data-marker="marker.id">
 			<h1>{{title}}</h1>
 
 			<div class="button-box" v-if="allow_save">
+					<span class="icon is-large">
+						<i class="fas fa-map-marked-alt"></i>
+					</span>
+				<p>Data you share will update the map for nearby users.</p>
 				<div :class="(is_saving ? 'is-loading' : '') + ' button is-primary'" @click="saveMarker">Save</div>
-				<div class="button is-inverted is-outlined" :disabled="is_saving" @click="goBack">Back</div>
+				<div class="button is-secondary" :disabled="is_saving" @click="goBack">Back</div>
 			</div>
 
 			<ul class="menu" v-if="!allow_save">
