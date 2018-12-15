@@ -1,32 +1,50 @@
 (function() {
 
+
+
+    //------------------------------------------------------------------------
+	const startMapApplications = function() {
+		LT.closeOneApp("intro");
+		setTimeout(() => {
+			LT.openOneApp("radiant");
+			LT.openOneApp("report");
+			this.$parent.map = true;
+		}, 150);
+	}
+
+
+
+    //------------------------------------------------------------------------
 	var config = {
 		methods: {},
 		computed: {},
-		open: false,
 		data: {
-			"title": "Lantern Network",
+			"title": "",
 			"slide": 0,
 			"max_slide": 3
 		},
 		callback: function() {
 		},
 		mounted() {
-			this.$parent.map = false;
+			if (!localStorage.hasOwnProperty("lx-app-intro-show")
+				&& localStorage.hasOwnProperty("_pouch_lx-user")) {
+				// we saved a map position, therefore must be a return user...
+				startMapApplications.call(this);
+			}
+			else {
+				this.title = "Lantern Network";
+				this.$parent.map = false; 
+			}
 		},
 		open: true
 	};
 
+
+
+    //------------------------------------------------------------------------
 	config.methods.doComplete = function() {
-
-		LT.closeOneApp("intro");
-
-		setTimeout(() => {
-			LT.openOneApp("radiant");
-			LT.openOneApp("report");
-			this.$parent.map = true;
-		}, 150);
-	};
+		startMapApplications.call(this);
+	}
 
 	config.methods.doContinue = function() {
 		this.$data.slide++;
