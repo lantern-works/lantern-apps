@@ -1,5 +1,5 @@
-<div class="app-center">
-	<div class="app-frame" v-if="!$parent.map && title">
+<div class="app-center" v-if="show" v-cloak>
+	<div class="app-frame" v-if="title">
 		<section v-if="slide === 0">
 			<img class="logo" src="logo.png">
 			<h1>Welcome to the {{ title }}</h1>
@@ -34,4 +34,7 @@
 	       	</div>
 	    </section>
 	</div>
+	<transition name="fade">
+        <div class="app-mask"></div>
+     </transition>
 </div>

@@ -5,10 +5,10 @@
     //------------------------------------------------------------------------
 	const startMapApplications = function() {
 		LT.closeOneApp("intro");
+		this.show = false;
 		setTimeout(() => {
 			LT.openOneApp("radiant");
 			LT.openOneApp("report");
-			this.$parent.map = true;
 		}, 150);
 	}
 
@@ -21,19 +21,19 @@
 		data: {
 			"title": "",
 			"slide": 0,
-			"max_slide": 3
+			"max_slide": 3,
+			"show": false
 		},
 		callback: function() {
 		},
 		mounted() {
-			if (!localStorage.hasOwnProperty("lx-app-intro-show")
-				&& localStorage.hasOwnProperty("_pouch_lx-user")) {
+			if (!localStorage.hasOwnProperty("lx-app-intro-show")) {
 				// we saved a map position, therefore must be a return user...
 				startMapApplications.call(this);
 			}
 			else {
 				this.title = "Lantern Network";
-				this.$parent.map = false; 
+				this.show = true;
 			}
 		},
 		open: true
