@@ -51,7 +51,7 @@
     const setupData = () =>{
         // make sure we have an organization to work with
         let org = new LX.Organization("lnt-dev", LT.db);
-
+        LT.user.feed.refreshData();
         org.getOrRegister("Project Lantern Development Team")
             .then((res) => {
                 if (res.name) {                
@@ -60,6 +60,7 @@
                     pkg.publish()
                         .then(() => {
                             LT.user.install(pkg);
+                            LT.user.feed.refreshData();
                         })
                         .catch(err => {
                             console.error(err);
@@ -113,6 +114,8 @@
         mounted() {
             // add map controls
             setupControls();
+
+
 
              // sync with all available markers from user-specific feed
             // this is pre-filtered based on installed packages
