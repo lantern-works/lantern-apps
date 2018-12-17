@@ -86,11 +86,22 @@
 
 
     //------------------------------------------------------------------------
+    let snapback = null;
     var self = {
         methods: {
             fitMap: () => {
+                
+                if (snapback) {
+                    snapback=false;
+                    return LT.atlas.setViewFromCenterLocationCache();
+                }
+                
+                snapback = true; 
                 LT.user.feed.refreshData();
-                LT.atlas.fitMapToAllMarkers();
+                LT.atlas.cacheCenterLocation(1).then(() => {
+                    LT.atlas.fitMapToAllMarkers();
+                })
+
             }
         },
         computed: {
@@ -106,7 +117,7 @@
              // sync with all available markers from user-specific feed
             // this is pre-filtered based on installed packages
             LT.user.feed.on("update", (e) => {
-                if (e.data === null) {
+                if (!e.data) {
                     // item was deleted
                     if (LT.atlas.markers[e.id]) {
                         LT.atlas.markers[e.id].hide();
