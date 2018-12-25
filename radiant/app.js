@@ -8,8 +8,6 @@
     //------------------------------------------------------------------------
     var $data;
 
-
-
     //------------------------------------------------------------------------
     const editMarker = (marker) => {
         LT.view.menu.lock();
@@ -25,11 +23,6 @@
                 LT.view.menu.unlock();                
             });
     }
-
-    const zoomToPoint = (latlng) => {
-        LT.atlas.centerMap({"latlng":latlng});
-    }
-
 
 
     //------------------------------------------------------------------------
@@ -79,8 +72,11 @@
             console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", $data.marker.tags.join(", "));
             $data.marker.setIcon(original_icon);
             $data.marker.layer.dragging.disable();
-            $data.marker.save(package_name)
-            LT.view.menu.unlock();
+            $data.marker.save(package_name);
+
+            setTimeout(() => {
+                LT.view.menu.unlock();
+            }, 500);
         });
     }
 
@@ -91,12 +87,10 @@
     * Map Click
     */
     const onMapClick = function(e) {
-
         if (LT.view.menu.isLocked()) {
             return;
         }
-
-        let pointer = L.circle(e.latlng, {radius: 2}).addTo(LT.atlas.map);
+        
         moveFromEdge(e.latlng)        
             .then(moveFromEdge)
             .then(() => {
@@ -107,7 +101,7 @@
                         "event": "zoom-in",
                         "icon": "search-plus",
                         "method": () => {
-                            zoomToPoint(e.latlng);
+                            LT.atlas.zoomToPoint(e.latlng);
                         }
                     },
                     {
@@ -118,7 +112,7 @@
                         "event": "marker-add",
                         "icon": "plus-circle",
                         "method": () => {
-                            zoomToPoint(e.latlng);
+                            LT.atlas.zoomToPoint(e.latlng);
                             return e.latlng;
                         }
                     }
@@ -127,18 +121,23 @@
                 LT.view.menu.open(items, pos);
                 LT.view.menu.lock();
                 LT.view.menu.once("close", () => {
-                    if (pointer) pointer.remove();
                     setTimeout(() => {
                         LT.view.menu.unlock();
+                        LT.atlas.removePointer();
                     }, 50);
                 });
             });
     }
 
+
     /**
     * Marker Click
     */
     const onMarkerClick = function(marker) {
+
+        if (LT.view.menu.isLocked()) {
+            return;
+        }
 
         // skip marker marked already for movement
         if (marker.getIcon() == "arrows-alt") {
@@ -157,7 +156,7 @@
                         "event": "zoom-in",
                         "icon": "search-plus",
                         "method": () => {
-                            zoomToPoint($data.marker.latlng);
+                            LT.atlas.zoomToPoint($data.marker.latlng);
                         }
                     },
                     {
@@ -177,12 +176,13 @@
                 LT.view.menu.lock();
                 $data.marker.once("hide", () => {
                     LT.view.menu.close();
+                    LT.atlas.removePointer();
                     $data.title = "";
                 });
 
                 LT.view.menu.once("close", () => {
                     setTimeout(() => {
-                        LT.view.menu.unlock();
+                        LT.atlas.removePointer();
                     }, 50);
                 });
 
@@ -201,7 +201,7 @@
         methods: {
             close: function() {
                 $data.title = null;
-                LT.view.menu.unlock();
+                LT.atlas.menu.unlock();
             },
             chooseItem: function(item) {
                 if (item.hasOwnProperty("method")) {
@@ -219,23 +219,36 @@
         },
         open: false,
         mounted() {
+            var map_clicked = 0;
             $data = this.$data;
 
             // show pie menu for marker-specific contextual actions
             LT.atlas.on("marker-click", onMarkerClick);
 
+
             // show pie menu for general map interactions
-            LT.atlas.map.on('click', onMapClick);
+            LT.atlas.on("map-click", onMapClick);
+
+
+            LT.atlas.on("map-click-start", (e) => {
+                if (!LT.view.menu.isLocked()) {
+                    LT.atlas.addPointer(e.latlng);
+                }
+            })
 
             // close pie menu on resize
             window.addEventListener("resize", function() {
-                LT.view.menu.close()
+                LT.view.menu.close();
             });
 
             // zoom out action
             LT.view.menu.on("zoom-out", () => {
                 LT.atlas.map.zoomOut(2);
+                LT.atlas.map.once("moveend", () => {
+                    LT.atlas.removePointer();
+                });
             });
+
         }
     };
 

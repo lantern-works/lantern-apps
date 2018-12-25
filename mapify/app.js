@@ -1,7 +1,5 @@
 (function() {
 
-
-
     //------------------------------------------------------------------------
     const package_name = "umbriel";
 
@@ -69,6 +67,15 @@
             });
     }
 
+    /**
+    * Map Double Click
+    */
+    const onDoubleClick = function(e) {
+        LT.atlas.map.zoomIn();
+        LT.atlas.map.once("moveend", () => {
+            LT.atlas.removePointer();
+        });
+    }
 
 
     //------------------------------------------------------------------------
@@ -115,11 +122,10 @@
             // add map controls
             setupControls();
 
-
-
              // sync with all available markers from user-specific feed
             // this is pre-filtered based on installed packages
             LT.user.feed.on("update", (e) => {
+                //console.log("feed update", e);
                 if (!e.data) {
                     // item was deleted
                     if (LT.atlas.markers[e.id]) {
@@ -153,7 +159,8 @@
                 this.marker_count = LT.atlas.getMarkerCount();
             });
 
-
+            // zoom in on double click
+            LT.atlas.on("map-double-click", onDoubleClick);
 
             // backup to handle cases where page is open but may be in background 
             // and therefore does not receive event updates through gundb emitters

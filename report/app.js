@@ -98,8 +98,10 @@
 	* Create a new draft marker for the user to annotate 
 	*/
 	const onMenuMarkerAdd = (latlng) => {
-          
-        LT.view.menu.lock();
+         
+        setTimeout(() => {
+	        LT.view.menu.lock();
+        }, 500);
         
         let marker = new LX.MarkerItem();
         marker.geohash = LV.Geohash.encode(latlng.lat, latlng.lng);
