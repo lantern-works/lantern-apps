@@ -71,10 +71,7 @@
     * Map Double Click
     */
     const onDoubleClick = function(e) {
-        LT.atlas.map.zoomIn();
-        LT.atlas.map.once("moveend", () => {
-            LT.atlas.removePointer();
-        });
+        LT.atlas.removePointer();
     }
 
 
