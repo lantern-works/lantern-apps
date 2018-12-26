@@ -10,8 +10,8 @@
 
     //------------------------------------------------------------------------
     const editMarker = (marker) => {
-        LT.view.menu.lock();
         setTimeout(() => {
+            LT.view.menu.lock();
             $data.title = "Marker";
         }, 200);
     }
@@ -182,6 +182,7 @@
 
                 LT.view.menu.once("close", () => {
                     setTimeout(() => {
+                        LT.view.menu.unlock();
                         LT.atlas.removePointer();
                     }, 50);
                 });
@@ -201,7 +202,7 @@
         methods: {
             close: function() {
                 $data.title = null;
-                LT.atlas.menu.unlock();
+                LT.view.menu.unlock();
             },
             chooseItem: function(item) {
                 if (item.hasOwnProperty("method")) {
