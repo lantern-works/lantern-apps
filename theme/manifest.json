@@ -3,12 +3,12 @@
   "name": "Lantern Network",
   "icons": [
     {
-      "src": "/apps/theme/favicon/android-chrome-192x192.png",
+      "src": "/-/theme/favicon/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/apps/theme/favicon/chrome-512x512.png",
+      "src": "/-/theme/favicon/chrome-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
