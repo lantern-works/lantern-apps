@@ -46,10 +46,9 @@
     }
 
 
-    const setupData = () =>{
+    const setupOrg = () =>{
         // make sure we have an organization to work with
         let org = new LX.Organization("lnt-dev", LT.db);
-        LT.user.feed.refreshData();
         org.getOrRegister("Project Lantern Development Team")
             .then((res) => {
                 if (res.name) {                
@@ -58,7 +57,6 @@
                     pkg.publish()
                         .then(() => {
                             LT.user.install(pkg);
-                            LT.user.feed.refreshData();
                         })
                         .catch(err => {
                             console.error(err);
@@ -72,20 +70,6 @@
     */
     const onDoubleClick = function(e) {
         LT.atlas.removePointer();
-    }
-
-
-    //------------------------------------------------------------------------
-    // manage case where browser is set in background on ios/android
-    let last_viewed = new Date().getTime();
-    const checkForNewData = () => {
-        let now = new Date().getTime();
-        let diff = now - last_viewed;
-        if (diff > 5000) {
-            // more than 5 seconds
-            LT.user.feed.refreshData();
-        }
-        last_viewed = now;
     }
 
 
@@ -119,34 +103,6 @@
             // add map controls
             setupControls();
 
-             // sync with all available markers from user-specific feed
-            // this is pre-filtered based on installed packages
-            LT.user.feed.on("update", (e) => {
-                //console.log("feed update", e);
-                if (!e.data) {
-                    // item was deleted
-                    if (LT.atlas.markers[e.id]) {
-                        LT.atlas.markers[e.id].hide();
-                    }
-                }
-                else if (e.data.g && e.data.t) {
-                    // duck typing for markers
-                    // only add a new marker if we don't have it in atlas
-                    if (LT.atlas.markers[e.id]) {
-                        let old_marker = LT.atlas.markers[e.id];
-                        old_marker.update(e.data)
-                    }
-                    else {
-                        let marker = new LX.MarkerItem(e.id, e.data);
-                        marker.show();
-                        marker.setIcons(icon_map);                        
-                    }
-                }
-            });
-
-
-            setupData();
-
             // keep the UI up-to-date based on changes to marker count
             LT.atlas.on("marker-add", () => {
                 this.marker_count = LT.atlas.getMarkerCount();
@@ -159,9 +115,37 @@
             // zoom in on double click
             LT.atlas.on("map-double-click", onDoubleClick);
 
-            // backup to handle cases where page is open but may be in background 
-            // and therefore does not receive event updates through gundb emitters
-            setInterval(checkForNewData, 500);
+            // waits for user authentication
+            LT.withUser(user => {
+
+                 // sync with all available markers from user-specific feed
+                // this is pre-filtered based on installed packages
+                user.feed.on("update", (e) => {
+                    
+                    if (!e.data) {
+                        // item was deleted
+                        if (LT.atlas.markers[e.id]) {
+                            LT.atlas.markers[e.id].hide();
+                        }
+                    }
+                    else if (e.data.g && e.data.t) {
+                        // duck typing for markers
+                        // only add a new marker if we don't have it in atlas
+                        if (LT.atlas.markers[e.id]) {
+                            let old_marker = LT.atlas.markers[e.id];
+                            old_marker.update(e.data)
+                        }
+                        else {
+                            let marker = new LX.MarkerItem(e.id, e.data);
+                            marker.show();
+                            marker.setIcons(icon_map);                        
+                        }
+                    }
+                });
+                setupOrg();
+
+                setInterval(() => LT.user.feed.refreshData(), 7000);
+            });
 
 
         }

@@ -72,7 +72,7 @@
             console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", $data.marker.tags.join(", "));
             $data.marker.setIcon(original_icon);
             $data.marker.layer.dragging.disable();
-            $data.marker.save(package_name);
+            $data.marker.save(package_name,"geohash");
 
             setTimeout(() => {
                 LT.view.menu.unlock();
