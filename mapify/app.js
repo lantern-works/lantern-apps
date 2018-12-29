@@ -2,20 +2,7 @@
 
     //------------------------------------------------------------------------
     const package_name = "umbriel";
-
-    const icon_map = {
-        "bed": "bed",
-        "wtr": "tint",
-        "net": "globe",
-        "clo": "tshirt",
-        "eat": "utensils",
-        "pwr": "plug",
-        "med": "prescription-bottle-alt",
-        "ful": "gas-pump",
-        "ven": "building",
-        "sit": "exclamation",
-        "obs": "hand-paper"
-    }
+    const icon_map = {"bed":"bed","wtr":"tint","net":"globe","clo":"tshirt","eat":"utensils","pwr":"plug","med":"prescription-bottle-alt","ful":"gas-pump","ven":"building","sit":"exclamation","obs":"hand-paper"};
 
 
 
@@ -69,14 +56,6 @@
             });
     }
 
-    /**
-    * Map Double Click
-    */
-    const onDoubleClick = function(e) {
-        LT.atlas.removePointer();
-    }
-
-
 
     //------------------------------------------------------------------------
     let snapback = null;
@@ -102,7 +81,6 @@
         data: {
             "marker_count": 0
         },
-        open: true,
         mounted() {
             // add map controls
             setupControls();
@@ -115,9 +93,6 @@
             LT.atlas.on("marker-remove", () => {
                 this.marker_count = LT.atlas.getMarkerCount();
             });
-
-            // zoom in on double click
-            LT.atlas.on("map-double-click", onDoubleClick);
 
             // waits for user authentication
             LT.withUser(user => {

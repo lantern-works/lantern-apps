@@ -8,9 +8,9 @@
 		this.show = false;
 	
 		setTimeout(() => {
+			LT.openOneApp("mapify");
 			LT.openOneApp("radiant");
-			LT.openOneApp("report");
-		}, 150);
+		}, 50);
 	}
 
 

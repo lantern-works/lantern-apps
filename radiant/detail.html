@@ -1,0 +1,5 @@
+<div class="app-top" v-if="target_marker">
+	<div :class="'app-frame ' + target_marker.tags.join(' ')" :data-marker="target_marker.id">
+		<h1>{{marker_title}}</h1>
+	</div>
+</div>

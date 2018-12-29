@@ -1,379 +1,364 @@
 (function() {
     
-    //------------------------------------------------------------------------
-    const package_name = "umbriel";
-
-    const icon_map = {
-        "bed": "bed",
-        "wtr": "tint",
-        "net": "globe",
-        "clo": "tshirt",
-        "eat": "utensils",
-        "pwr": "plug",
-        "med": "prescription-bottle-alt",
-        "ful": "gas-pump",
-        "ven": "building",
-        "sit": "exclamation",
-        "obs": "hand-paper"
-    }
-
-    const menus = {
-        "main": [
-                {"label": "Place", "tag": "ven"}, 
-                {"label": "Resource", "tag": "rsc"},
-                {"label": "Obstacle", "tag": "obs"},
-                {"label": "Situation", "tag": "sit"}
-            ],
-        "rsc": [
-            {"label": "Bed", "tag": "bed"},
-            {"label": "Clothing", "tag": "clo"},
-            {"label": "Food", "tag": "eat"}, 
-            {"label": "Fuel", "tag": "ful"},
-            {"label": "Internet", "tag": "net"},
-            {"label": "Medical", "tag": "med"},
-            {"label": "Power", "tag": "pwr"},
-            {"label": "Water", "tag": "wtr"}
-        ],
-        "ven": [
-            {"label": "Shelter", "tag": "shl"}, 
-            {"label": "Relief Camp", "tag": "cmp"},
-            {"label": "Hospital", "tag": "hsp"},
-            {"label": "Operating Base", "tag": "bse"}
-        ],
-        "obs": [
-            {"label": "Road Debris", "tag": "rdb"},
-            {"label": "Detour", "tag": "dtr"},
-            {"label": "Destroyed", "tag": "dst"}
-        ],
-        "sit": [
-            {"label": "Power Outage", "tag": "pwo"},
-            {"label": "Fire", "tag": "fir"},
-            {"label": "Flooding", "tag": "fld"},
-            {"label": "Looting", "tag": "lot"},
-            {"label": "Closed by Authorities", "tag": "cba"}
-        ]
-    }
-    
-
-
-    //------------------------------------------------------------------------
-    var $data;
-
-
-
-    //------------------------------------------------------------------------
-    for (var idx in menus) {
-        let menu = menus[idx];
-        menu.forEach((item) => {
-            if (icon_map.hasOwnProperty(item.tag)) {
-                // only show sub-menu icons
-                if (!menus.hasOwnProperty(item.tag)) {
-                    item.icon_class = 'fa fa-' + icon_map[item.tag];
-                    item.tag_class = "tag-icon " + item.tag;
-                    if (idx != "main") {
-                        item.tag_class += " " + idx;
-                    }
-                }
-            }
-        })
-    }
-
-
-
-    //------------------------------------------------------------------------
-    const getParentTag = (tag) => {
-        for (var idx in menus) {
-            var menu = menus[idx];
-            for (var idy in menu) {
-                if (menu[idy].tag == tag) {
-                    return idx;
-                }   
-            }
+    var self;
+    let Interface = {};
+    let Component = {
+        mounted() {
+            if (self) return;
+            self = this; 
+            Interface.bindAll();
         }
+    };
+    let Action = {};
+    let Data = {};
+
+
+
+
+    //------------------------------------------------------------------------
+    // data
+    Data.package = "umbriel";
+    Data.icons = {"bed":"bed","wtr":"tint","net":"globe","clo":"tshirt","eat":"utensils","pwr":"plug","med":"prescription-bottle-alt","ful":"gas-pump","ven":"building","sit":"exclamation","obs":"hand-paper"};
+    Data.categories = {"main":[{"label":"Place","tag":"ven"},{"label":"Resource","tag":"rsc"},{"label":"Obstacle","tag":"obs"},{"label":"Situation","tag":"sit"}],"rsc":[{"label":"Bed","tag":"bed"},{"label":"Clothing","tag":"clo"},{"label":"Food","tag":"eat"},{"label":"Fuel","tag":"ful"},{"label":"Internet","tag":"net"},{"label":"Medical","tag":"med"},{"label":"Power","tag":"pwr"},{"label":"Water","tag":"wtr"}],"ven":[{"label":"Shelter","tag":"shl"},{"label":"Relief Camp","tag":"cmp"},{"label":"Hospital","tag":"hsp"},{"label":"Operating Base","tag":"bse"}],"obs":[{"label":"Road Debris","tag":"rdb"},{"label":"Detour","tag":"dtr"},{"label":"Destroyed","tag":"dst"}],"sit":[{"label":"Power Outage","tag":"pwo"},{"label":"Fire","tag":"fir"},{"label":"Flooding","tag":"fld"},{"label":"Looting","tag":"lot"},{"label":"Closed by Authorities","tag":"cba"}]};
+    Data.menu = {};
+    Data.menu.map = [{"event": "zoom-in", "icon": "search-plus"},
+                    {"event": "zoom-out", "icon": "search-minus"},
+                    {"event": "marker-add", "icon": "plus-circle"}];
+
+    Data.menu.marker = [{"event": "zoom-in", "icon": "search-plus"},
+                    {"event": "zoom-out", "icon": "search-minus"},
+                    {"event": "marker-edit", "icon": "edit"}];
+
+    //------------------------------------------------------------------------
+    // explicit user actions, button pushes, choices
+    /**
+    * User tapped or clicked on a marker
+    */
+    Action.selectMarkerOnMap = (marker) => {
+
+        if (LT.view.menu.isLocked()) return;
+        if (Interface.waitingForMarkerMove()) return;
+        marker.inspect();
+        self.latlng = marker.latlng;
+        LT.atlas.removePointer();
+        self.target_marker = marker;
+        Interface.openRadial(Data.menu.marker);
     }
+
+    /**
+    * User tapped or clicked on a point on the map
+    */
+    Action.selectPointOnMap = (e) => {
+        if (LT.view.menu.isLocked()) return;
+        Interface.clearMarker();
+        self.latlng = e.latlng;
+        Interface.openRadial(Data.menu.map);            
+    }
+
+    /**
+    * User wants to zoom in
+    */
+    Action.zoomToPoint = (e) => {
+        LT.atlas.zoomToPoint(self.latlng);
+        LT.view.menu.unlock();
+    }
+
+    Action.zoomIn = () => {
+        LT.atlas.map.zoomIn();
+    }
+
+    /**
+    * User wants to zoom out
+    */
+    Action.zoomOut = () => {
+        LT.atlas.map.zoomOut();
+        LT.atlas.map.once("moveend", () => {
+            LT.atlas.removePointer();
+            LT.view.menu.unlock();
+        });
+    }
+
+    /**
+    * User wants to save marker to database
+    */
+    Action.saveMarker = () => {
+
+
+        if (self.is_saving) return;
+        
+        self.is_saving = true;
+
+        self.draft_marker.once("save", () => {
+            // make sure save event is intended from this app
+            console.log("[a:report]".padEnd(20, " ") + " saved marker", self.draft_marker.id);               
+            self.draft_marker.layer.dragging.disable();
+            self.is_saving = false;
+            LT.view.menu.unlock();
+        });
+        
+        self.draft_marker.save(Data.package);
+        self.prompt_draft_save = false;
+        self.menu = {};
+    }
+
 
 
     /**
-    * Create a new draft marker for the user to annotate 
+    * User wants to move marker
     */
-    const onMenuMarkerAdd = (latlng) => {
-         
-        setTimeout(() => {
-            LT.view.menu.lock();
-        }, 500);
-        
-        let marker = new LX.MarkerItem();
-        marker.geohash = LV.Geohash.encode(latlng.lat, latlng.lng);
-        marker.show();
+    Action.relocateMarker = () => {
 
-        marker.layer.dragging.enable();
-
-        $data.marker_id = marker.id;
-        $data.allow_save = false;
-        $data.prev_menu = null;
-        $data.prev_title = null;
-        $data.menu = menus.main;
-        $data.title = "What's here?"
-
-        marker.on("tag", () => {
-            marker.setIcons(icon_map);
+        self.target_marker.layer.dragging.enable();
+        let original_icon = self.target_marker.getIcon();
+        self.target_marker.setIcon("arrows-alt");
+        self.menu = {};
+        self.target_marker.once("move", (val) => {
+            console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", self.target_marker.tags.join(", "));
+            self.target_marker.setIcon(original_icon);
+            self.target_marker.layer.dragging.disable();
+            self.target_marker.save(Data.package,"geohash");
+            LT.view.menu.unlock();
         });
 
-        marker.on("untag", () => {                  
-            marker.setIcons(icon_map);
-        });
-
-        $data.marker = marker;
     }
 
-
-
-    //------------------------------------------------------------------------
-    const editMarker = (marker) => {
-        setTimeout(() => {
-            LT.view.menu.lock();
-            $data.title = "Marker";
-        }, 200);
-    }
-
-    const dropMarker = () => {
-        $data.marker.drop(package_name)
+    /**
+    * User wants to drop / remove marker
+    */
+    Action.dropMarker = () => {
+        self.menu = {};
+        self.target_marker.drop(Data.package)
             .then(() => {
-                $data.title = "";
+                self.target_marker = null;
                 LT.view.menu.unlock();                
             });
     }
 
-
-    //------------------------------------------------------------------------
-    const moveFromEdge = (latlng) => {
-        return new Promise(function(resolve, reject) {
-            // are we too close to the edge for our menu?
-            let pos = LT.atlas.map.latLngToContainerPoint(latlng);
-            let dimensions = document.getElementById("map").getBoundingClientRect()
-            let margin = 110;
-            let center_point = LT.atlas.map.getSize().divideBy(2);
-
-            if (pos.x < margin || pos.x > dimensions.width-margin) {
-                let direction = (pos.x < margin ? "subtract" : "add");
-                let target_point = center_point[direction]([margin, 0]);
-                let target_latlng = LT.atlas.map.containerPointToLatLng(target_point);
-                LT.atlas.map.panTo(target_latlng);
-                LT.atlas.map.once("moveend", () => {
-                    resolve(latlng);
-                });
-            } 
-            else if (pos.y < margin || pos.y > dimensions.height-margin) {
-                let direction = (pos.y < margin ? "subtract" : "add");
-                let target_point = center_point[direction]([0,margin]);
-                let target_latlng = LT.atlas.map.containerPointToLatLng(target_point);
-                LT.atlas.map.panTo(target_latlng);
-                LT.atlas.map.once("moveend", () => {
-                    resolve(latlng);
-                });
-            } 
-            else {
-                resolve(latlng);
-            }
-        });
-    }    
-
     /**
-    * Changes marker position and shares with network
+    * User wants to choose menu from item,
     */
-    const moveMarker = () => {
-        
-        LT.view.menu.lock();
-        $data.title = "";
-        $data.marker.layer.dragging.enable();
-        let original_icon = $data.marker.getIcon();
-        $data.marker.setIcon("arrows-alt");
-        $data.marker.once("move", (val) => {
-            console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", $data.marker.tags.join(", "));
-            $data.marker.setIcon(original_icon);
-            $data.marker.layer.dragging.disable();
-            $data.marker.save(package_name,"geohash");
+    Action.chooseFromMenu = (item) => {
+        console.log(item);
 
-            setTimeout(() => {
-                LT.view.menu.unlock();
-            }, 500);
-        });
-    }
-
-
-
-    //------------------------------------------------------------------------
-    /**
-    * Map Click
-    */
-    const onMapClick = function(e) {
-        if (LT.view.menu.isLocked()) {
-            return;
-        }
-        
-        moveFromEdge(e.latlng)        
-            .then(moveFromEdge)
-            .then(() => {
-                let pos = LT.atlas.map.latLngToContainerPoint(e.latlng);
-                
-                let items = [
-                    {
-                        "event": "zoom-in",
-                        "icon": "search-plus",
-                        "method": () => {
-                            LT.atlas.zoomToPoint(e.latlng);
-                        }
-                    },
-                    {
-                        "event": "zoom-out",
-                        "icon": "search-minus"
-                    },
-                    {
-                        "event": "marker-add",
-                        "icon": "plus-circle",
-                        "method": () => {
-                            LT.atlas.zoomToPoint(e.latlng);
-                            return e.latlng;
-                        }
+        if (self.draft_marker) {
+            // special actions for reporting menu
+            if (Data.categories.hasOwnProperty(item.tag)) {
+                if (self.menu.items && self.menu.title) {
+                    self.previous = {
+                        title: self.menu.title,
+                        items: self.menu.items,
+                        tag: item.tag
                     }
-                ];
-
-                LT.view.menu.open(items, pos);
-                LT.view.menu.lock();
-                LT.view.menu.once("close", () => {
-                    setTimeout(() => {
-                        LT.view.menu.unlock();
-                        LT.atlas.removePointer();
-                    }, 50);
-                });
-            });
-    }
-
-
-    /**
-    * Marker Click
-    */
-    const onMarkerClick = function(marker) {
-
-        if (LT.view.menu.isLocked()) {
-            return;
-        }
-
-        // skip marker marked already for movement
-        if (marker.getIcon() == "arrows-alt") {
-            return;
-        }
-
-        $data.marker = marker;
-        $data.marker.inspect();
-        $data.title = "";
-        moveFromEdge($data.marker.latlng)
-            .then(moveFromEdge)
-            .then(() => {
-                let pos = LT.atlas.map.latLngToContainerPoint($data.marker.latlng);
-                let menu_items = [
-                    {
-                        "event": "zoom-in",
-                        "icon": "search-plus",
-                        "method": () => {
-                            LT.atlas.zoomToPoint($data.marker.latlng);
-                        }
-                    },
-                    {
-                        "event": "zoom-out",
-                        "icon": "search-minus"
-                    },
-                    {
-                        "event": "marker-edit",
-                        "icon": "edit",
-                        "method": () => {
-                            editMarker($data.marker.latlng);
-                        }
-                    }
-                ];
-                LT.view.menu.open(menu_items, pos);
-
-                LT.view.menu.lock();
-                $data.marker.once("hide", () => {
-                    LT.view.menu.close();
-                    LT.atlas.removePointer();
-                    $data.title = "";
-                });
-
-                LT.view.menu.once("close", () => {
-                    setTimeout(() => {
-                        LT.view.menu.unlock();
-                        LT.atlas.removePointer();
-                    }, 50);
-                });
-
-                $data.marker.once("move", () => {
-                    LT.view.menu.close();
-                    $data.title = "";
-                });
-            
-            });
-    }
-
-
-
-    //------------------------------------------------------------------------
-    var self = {
-        methods: {
-            close: function() {
-                $data.title = null;
-                LT.view.menu.unlock();
-            },
-            chooseItem: function(item) {
-                if (item.hasOwnProperty("method")) {
-                    item.method(item);
                 }
+
+                self.menu.items = Data.categories[item.tag];
+                self.menu.title = item.label;
             }
-        },
-        data: {
-            title: "",
-            marker: null,
-            menu: [
-                {"label":"Move", "method": moveMarker}, 
-                {"label":"Delete", "method": dropMarker}
-            ]
-        },
-        open: false,
-        mounted() {
-            var map_clicked = 0;
-            $data = this.$data;
+            else if (self.previous.tag) {
+                self.draft_marker.tag(self.previous.tag);
+                self.prompt_draft_save = true;
+            }
+            self.draft_marker.tag(item.tag);
 
-            // show pie menu for marker-specific contextual actions
-            LT.atlas.on("marker-click", onMarkerClick);
+        }
+        else if (item.hasOwnProperty("method")) {
+            item.method(item);
+        }
+    }
 
+    /**
+    * User wants to close menu
+    */
+    Action.closeMenu = () => {
+        self.menu = {};
+        LT.view.menu.unlock();
+        if (self.draft_marker) {
+            self.draft_marker.hide()
+            self.draft_marker = null;
+        }
+    }
 
-            // show pie menu for general map interactions
-            LT.atlas.on("map-click", onMapClick);
+    /**
+    * User wants to navigate backwards to previous menu
+    */
+    Action.goToPreviousMenu = () => {
+        if (self.is_saving) return;
 
+        self.draft_marker.untagAll();
+        self.prompt_draft_save = false;
+        console.log(self.previous)
 
-            LT.atlas.on("map-click-start", (e) => {
-                if (!LT.view.menu.isLocked()) {
-                    LT.atlas.addPointer(e.latlng);
+        if (self.previous.title && self.previous.items) {
+            self.menu.title = self.previous.title;
+            self.menu.items = self.previous.items;
+            self.previous = {};
+        }
+    }
+
+    //------------------------------------------------------------------------
+    // interface controls
+    Interface.bindAll = () => {
+        // user intended actions
+        LT.atlas.on("marker-click", Action.selectMarkerOnMap);
+        LT.atlas.on("map-click", Action.selectPointOnMap);
+        LT.atlas.on("map-double-click", Interface.removePointer);
+        LT.atlas.on("map-double-click", Action.zoomIn);
+        LT.view.menu.on("zoom-in", Action.zoomToPoint);
+        LT.view.menu.on("zoom-out", Action.zoomOut);
+        LT.view.menu.on("marker-add", Interface.promptForNewMarker);
+        LT.view.menu.on("marker-edit", Interface.promptForEdit);
+
+        // side-effects of interactions guided by application
+        LT.atlas.on("map-click-start", Interface.addPointer);
+        window.addEventListener("resize", Interface.closeRadial);
+
+        // set up custom icons for menu
+
+        for (var idx in Data.categories) {
+            let menu = Data.categories[idx];
+            menu.forEach((item) => {
+                if (Data.icons.hasOwnProperty(item.tag)) {
+                    // only show sub-menu icons
+                    if (!Data.categories.hasOwnProperty(item.tag)) {
+                        item.icon_class = 'fa fa-' + Data.icons[item.tag];
+                        item.tag_class = "tag-icon " + item.tag;
+                        if (idx != "main") {
+                            item.tag_class += " " + idx;
+                        }
+                    }
                 }
             })
+        }
 
-            // close pie menu on resize
-            window.addEventListener("resize", function() {
-                LT.view.menu.close();
-            });
 
-            // zoom out action
-            LT.view.menu.on("zoom-out", () => {
-                LT.atlas.map.zoomOut(2);
-                LT.atlas.map.once("moveend", () => {
+    }
+
+    Interface.promptForNewMarker = () => {
+        console.log("new marker", self.latlng); 
+
+        self.draft_marker = new LX.MarkerItem();
+        self.draft_marker.geohash = LV.Geohash.encode(self.latlng.lat, self.latlng.lng);
+        self.draft_marker.show();
+        self.draft_marker.layer.dragging.enable();
+
+
+        self.draft_marker.on("tag", () => {
+            self.draft_marker.setIcons(Data.icons);
+        });
+
+        self.draft_marker.on("untag", () => {                  
+            self.draft_marker.setIcons(Data.icons);
+        });
+
+        self.menu = {
+            title: "What's here?"
+        }
+        self.menu.items = Data.categories.main;
+    }
+
+    Interface.promptForEdit = () => {
+        LT.view.menu.lock();
+        self.menu = {title: "Marker"};
+        self.menu.items = [{"label":"Move", "method": Action.relocateMarker}, 
+                    {"label":"Delete", "method": Action.dropMarker}];
+    }
+
+
+    Interface.clearMarker = () => {
+        self.target_marker = null;
+    }
+
+    Interface.addPointer = (e) => {
+        if (LT.view.menu.isLocked()) return;
+        self.latlng = e.latlng;
+        LT.atlas.addPointer(self.latlng);
+    }
+
+    Interface.removePointer = (e) => {
+        LT.atlas.removePointer();
+    }
+
+    Interface.openRadial = (items) => {
+        LT.atlas.moveFromEdge(self.latlng)
+            .then(() => {        
+                return LT.atlas.moveFromEdge(self.latlng)
+            })
+            .then(() => {
+                let pos = LT.atlas.map.latLngToContainerPoint(self.latlng);
+                LT.view.menu.open(items, pos);
+                LT.view.menu.lock();
+                // clicking anywhere on the mask element closes radial menu
+                LT.view.menu.once("close", () => {
                     LT.atlas.removePointer();
                 });
             });
+    }
 
+    Interface.closeRadial = () => {
+        if (LT.view.menu.isOpen()) {
+            LT.view.menu.close();
+            LT.view.menu.unlock();                
         }
-    };
+    }
+
+    Interface.waitingForMarkerMove = () => {
+        if (self.target_marker && self.target_marker.getIcon() == "arrows-alt") return;
+    }
 
 
 
-    return self;
+    //------------------------------------------------------------------------
+    // starting data for view
+    Component.data = {
+        target_marker: null,
+        draft_marker: null,
+        prompt_draft_save: false,
+        menu: {
+            title: null,
+            items: null
+        },
+        previous: {},
+        latlng: null,
+        is_saving: false
+    }
+
+    // methods available
+    Component.methods = {
+        closeMenu: Action.closeMenu,
+        chooseFromMenu: Action.chooseFromMenu,
+        saveMarker: Action.saveMarker,
+        goToPreviousMenu: Action.goToPreviousMenu
+    }
+
+
+    // compute marker titles
+    Component.computed = {};
+    Component.computed.marker_title = () => {
+        if (!self.target_marker) return null;
+        let title = "";
+        let cat = "";
+        for (var idx in Data.categories) {
+            let item = Data.categories[idx];
+            for (var idy in item) {
+                let tag = item[idy].tag;
+                if (self.target_marker.tags.indexOf(tag) != -1) {
+                    if (idx == "main") {
+                        cat = item[idy].label;
+                    }
+                    else {
+                        title = item[idy].label;
+                        return cat + " — " + title;
+                    }
+                }
+                
+            }
+        }
+        return "Marker";
+    }
+
+
+
+
+    //------------------------------------------------------------------------
+    return Component;
 }());

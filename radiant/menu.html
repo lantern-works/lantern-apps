@@ -1,0 +1,40 @@
+<div class="app-bottom" v-if="menu.items">
+	<div class="app-frame">
+		<h1>{{menu.title}}</h1>
+
+
+		<!-- draft marker saving -->
+		<div class="button-box" v-if="prompt_draft_save">
+				<span class="icon is-large">
+					<i class="fas fa-map-marked-alt"></i>
+				</span>
+			<p>Data you share will update the map for nearby users.</p>
+			<div :class="(is_saving ? 'is-loading' : '') + ' button is-primary'" @click="saveMarker">Save</div>
+			<div class="button is-secondary" :disabled="is_saving" @click="goToPreviousMenu">Back</div>
+		</div>
+
+
+		<!-- multi-purpose menu -->
+		<ul class="menu" v-if="!prompt_draft_save">
+			<li v-for="item in menu.items" @click="chooseFromMenu(item)" >
+			
+				<div v-if="item.icon_class" :class="item.tag_class"> 
+					<i :class="item.icon_class"></i>
+				</div>
+				<span> {{ item.label}} </span>
+				<span class="icon is-large">
+					<i class="fas fa-angle-right"></i>
+				</span>
+			</li>
+
+			<!-- allow option for previous menu access -->
+			<li class="inline-btn" v-if="previous.title" @click="goToPreviousMenu">
+				Back
+			</li>
+			<li class="inline-btn" v-if="!previous.title" @click="closeMenu">
+				Close
+			</li>
+		</ul>
+	</div>
+</div>
+
