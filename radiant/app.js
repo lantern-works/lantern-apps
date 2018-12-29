@@ -99,6 +99,7 @@
             console.log("[a:report]".padEnd(20, " ") + " saved marker", self.draft_marker.id);               
             self.draft_marker.layer.dragging.disable();
             self.is_saving = false;
+            self.draft_marker = null;
             LT.view.menu.unlock();
         });
         
