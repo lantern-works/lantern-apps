@@ -43,6 +43,12 @@
         LT.atlas.removePointer();
         self.target_marker = marker;
         Interface.openRadial(Data.menu.marker);
+
+        // close radial menu if another user modified our target
+        marker.once("update", (data) => {
+            LT.view.menu.close();
+            LT.view.menu.unlock();
+        });
     }
 
     /**
@@ -117,7 +123,10 @@
             self.target_marker.setIcon(original_icon);
             self.target_marker.layer.dragging.disable();
             self.target_marker.save(Data.package,"geohash");
-            LT.view.menu.unlock();
+
+            setTimeout(() => {
+                LT.view.menu.unlock();
+            }, 300);
         });
 
     }
