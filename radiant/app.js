@@ -42,6 +42,7 @@
         self.latlng = marker.latlng;
         LT.atlas.removePointer();
         self.target_marker = marker;
+        self.show_target_marker_detail = true;
         Interface.openRadial(Data.menu.marker);
 
         // close radial menu if another user modified our target
@@ -49,6 +50,10 @@
             LT.view.menu.close();
             LT.view.menu.unlock();
         });
+
+        LT.view.menu.on("close", () => {
+            self.show_target_marker_detail = false;
+        })
     }
 
     /**
@@ -139,7 +144,7 @@
         self.menu = {};
         self.target_marker.drop(Data.package)
             .then(() => {
-                self.target_marker = null;
+                Interface.clearMarker();
                 LT.view.menu.unlock();                
             });
     }
@@ -276,6 +281,7 @@
 
     Interface.clearMarker = () => {
         self.target_marker = null;
+        self.show_target_marker_detail = false;
     }
 
     Interface.addPointer = (e) => {
@@ -321,6 +327,7 @@
     // starting data for view
     Component.data = {
         target_marker: null,
+        show_target_marker_detail: true,
         draft_marker: null,
         prompt_draft_save: false,
         menu: {
