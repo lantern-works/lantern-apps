@@ -51,6 +51,10 @@
         let org = new LX.Organization("lnt-dev", LT.db);
         org.getOrRegister("Project Lantern Development Team")
             .then((res) => {
+                if (!res) {
+                    console.log("missing expected response from registration of org");
+                    return;
+                }
                 if (res.name) {                
                     // make sure we have the demo package installed
                     let pkg = new LX.Package(package_name, org);

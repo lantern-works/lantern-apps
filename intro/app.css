@@ -1,7 +1,9 @@
 #lx-app-intro-index {
 	height: 100%;
 	overflow: hidden;
-	background: none;
+	background: none;	
+	z-index: 1000;
+
 }
 
 
@@ -9,11 +11,18 @@
 	text-align: center;
 	padding: 0;
 	overflow: hidden;
-	margin-top: 3.2em;
+	max-width: 450px;
+	min-width: 320px;
+	margin: 3.2em auto;
 }
+
 
 #lx-app-intro-index section {
 	padding: 0;
+}
+
+#app-container #lx-app-intro-index .app-mask {
+	z-index: -100;
 }
 
 

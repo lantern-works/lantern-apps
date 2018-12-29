@@ -12,3 +12,51 @@
 #lx-app-radiant-index h1 {
 	border-bottom: 1px solid #EEE;
 }
+
+
+#lx-app-radiant-menu {
+	max-width: 450px;
+	min-width: 320px;
+}
+
+#lx-app-radiant-menu .app-frame {
+	padding: 0em;
+}
+
+#lx-app-radiant-menu h1 {
+	border-bottom: 1px solid #EEE;
+}
+
+
+#lx-app-radiant-menu ul.menu .tag-icon {
+	margin-right: 1em;
+	padding-top: 3px;
+	margin-top: -2px;
+	border-radius: 3px;
+	float: left;
+	text-align: center;
+	width: 2em;
+}
+
+#lx-app-radiant-menu .button-box {
+	text-align: center;
+	padding: 1em;
+}
+
+#lx-app-radiant-menu .button-box .icon {
+	margin: auto;
+	opacity: 0.9;
+	font-size: xx-large;
+}
+
+#lx-app-radiant-menu .button-box p {
+	padding: 1em;
+}
+#lx-app-radiant-menu .button-box .button {
+	margin-top: 1em;
+	width: 100%;
+}
+
+#lx-app-radiant-menu ul.menu li .tag-icon {
+	color: #FFF;
+}
