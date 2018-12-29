@@ -1,6 +1,6 @@
 (function() {
 
-
+    const package_name = "umbriel";
 
     //------------------------------------------------------------------------
 	const startMapApplications = function() {
@@ -12,6 +12,30 @@
 			LT.openOneApp("radiant");
 		}, 50);
 	}
+
+
+    const setupOrg = () =>{
+        // make sure we have an organization to work with
+        let org = new LX.Organization("lnt-dev", LT.db);
+        org.getOrRegister("Project Lantern Development Team")
+            .then((res) => {
+                if (!res) {
+                    console.log("missing expected response from registration of org");
+                    return;
+                }
+                if (res.name) {                
+                    // make sure we have the demo package installed
+                    let pkg = new LX.Package(package_name, org);
+                    pkg.publish()
+                        .then(() => {
+                            LT.user.install(pkg);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                }
+            });
+    }
 
 
 
@@ -36,6 +60,11 @@
 				this.title = "Lantern Network";
 				this.show = true;
 			}
+
+			LT.withUser(user => {
+            	setupOrg();
+                setInterval(() => LT.user.feed.refreshData(), 7000);
+           	 });
 		},
 		open: true
 	};

@@ -1,7 +1,7 @@
 (function() {
 
     //------------------------------------------------------------------------
-    const package_name = "umbriel";
+
     const icon_map = {"bed":"bed","wtr":"tint","net":"globe","clo":"tshirt","eat":"utensils","pwr":"plug","med":"prescription-bottle-alt","ful":"gas-pump","ven":"building","sit":"exclamation","obs":"hand-paper"};
 
 
@@ -33,30 +33,6 @@
     }
 
 
-    const setupOrg = () =>{
-        // make sure we have an organization to work with
-        let org = new LX.Organization("lnt-dev", LT.db);
-        org.getOrRegister("Project Lantern Development Team")
-            .then((res) => {
-                if (!res) {
-                    console.log("missing expected response from registration of org");
-                    return;
-                }
-                if (res.name) {                
-                    // make sure we have the demo package installed
-                    let pkg = new LX.Package(package_name, org);
-                    pkg.publish()
-                        .then(() => {
-                            LT.user.install(pkg);
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
-                }
-            });
-    }
-
-
     //------------------------------------------------------------------------
     let snapback = null;
     var self = {
@@ -79,7 +55,7 @@
         computed: {
         },
         data: {
-            "marker_count": 0
+            "marker_count": -1
         },
         mounted() {
             // add map controls
@@ -97,10 +73,10 @@
             // waits for user authentication
             LT.withUser(user => {
 
+                LT.user.feed.refreshData();
                  // sync with all available markers from user-specific feed
                 // this is pre-filtered based on installed packages
                 user.feed.on("update", (e) => {
-                    
                     if (!e.data) {
                         // item was deleted
                         if (LT.atlas.markers[e.id]) {
@@ -121,9 +97,6 @@
                         }
                     }
                 });
-                setupOrg();
-
-                setInterval(() => LT.user.feed.refreshData(), 7000);
             });
 
 

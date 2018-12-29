@@ -7,6 +7,7 @@
 }
 
 
+
 #lx-app-intro-index .app-frame {
 	text-align: center;
 	padding: 0;
@@ -23,6 +24,7 @@
 
 #app-container #lx-app-intro-index .app-mask {
 	z-index: -100;
+	opacity: 0.5;
 }
 
 

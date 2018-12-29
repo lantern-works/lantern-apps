@@ -1,9 +1,9 @@
 <div class="app-top">	
 	<div class="app-frame" :data-username="$parent.user.username" @click="fitMap">
-		<span v-if="$parent.user.username">
+		<span v-if="marker_count > -1">
 		{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}
 		</span>
-		<span v-if="!marker_count && !$parent.user.username">
+		<span v-if="marker_count == -1">
 			loading&hellip;
 		</span>
 	</div>
