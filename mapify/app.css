@@ -31,7 +31,7 @@
 	float: right;
 }
 
-#lx-app-mapify-index .icon.active {
+#lx-app-mapify-index .icon.active, #lx-app-mapify-index .icon:hover {
 	background: #3273dc;
 	color: #FFF;
 }

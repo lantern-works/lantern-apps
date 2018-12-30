@@ -41,6 +41,9 @@
         LT.withUser(user => {
 
             LT.user.feed.refreshData();
+
+
+
              // sync with all available markers from user-specific feed
             // this is pre-filtered based on installed packages
             user.feed.on("update", (e) => {
@@ -64,6 +67,13 @@
                     }
                 }
             });
+
+            setTimeout(() => {
+                if (self.marker_count == -1) {
+                    self.marker_count = 0;
+                }  
+            }, 500);
+
         });
     }
 
