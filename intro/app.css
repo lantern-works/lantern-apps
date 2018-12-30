@@ -3,6 +3,7 @@
 	overflow: hidden;
 	background: none;	
 	z-index: 1000;
+	padding: 1em;
 
 }
 
@@ -13,13 +14,18 @@
 	padding: 0;
 	overflow: hidden;
 	max-width: 450px;
-	min-width: 320px;
-	margin: 3.2em auto;
+	min-width: 200px;
+	margin: auto;
 }
 
 
 #lx-app-intro-index section {
 	padding: 0;
+}
+
+#lx-app-intro-index h1 {
+	padding-bottom: 0;
+	padding-top: 0;
 }
 
 #app-container #lx-app-intro-index .app-mask {
@@ -29,8 +35,8 @@
 
 
 #lx-app-intro-index .logo {
-	width: 70px;
-	height: 70px;
+	width: 60px;
+	height: 60px;
 	margin-top: 1.5em;
 }
 
