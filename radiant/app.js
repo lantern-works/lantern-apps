@@ -228,7 +228,6 @@
         window.addEventListener("resize", Interface.closeRadial);
 
         // set up custom icons for menu
-
         for (var idx in Data.categories) {
             let menu = Data.categories[idx];
             menu.forEach((item) => {
@@ -321,6 +320,32 @@
         if (self.target_marker && self.target_marker.getIcon() == "arrows-alt") return;
     }
 
+    /**
+    * Computes a marker title based on available categories
+    */
+    Interface.getCategory = (marker, categories) => {
+        let title = "";
+        let cat = "";
+        for (var idx in categories) {
+            let item = categories[idx];
+            for (var idy in item) {
+                let tag = item[idy].tag;
+                if (marker.tags.indexOf(tag) != -1) {
+                    if (idx == "main") {
+                        cat = item[idy].label;
+                    }
+                    else {
+                        title = item[idy].label;
+                        return cat + " — " + title;
+                    }
+                }
+                
+            }
+        }
+        return "Unknown Category";
+    }
+
+ 
 
 
     //------------------------------------------------------------------------
@@ -352,25 +377,7 @@
     Component.computed = {};
     Component.computed.marker_title = () => {
         if (!self.target_marker) return null;
-        let title = "";
-        let cat = "";
-        for (var idx in Data.categories) {
-            let item = Data.categories[idx];
-            for (var idy in item) {
-                let tag = item[idy].tag;
-                if (self.target_marker.tags.indexOf(tag) != -1) {
-                    if (idx == "main") {
-                        cat = item[idy].label;
-                    }
-                    else {
-                        title = item[idy].label;
-                        return cat + " — " + title;
-                    }
-                }
-                
-            }
-        }
-        return "Marker";
+        return Interface.getCategory(self.target_marker, Data.categories);
     }
 
 

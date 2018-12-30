@@ -1,10 +1,19 @@
 <div class="app-top">	
 	<div class="app-frame" :data-username="$parent.user.username" @click="fitMap">
-		<span v-if="marker_count > -1">
-		{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}
-		</span>
-		<span v-if="marker_count == -1">
-			loading&hellip;
-		</span>
+
+		<!-- search icon -->
+		<span @click.stop="searchMap" v-if="marker_count > -1" :class="'icon ' + (show_search ? 'active' : 'inactive') "><i class="fas fa-search"></i></span>
+
+
+		<!-- loading text -->
+		<div v-if="marker_count == -1">
+			Loading&hellip;
+		</div> 
+
+		<!-- marker count -->
+		<div class="marker-count" v-if="marker_count > -1">
+			{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}
+		</div>
+
 	</div>
-</div>
+</div>          

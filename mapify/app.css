@@ -1,3 +1,4 @@
+/*----------------------------------------------------------------------------*/
 #lx-app-mapify-index {
 	max-width: 18em;
 	font-size: small;
@@ -8,7 +9,7 @@
 #lx-app-mapify-index .app-frame {
 	text-align: center;
 	border-radius: 6px;
-	min-height: 2.5em;
+	height: 2.25rem;
 }
 
 #lx-app-mapify-index:hover {
@@ -22,4 +23,43 @@
 
 .lx-map-zoom-far #map .lx-default, .lx-map-zoom-very-far #map .lx-default {
 	background: #3273dc;
+}
+
+#lx-app-mapify-index .icon {
+	background: #EEE;
+	border-radius: 1em;
+	float: right;
+}
+
+#lx-app-mapify-index .icon.active {
+	background: #3273dc;
+	color: #FFF;
+}
+
+#lx-app-mapify-index .app-frame div{
+	padding-top: 0.15rem;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+#lx-app-mapify-search {
+	height: 100%;
+	overflow: hidden;
+	background: none;	
+	z-index: 1000;
+	margin-top: -2px;
+}
+
+#lx-app-mapify-search h1 {
+	border-bottom: 1px solid #EEE;
+}
+
+#lx-app-mapify-search .app-frame {
+	padding: 0em;
+}
+
+#lx-app-mapify-search .app-mask {
+	opacity: 0.5;
+	z-index: -100;
 }

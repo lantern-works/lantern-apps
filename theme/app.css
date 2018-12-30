@@ -1,6 +1,6 @@
 
 
-#map .lx-marker.ven {
+#map .lx-marker.ven,  .menu .tag-icon.ven {
 	background-color: #3273dc;
 }
 
@@ -86,7 +86,7 @@
 
 
 
-#map .lx-marker.obs {
+#map .lx-marker.obs, .menu .tag-icon.obs {
 	background: #ff844d;
 }
 #app-container .app .app-frame.obs {
@@ -103,7 +103,7 @@
 	border-color: #c075c9;
 }
 
-#map .lx-marker.sit {
+#map .lx-marker.sit, .menu .tag-icon.sit {
 	background-color: #FFB000;
 }
 #app-container .app .app-frame.sit {
