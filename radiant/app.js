@@ -97,12 +97,13 @@
 
         if (self.is_saving) return;
         
-        self.is_saving = true;
+        self.is_saving = true;            
+
+        self.draft_marker.layer.dragging.disable();
 
         self.draft_marker.once("save", () => {
             // make sure save event is intended from this app
             console.log("[a:report]".padEnd(20, " ") + " saved marker", self.draft_marker.id);               
-            self.draft_marker.layer.dragging.disable();
             self.is_saving = false;
             self.draft_marker = null;
             LT.view.menu.unlock();
@@ -125,7 +126,6 @@
         self.target_marker.setIcon("arrows-alt");
         self.menu = {};
         self.target_marker.once("move", (val) => {
-            console.log("[a:radiant]".padEnd(20, " ") + " moved marker with tags: ", self.target_marker.tags.join(", "));
             self.target_marker.setIcon(original_icon);
             self.target_marker.layer.dragging.disable();
             self.target_marker.save(Data.package,"geohash");
@@ -153,7 +153,6 @@
     * User wants to choose menu from item,
     */
     Action.chooseFromMenu = (item) => {
-        console.log(item);
 
         if (self.draft_marker) {
             // special actions for reporting menu
@@ -201,7 +200,6 @@
 
         self.draft_marker.untagAll();
         self.prompt_draft_save = false;
-        console.log(self.previous)
 
         if (self.previous.title && self.previous.items) {
             self.menu.title = self.previous.title;
@@ -248,7 +246,6 @@
     }
 
     Interface.promptForNewMarker = () => {
-        console.log("new marker", self.latlng); 
 
         self.draft_marker = new LX.MarkerItem();
         self.draft_marker.geohash = LV.Geohash.encode(self.latlng.lat, self.latlng.lng);
