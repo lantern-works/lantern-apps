@@ -10,7 +10,7 @@
 		setTimeout(() => {
 			LT.openOneApp("mapify");
 			LT.openOneApp("radiant");
-		}, 50);
+		}, 150);
 	}
 
 
@@ -47,7 +47,8 @@
 			"title": "",
 			"slide": 0,
 			"max_slide": 3,
-			"show": false
+			"show": false,
+			"username": null
 		},
 		callback: function() {
 		},
@@ -62,6 +63,7 @@
 			}
 
 			LT.withUser(user => {
+	            this.username = user.username
             	setupOrg();
                 setInterval(() => LT.user.feed.refreshData(), 7000);
            	 });

@@ -1,5 +1,5 @@
 <div class="app-center" v-if="show" v-cloak>
-	<div class="app-frame" v-if="title">
+	<div class="app-frame" v-if="title" :data-username="username">
 		<section v-if="slide === 0">
 			<img class="logo" src="../theme/logo.png">
 			<h1>Welcome to the {{ title }}</h1>
