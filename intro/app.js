@@ -14,26 +14,6 @@
     }
 
 
-    const setupOrg = () =>{
-        // make sure we have an organization to work with
-        let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
-        org.register()
-            .then(() => {
-                // make sure we have the demo package installed
-                let pkg = new LX.Package(package_name, org);
-
-                pkg.publish()
-                    .then(() => {
-                        LT.user.install(pkg);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
-            });
-    }
-
-
-
     //------------------------------------------------------------------------
     var config = {
         methods: {},
@@ -59,7 +39,17 @@
 
             LT.withUser(user => {
                 this.username = user.username
-                setupOrg();
+                
+                // make sure we have an organization to work with
+                let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
+             
+                // select package to follow data from
+                let pkg = new LX.Package(package_name, org);
+
+                // install and follow updates for package within verified user account
+                LT.user.install(pkg);
+
+                // backup refresh in case live updates are not working on a given device
                 setInterval(() => LT.user.feed.refreshData(), 7000);
              });
         },
