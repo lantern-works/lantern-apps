@@ -314,7 +314,7 @@
     }
 
     Interface.waitingForMarkerMove = () => {
-        if (self.target_marker && self.target_marker.getIcon() == "arrows-alt") return;
+        return (self.target_marker && self.target_marker.getIcon() == "arrows-alt");
     }
 
     /**
