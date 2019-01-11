@@ -126,10 +126,12 @@
         self.target_marker.setIcon("arrows-alt");
         self.menu = {};
         self.target_marker.once("move", (val) => {
+
             self.target_marker.setIcon(original_icon);
             self.target_marker.layer.dragging.disable();
-            self.target_marker.save(Data.package,"geohash");
-
+            // add user to list of editors
+            self.target_marker.editor(LT.user.username);
+            self.target_marker.save(Data.package,["editors","geohash"]);
             setTimeout(() => {
                 LT.view.menu.unlock();
             }, 300);

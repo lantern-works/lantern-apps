@@ -42,25 +42,21 @@
             LT.user.feed.refreshData();
              // sync with all available markers from user-specific feed
             // this is pre-filtered based on installed packages
-            user.feed.on("update", (e) => {
+            user.feed.on("change", (e) => {
                 if (!e.data) {
                     // item was deleted
                     if (LT.atlas.markers[e.id]) {
                         LT.atlas.markers[e.id].hide();
                     }
                 }
-                else if (e.data.g && e.data.t) {
-                    // duck typing for markers
-                    // only add a new marker if we don't have it in atlas
-                    if (LT.atlas.markers[e.id]) {
+                else if (LT.atlas.markers[e.id]) {
                         let old_marker = LT.atlas.markers[e.id];
-                        old_marker.update(e.data)
-                    }
-                    else {
-                        let marker = new LX.MarkerItem(e.id, e.data);
-                        marker.show();
-                        marker.setIcons(Data.icons);                        
-                    }
+                        old_marker.refresh(e.data)
+                }
+                else {
+                    let marker = new LX.MarkerItem(e.id, e.data);
+                    marker.show();
+                    marker.setIcons(Data.icons);                        
                 }
             });
 
@@ -145,7 +141,6 @@
             })
         },
         chooseFromMenu: (item) => {
-            console.log(item.latlng);
             LT.atlas.zoomToPoint(item.latlng);
             self.show_search = false;
         },
