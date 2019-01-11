@@ -42,12 +42,19 @@
                 
                 // make sure we have an organization to work with
                 let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
-             
+
                 // select package to follow data from
                 let pkg = new LX.Package(package_name, org);
 
-                // install and follow updates for package within verified user account
-                LT.user.install(pkg);
+                // ensure database has the expected organization and package to work with
+                // then install the package for this user
+                org.ensure()
+                    .then(() => {
+                        return pkg.ensure()
+                    })
+                    .then(() => {
+                        LT.user.install(pkg) 
+                    });
 
                 // backup refresh in case live updates are not working on a given device
                 setInterval(() => LT.user.feed.refreshData(), 7000);
