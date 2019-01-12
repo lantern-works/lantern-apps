@@ -50,7 +50,7 @@
                 // then install the package for this user
                 org.ensure()
                     .then(() => {
-                        return pkg.ensure()
+                        return pkg.publish();
                     })
                     .then(() => {
                         LT.user.install(pkg) 
