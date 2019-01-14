@@ -1,0 +1,23 @@
+{
+  "name": "lantern-apps",
+  "version": "1.0.0",
+  "description": "These are the default applications running on the lantern",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "standard": "^12.0.1"
+  },
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lantern-works/lantern-apps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lantern-works/lantern-apps/issues"
+  },
+  "homepage": "https://github.com/lantern-works/lantern-apps#readme"
+}
