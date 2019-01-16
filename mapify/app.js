@@ -54,9 +54,12 @@
                         old_marker.refresh(e.data)
                 }
                 else {
-                    let marker = new LX.MarkerItem(e.id, e.data);
-                    marker.show();
-                    marker.setIcons(Data.icons);                        
+                    // is this a valid marker?
+                    if (e.data.g && e.data.o && e.data.t) {
+                        let marker = new LX.MarkerItem(e.id, e.data);
+                        marker.show();
+                        marker.setIcons(Data.icons);                                                
+                    }
                 }
             });
 
