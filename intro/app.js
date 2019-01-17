@@ -44,17 +44,21 @@
                 let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
 
                 // select package to follow data from
-                let pkg = new LX.Package(package_name, org);
+                let pkg = new LX.Package(package_name, LT.db);
 
                 // ensure database has the expected organization and package to work with
                 // then install the package for this user
-                org.ensure()
+                org.register()
                     .then(() => {
                         return pkg.publish();
                     })
                     .then(() => {
+                        org.claim(pkg);
                         LT.user.install(pkg) 
-                    });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    })
 
                 // backup refresh in case live updates are not working on a given device
                 setInterval(() => LT.user.feed.refreshData(), 7000);
