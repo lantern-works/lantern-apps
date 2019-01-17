@@ -103,7 +103,7 @@
 
         self.draft_marker.once("save", () => {
             // make sure save event is intended from this app
-            console.log("[a:report]".padEnd(20, " ") + " saved marker", self.draft_marker.id);               
+            console.log("(report) marker saved:", self.draft_marker.id);               
             self.is_saving = false;
             self.draft_marker = null;
             LT.view.menu.unlock();

@@ -39,7 +39,6 @@
 
         // waits for user authentication
         LT.withUser(user => {
-            LT.user.feed.refreshData();
              // sync with all available markers from user-specific feed
             // this is pre-filtered based on installed packages
             user.feed.on("change", (e) => {
@@ -57,12 +56,15 @@
                     // is this a valid marker?
                     if (e.data.g && e.data.o && e.data.t) {
                         let marker = new LX.MarkerItem(e.id, e.data);
+                        console.log("(mapify) add new marker", marker.id, marker.geohash);
                         marker.show();
                         marker.setIcons(Data.icons);                                                
                     }
                 }
             });
 
+            LT.user.feed.refreshData();
+            
             setTimeout(() => {
                 if (self.marker_count == -1) {
                     self.marker_count = 0;
@@ -139,9 +141,9 @@
             
             self.snapback = true; 
             LT.user.feed.refreshData();
-            LT.atlas.cacheCenterLocation(1).then(() => {
-                LT.atlas.fitMapToAllMarkers();
-            })
+            LT.atlas.cacheCenterLocation(0);
+            LT.atlas.fitMapToAllMarkers();
+            
         },
         chooseFromMenu: (item) => {
             LT.atlas.zoomToPoint(item.latlng);
