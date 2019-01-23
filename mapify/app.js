@@ -36,42 +36,37 @@
         // add map controls
         Interface.setupControls();
 
-
-        // waits for user authentication
-        LT.withUser(user => {
-             // sync with all available markers from user-specific feed
-            // this is pre-filtered based on installed packages
-            user.feed.on("change", (e) => {
-                if (!e.data) {
-                    // item was deleted
-                    if (LT.atlas.markers[e.id]) {
-                        LT.atlas.markers[e.id].hide();
-                    }
+         // sync with all available markers from user-specific feed
+        // this is pre-filtered based on installed packages
+        LT.user.feed.on("change", (e) => {
+            if (!e.data) {
+                // item was deleted
+                if (LT.atlas.markers[e.id]) {
+                    LT.atlas.markers[e.id].hide();
                 }
-                else if (LT.atlas.markers[e.id]) {
-                        let old_marker = LT.atlas.markers[e.id];
-                        old_marker.refresh(e.data)
+            }
+            else if (LT.atlas.markers[e.id]) {
+                    let old_marker = LT.atlas.markers[e.id];
+                    old_marker.refresh(e.data)
+            }
+            else {
+                // is this a valid marker?
+                if (e.data.g && e.data.o && e.data.t) {
+                    let marker = new LX.MarkerItem(e.id, e.data);
+                    console.log("(mapify) add new marker", marker.id, marker.geohash);
+                    marker.show();
+                    marker.setIcons(Data.icons);                                                
                 }
-                else {
-                    // is this a valid marker?
-                    if (e.data.g && e.data.o && e.data.t) {
-                        let marker = new LX.MarkerItem(e.id, e.data);
-                        console.log("(mapify) add new marker", marker.id, marker.geohash);
-                        marker.show();
-                        marker.setIcons(Data.icons);                                                
-                    }
-                }
-            });
-
-            LT.user.feed.refreshData();
-            
-            setTimeout(() => {
-                if (self.marker_count == -1) {
-                    self.marker_count = 0;
-                }  
-            }, 500);
-
+            }
         });
+
+        LT.user.feed.refreshData();
+        
+        setTimeout(() => {
+            if (self.marker_count == -1) {
+                self.marker_count = 0;
+            }  
+        }, 500);
     }
 
     /**

@@ -37,32 +37,30 @@
                 this.show = true;
             }
 
-            LT.withUser(user => {
-                this.username = user.username
-                
-                // make sure we have an organization to work with
-                let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
+            this.username = LT.user.username
+            
+            // make sure we have an organization to work with
+            let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
 
-                // select package to follow data from
-                let pkg = new LX.Package(package_name, LT.db);
+            // select package to follow data from
+            let pkg = new LX.Package(package_name, LT.db);
 
-                // ensure database has the expected organization and package to work with
-                // then install the package for this user
-                org.register()
-                    .then(() => {
-                        return pkg.publish();
-                    })
-                    .then(() => {
-                        org.claim(pkg);
-                        LT.user.install(pkg) 
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    })
+            // ensure database has the expected organization and package to work with
+            // then install the package for this user
+            org.register()
+                .then(() => {
+                    return pkg.publish();
+                })
+                .then(() => {
+                    org.claim(pkg);
+                    LT.user.install(pkg) 
+                })
+                .catch((err) => {
+                    console.error(err);
+                })
 
-                // backup refresh in case live updates are not working on a given device
-                setInterval(() => LT.user.feed.refreshData(), 7000);
-             });
+            // backup refresh in case live updates are not working on a given device
+            setInterval(() => LT.user.feed.refreshData(), 7000);
         },
         open: true
     };
