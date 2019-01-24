@@ -26,11 +26,7 @@
             if (v && v.g && v.o && v.t) {
                 // this is a marker
                 if (!LT.atlas.markers.hasOwnProperty(k) ) {
-                    // does not exist yet in UI
-                    let marker = new LX.MarkerItem(k, v);
-                    console.log("(mapify) add existing marker", marker.id, marker.geohash);
-                    marker.show();
-                    marker.setIcons(Data.icons);                                                
+                    Interface.showMarker({id: k, data: v})
                 }
                 else {
                     // exists in UI
@@ -38,10 +34,36 @@
                     marker.refresh(v)
                 }
             }
+            else {
+                Interface.hideMarker({id: k})
+            }
         })
     }
 
+    Interface.showMarker = (e) => {
+        if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
+            let marker = new LX.MarkerItem(e.id, e.data);
+            console.log("(mapify) show marker", marker.id, marker.geohash);
+            marker.show();
+            marker.setIcons(Data.icons);                                          
+        }
+    }
 
+    Interface.hideMarker = (e) => {
+        if (LT.atlas.markers[e.id]) {
+            console.log("(mapify) hide existing marker", e.id)
+            LT.atlas.markers[e.id].hide();
+        }
+    }
+
+    Interface.refreshMarker = (e) => {
+        if (LT.atlas.markers[e.id]) {
+            let marker = LT.atlas.markers[e.id];
+            let obj = {}
+            obj[e.key] = e.data
+            marker.refresh(obj);
+        }
+    }
 
     Interface.bindAll = () => {
 
@@ -54,41 +76,16 @@
             self.marker_count = LT.atlas.getMarkerCount();
         });
 
-
         // add map controls
         Interface.setupControls();
 
-
         // visualize known markers
-        Interface.refresh();
-        setInterval(Interface.refresh, 7000)
-
         // sync with all available markers from user-specific feed
         // this is pre-filtered based on installed packages
-        LT.user.feed.on("change", (e) => {
-            if (LT.atlas.markers[e.id]) {
-                let marker = LT.atlas.markers[e.id];
-                let obj = {}
-                obj[e.key] = e.data
-                marker.refresh(obj);
-            }
-        });
-
-        LT.user.feed.on("add", (e) => {
-            if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
-                let marker = new LX.MarkerItem(e.id, e.data);
-                console.log("(mapify) add new marker", marker.id, marker.geohash);
-                marker.show();
-                marker.setIcons(Data.icons);                                          
-            }
-        });
-
-        LT.user.feed.on("drop", (e) => {
-            if (LT.atlas.markers[e.id]) {
-                console.log("(mapify) hide existing marker", e.id)
-                LT.atlas.markers[e.id].hide();
-            }
-        });
+        Interface.refresh();
+        LT.user.feed.on("change", Interface.refreshMarker);
+        LT.user.feed.on("add", Interface.showMarker);
+        LT.user.feed.on("drop", Interface.hideMarker);
 
         setTimeout(() => {
             if (self.marker_count == -1) {
