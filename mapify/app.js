@@ -23,6 +23,7 @@
     //------------------------------------------------------------------------
 
     Interface.bindAll = () => {
+
         // keep the UI up-to-date based on changes to marker count
         LT.atlas.on("marker-add", () => {
             self.marker_count = LT.atlas.getMarkerCount();
@@ -36,32 +37,44 @@
         // add map controls
         Interface.setupControls();
 
-         // sync with all available markers from user-specific feed
+
+        // visualize known markers
+        LT.user.feed.forEachItem((v,k) => {
+            if (v && !LT.atlas.markers.hasOwnProperty(k) && v.g && v.o && v.t) {
+                let marker = new LX.MarkerItem(k, v);
+                console.log("(mapify) add existing marker", marker.id, marker.geohash);
+                marker.show();
+                marker.setIcons(Data.icons);                                                
+            }
+        })
+
+        // sync with all available markers from user-specific feed
         // this is pre-filtered based on installed packages
         LT.user.feed.on("change", (e) => {
-            if (!e.data) {
-                // item was deleted
-                if (LT.atlas.markers[e.id]) {
-                    LT.atlas.markers[e.id].hide();
-                }
-            }
-            else if (LT.atlas.markers[e.id]) {
-                    let old_marker = LT.atlas.markers[e.id];
-                    old_marker.refresh(e.data)
-            }
-            else {
-                // is this a valid marker?
-                if (e.data.g && e.data.o && e.data.t) {
-                    let marker = new LX.MarkerItem(e.id, e.data);
-                    console.log("(mapify) add new marker", marker.id, marker.geohash);
-                    marker.show();
-                    marker.setIcons(Data.icons);                                                
-                }
+            if (LT.atlas.markers[e.id]) {
+                let marker = LT.atlas.markers[e.id];
+                let obj = {}
+                obj[e.key] = e.data
+                marker.refresh(obj);
             }
         });
 
-        LT.user.feed.refreshData();
-        
+        LT.user.feed.on("add", (e) => {
+            if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
+                let marker = new LX.MarkerItem(e.id, e.data);
+                console.log("(mapify) add new marker", marker.id, marker.geohash);
+                marker.show();
+                marker.setIcons(Data.icons);                                                
+            }
+        });
+
+        LT.user.feed.on("drop", (e) => {
+            if (LT.atlas.markers[e.id]) {
+                console.log("(mapify) hide existing marker", e.id)
+                LT.atlas.markers[e.id].hide();
+            }
+        });
+
         setTimeout(() => {
             if (self.marker_count == -1) {
                 self.marker_count = 0;

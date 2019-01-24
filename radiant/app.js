@@ -17,7 +17,7 @@
 
     //------------------------------------------------------------------------
     // data
-    Data.package = "umbriel";
+    Data.package = "umbriel@0.0.1";
     Data.icons = {"bed":"bed","wtr":"tint","net":"globe","clo":"tshirt","eat":"utensils","pwr":"plug","med":"prescription-bottle-alt","ful":"gas-pump","ven":"building","sit":"exclamation","obs":"hand-paper"};
     Data.categories = {"main":[{"label":"Place","tag":"ven"},{"label":"Resource","tag":"rsc"},{"label":"Obstacle","tag":"obs"},{"label":"Situation","tag":"sit"}],"rsc":[{"label":"Bed","tag":"bed"},{"label":"Clothing","tag":"clo"},{"label":"Food","tag":"eat"},{"label":"Fuel","tag":"ful"},{"label":"Internet","tag":"net"},{"label":"Medical","tag":"med"},{"label":"Power","tag":"pwr"},{"label":"Water","tag":"wtr"}],"ven":[{"label":"Shelter","tag":"shl"},{"label":"Relief Camp","tag":"cmp"},{"label":"Hospital","tag":"hsp"},{"label":"Operating Base","tag":"bse"}],"obs":[{"label":"Road Debris","tag":"rdb"},{"label":"Detour","tag":"dtr"},{"label":"Destroyed","tag":"dst"}],"sit":[{"label":"Power Outage","tag":"pwo"},{"label":"Fire","tag":"fir"},{"label":"Flooding","tag":"fld"},{"label":"Looting","tag":"lot"},{"label":"Closed by Authorities","tag":"cba"}]};
     Data.menu = {};
@@ -108,8 +108,11 @@
             self.draft_marker = null;
             LT.view.menu.unlock();
         });
-        
-        self.draft_marker.save(Data.package);
+
+        self.draft_marker.save().then(() => {
+            let pkg = new LX.Package(Data.package, LT.db);
+            pkg.add(self.draft_marker);
+        })
         self.prompt_draft_save = false;
         self.menu = {};
     }
@@ -131,7 +134,7 @@
             self.target_marker.layer.dragging.disable();
             // add user to list of editors
             self.target_marker.editor(LT.user.username);
-            self.target_marker.save(Data.package,["editors","geohash"]);
+            self.target_marker.save(["editors","geohash"]);
             setTimeout(() => {
                 LT.view.menu.unlock();
             }, 300);
@@ -144,10 +147,13 @@
     */
     Action.dropMarker = () => {
         self.menu = {};
-        self.target_marker.drop(Data.package)
+        self.target_marker.drop()
             .then(() => {
-                Interface.clearMarker();
-                LT.view.menu.unlock();                
+                let pkg = new LX.Package(Data.package, LT.db);
+                pkg.remove(self.target_marker).then(() => {
+                    Interface.clearMarker();
+                });
+                LT.view.menu.unlock();
             });
     }
 

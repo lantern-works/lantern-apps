@@ -58,9 +58,6 @@
                 .catch((err) => {
                     console.error(err);
                 })
-
-            // backup refresh in case live updates are not working on a given device
-            setInterval(() => LT.user.feed.refreshData(), 7000);
         },
         open: true
     };
