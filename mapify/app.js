@@ -21,6 +21,27 @@
 
 
     //------------------------------------------------------------------------
+    Interface.refresh = () => {
+       LT.user.feed.forEachItem((v,k) => {
+            if (v && v.g && v.o && v.t) {
+                // this is a marker
+                if (!LT.atlas.markers.hasOwnProperty(k) ) {
+                    // does not exist yet in UI
+                    let marker = new LX.MarkerItem(k, v);
+                    console.log("(mapify) add existing marker", marker.id, marker.geohash);
+                    marker.show();
+                    marker.setIcons(Data.icons);                                                
+                }
+                else {
+                    // exists in UI
+                    let marker = LT.atlas.markers[k];
+                    marker.refresh(v)
+                }
+            }
+        })
+    }
+
+
 
     Interface.bindAll = () => {
 
@@ -39,14 +60,8 @@
 
 
         // visualize known markers
-        LT.user.feed.forEachItem((v,k) => {
-            if (v && !LT.atlas.markers.hasOwnProperty(k) && v.g && v.o && v.t) {
-                let marker = new LX.MarkerItem(k, v);
-                console.log("(mapify) add existing marker", marker.id, marker.geohash);
-                marker.show();
-                marker.setIcons(Data.icons);                                                
-            }
-        })
+        Interface.refresh();
+        setInterval(Interface.refresh, 7000)
 
         // sync with all available markers from user-specific feed
         // this is pre-filtered based on installed packages
@@ -64,7 +79,7 @@
                 let marker = new LX.MarkerItem(e.id, e.data);
                 console.log("(mapify) add new marker", marker.id, marker.geohash);
                 marker.show();
-                marker.setIcons(Data.icons);                                                
+                marker.setIcons(Data.icons);                                          
             }
         });
 
