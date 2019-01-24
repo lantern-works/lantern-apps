@@ -148,7 +148,6 @@
             }
             
             self.snapback = true; 
-            LT.user.feed.refreshData();
             LT.atlas.cacheCenterLocation(0);
             LT.atlas.fitMapToAllMarkers();
             

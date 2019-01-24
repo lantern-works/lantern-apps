@@ -8,7 +8,6 @@
         this.show = false;
     
         setTimeout(() => {
-            LT.openOneApp("mapify");
             LT.openOneApp("radiant");
         }, 150);
     }
@@ -53,7 +52,10 @@
                 })
                 .then(() => {
                     org.claim(pkg);
-                    LT.user.install(pkg) 
+                    LT.user.install(pkg)
+                    .then(() => {
+                        LT.openOneApp("mapify");
+                    })
                 })
                 .catch((err) => {
                     console.error(err);
