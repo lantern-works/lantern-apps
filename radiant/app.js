@@ -103,8 +103,10 @@
 
         self.draft_marker.once("save", () => {
             // make sure save event is intended from this app
-            console.log("(report) marker saved:", self.draft_marker.id);               
+            console.log("(radiant) marker saved:", self.draft_marker.id);               
             self.is_saving = false;
+            self.draft_marker.hide()
+            delete self.draft_marker
             self.draft_marker = null;
             LT.view.menu.unlock();
         });

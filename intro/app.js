@@ -1,6 +1,6 @@
 (function() {
 
-    const package_name = "umbriel";
+    const package_name = "umbriel@0.0.1";
 
     //------------------------------------------------------------------------
     const startMapApplications = function() {
@@ -43,23 +43,20 @@
 
             // select package to follow data from
             let pkg = new LX.Package(package_name, LT.db);
+            pkg.publish().then(() => {
 
-            // ensure database has the expected organization and package to work with
-            // then install the package for this user
-            org.register()
-                .then(() => {
-                    return pkg.publish();
+                // let user watch the package for updates
+                LT.user.install(pkg).then(() => {
+                    LT.openOneApp("mapify");
                 })
+
+                // link our organization
+                org.register()
                 .then(() => {
                     org.claim(pkg);
-                    LT.user.install(pkg)
-                    .then(() => {
-                        LT.openOneApp("mapify");
-                    })
                 })
-                .catch((err) => {
-                    console.error(err);
-                })
+            })
+       
         },
         open: true
     };
