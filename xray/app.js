@@ -45,6 +45,7 @@
         }
         self.marker = marker;
         console.log(`(xray) focus on marker ${self.marker.id}`)
+        marker.inspect()
     }
 
  
@@ -95,13 +96,41 @@
     //------------------------------------------------------------------------
     Component.data = {
         "marker": null,
-        "username": LT.user.username
+        "username": LT.user.username,
+        "readyToDrop": false
     }
     Component.methods = {
         ping: Action.pingMarker,
         move: Action.relocateMarker,
         drop: Action.dropMarker,
+        scoreUp: () => {
+            if (self.marker.score > 0.9) {
+                return
+            }
+            if (!self.marker.score) {
+                self.marker.score = 0
+            }
+            self.marker.score += 0.10
+            if (self.marker.score > 1.0) {
+                self.marker.score = 1.0
+            }
+            self.marker.save(["score"]);
+        },
+        promptForDrop: () => {
+            self.readyToDrop = true
+        },
+        scoreDown: () => {
+            if (self.marker.score < 0.10) {
+                return
+            }
+            self.marker.score -= 0.10
+            if (self.marker.score < 0) {
+                self.marker.score = 0
+            }
+            self.marker.save(["score"]);
+        },
         close: () => {
+            self.readyToDrop = false
             self.marker = null;
         }
     }

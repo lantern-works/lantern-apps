@@ -28,13 +28,29 @@
     opacity: 0.5;
 }
 
-#lx-app-xray-index .inline-btn  {
-    padding:2em;
-    border: 1px solid #EEE;
-    border-radius: 3px;
-    margin-right: 1em;
+#lx-app-xray-index header:hover {
+    background: #F9F9F9;
+    cursor: pointer;
 }
 
-#lx-app-xray-index .inline-btn:active {
-    background-color: #EEE;
+#lx-app-xray-index .buttons .button {
+    padding: 2em;
+    color: #3273dc;
+    border-color: #ECECEC;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01), 0 0 0 1px rgba(0, 0, 0, 0.01);
+    background-color: rgba(255,255,255,0.8);
+    max-width: 4em;
+    margin-left: 0.6em;
+    margin-top: 0.6em;
 }
+
+#lx-app-xray-index .button:last-child {
+    margin-right: 0.6em;
+}
+
+#lx-app-xray-index .buttons .button:hover {
+    border-color: #DDD;
+}
+#lx-app-xray-index progress::-webkit-progress-value {background-color: #3273dc !important;}
+#lx-app-xray-index progress::-moz-progress-bar {background-color: #3273dc !important;}
+#lx-app-xray-index progress {color: #3273dc;}

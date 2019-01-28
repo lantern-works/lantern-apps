@@ -1,21 +1,40 @@
 <div class="app-bottom" v-if="marker">
 	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
-        <header>
+        <header v-long-press="promptForDrop">
 	   	   <h1>{{marker_title}}</h1>
         </header>
-        <section>
-            <p>This marker has {{marker.editors.length}} {{ 'editor' | pluralize(marker.editors.length) }}.</p>
+
+
+        <section v-if="readyToDrop">
+            Are you sure you want to remove this marker? This will impact all other users relying on this marker, too.
         </section>
-        <section>
-            <span class="inline-btn"  @click="ping">
-                <i class="fa fa-flag"/>
-            </span>
-            <span class="inline-btn"  @click="move">
-                <i class="fa fa-arrows-alt"/>
-            </span>
-            <span class="inline-btn"  @click="drop">
-                <i class="fa fa-trash-alt"/>
-            </span>
+
+        <section v-if="readyToDrop">     
+            <div class="buttons is-centered">
+                <div class="button"  @click="drop">
+                    <i class="fa fa-trash-alt"/>
+                </div>
+            </div>
+        </section>
+
+        <section v-if="!readyToDrop">
+            <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
+        </section>
+        <section v-if="!readyToDrop">
+            <div class="buttons is-centered">
+                <div class="button"  @click="ping">
+                    <i class="fa fa-flag"/>
+                </div>
+                <div class="button"  @click="scoreUp">
+                    <i class="fa fa-caret-up"/>
+                </div>
+                <div class="button"  @click="scoreDown">
+                    <i class="fa fa-caret-down"/>
+                </div>
+                <div class="button"  @click="move">
+                    <i class="fa fa-arrows-alt"/>
+                </div>
+            </div>
         </section>
 	</div>
     <transition name="fade">
