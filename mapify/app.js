@@ -69,6 +69,7 @@
 
             // if this is a ping, open details on map
             if (e.key && e.key == 'p') {
+                LT.atlas.panToPoint(marker.latlng);
                 marker.focus()
             }
         }

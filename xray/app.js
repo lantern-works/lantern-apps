@@ -22,6 +22,11 @@
    
     //------------------------------------------------------------------------
     Interface.bindAll = () => {
+        
+        Object.keys(LT.atlas.markers).forEach((k)=> {
+            let marker = LT.atlas.markers[k];
+            marker.on("focus", Interface.selectMarker)
+        });
         LT.atlas.on("marker-add", (marker) => {
             marker.on("focus", Interface.selectMarker)
         })
@@ -35,8 +40,6 @@
     }
 
     Interface.selectMarker = (marker) => {
-        LT.atlas.panToPoint(marker.latlng);
-        
         if (self.marker === marker) {
             return;
         }
