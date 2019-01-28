@@ -1,0 +1,24 @@
+<div class="app-bottom" v-if="marker">
+	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        <header>
+	   	   <h1>{{marker_title}}</h1>
+        </header>
+        <section>
+            <p>This marker has {{marker.editors.length}} {{ 'editor' | pluralize(marker.editors.length) }}.</p>
+        </section>
+        <section>
+            <span class="inline-btn"  @click="ping">
+                <i class="fa fa-flag"/>
+            </span>
+            <span class="inline-btn"  @click="move">
+                <i class="fa fa-arrows-alt"/>
+            </span>
+            <span class="inline-btn"  @click="drop">
+                <i class="fa fa-trash-alt"/>
+            </span>
+        </section>
+	</div>
+    <transition name="fade">
+        <div v-if="marker" @click="close" class="app-mask"></div>
+     </transition>
+</div>

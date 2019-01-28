@@ -1,3 +1,7 @@
+/**
+* Renders markers to a map-based canvas and counts the number of markers
+* Also offers a search-box to find relevant markers
+*/
 (function() {
     
     var self;
@@ -45,26 +49,8 @@
             let marker = new LX.MarkerItem(e.id, e.data);
             //console.log("(mapify) show marker", marker.id, marker.geohash);
             marker.show();
-            marker.setIcons(Data.icons);         
-
-            // watch for selection so we can show details
-            marker.on("focus", () => {
-                //marker.inspect();
-                self.target_marker = marker;
-                self.show_target_marker_detail = true;
-
-                // let user close the focus any time by clicking elsewhere
-                LT.atlas.once("marker-click", Interface.clearMarker);
-                LT.atlas.once("map-click", Interface.clearMarker);
-            })                                 
-
-
+            marker.setIcons(Data.icons);
         }
-    }
-
-    Interface.clearMarker = () => {
-        self.target_marker = null;
-        self.show_target_marker_detail = false;
     }
 
     Interface.hideMarker = (e) => {
@@ -84,9 +70,7 @@
             // if this is a ping, open details on map
             if (e.key && e.key == 'p') {
                 marker.focus()
-                LT.atlas.panToPoint(marker.latlng);
             }
-
         }
     }
 
@@ -96,7 +80,7 @@
         LT.atlas.on("marker-add", () => {
             self.marker_count = LT.atlas.getMarkerCount();
         });
-
+ 
         LT.atlas.on("marker-remove", () => {
             self.marker_count = LT.atlas.getMarkerCount();
         });
@@ -145,32 +129,6 @@
     }
 
 
-    /**
-    * Computes a marker title based on available categories
-    */
-    Interface.getCategory = (marker, categories) => {
-        let title = "";
-        let cat = "";
-        for (var idx in categories) {
-            let item = categories[idx];
-            for (var idy in item) {
-                let tag = item[idy].tag;
-                if (marker.tags.indexOf(tag) != -1) {
-                    if (idx == "main") {
-                        cat = item[idy].label;
-                    }
-                    else {
-                        title = item[idy].label;
-                        return title;
-                    }
-                }
-                
-            }
-        }
-        return "Unknown Category";
-    }
-
-
     //------------------------------------------------------------------------
 
     Component.methods = {
@@ -178,12 +136,10 @@
             self.show_search = !self.show_search;
         },
         fitMap: () => {
-            
             if (self.snapback) {
                 self.snapback=false;
                 return LT.atlas.setViewFromCenterLocationCache();
             }
-            
             self.snapback = true; 
             LT.atlas.cacheCenterLocation(0);
             LT.atlas.fitMapToAllMarkers();
@@ -196,11 +152,8 @@
         closeMenu: () => {
             self.show_search = false;
         },
-        closeMarkerDetail: () => {
-            Interface.clearMarker()
-        },
         getCategory: (item) => {
-            return Interface.getCategory(item, Data.categories);
+            return item.getCategory(Data.categories)
         },
         getMarkerClass: (item) => {
             return "tag-icon " + item.tags.join(" ")
@@ -217,20 +170,12 @@
     };
 
     Component.data = {
-        "username": LT.user.username,
         "marker_count": -1,
-        "target_marker": null,
         "show_search": false,
         "snapback": false,
         "markers": LT.atlas.markers
     };
 
-    // compute marker titles
-    Component.computed = {};
-    Component.computed.marker_title = () => {
-        if (!self.target_marker) return null;
-        return Interface.getCategory(self.target_marker, Data.categories);
-    }
 
     return Component;
 }());

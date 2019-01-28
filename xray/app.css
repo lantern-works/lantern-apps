@@ -1,0 +1,34 @@
+#lx-app-xray-index {
+    height: 100%;
+    overflow: hidden;
+    background: none;
+    z-index: 1000;
+}
+
+#lx-app-xray-index .app-frame {
+    margin: 0 3%;
+    padding: 0em;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top: 1em solid #FFF;
+    position: absolute;
+    bottom: 0;
+    z-index: 1001;
+    width: 94%;
+    min-width: 320px;
+}
+
+#lx-app-xray-index section {
+    border-top: 1px solid #EEE;
+    padding: 1em;
+    text-align: center;
+}
+
+#lx-app-xray-index .app-mask {
+    opacity: 0.5;
+}
+
+#lx-app-xray-index .inline-btn  {
+    padding:2em;
+    border-radius: 3px;
+}

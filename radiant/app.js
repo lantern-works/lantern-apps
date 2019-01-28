@@ -24,41 +24,13 @@
                     {"event": "zoom-out", "icon": "search-minus"},
                     {"event": "marker-add", "icon": "plus-circle"}];
 
-    Data.menu.marker = [{"event": "zoom-in", "icon": "search-plus"},
-                    {"event": "marker-edit", "icon": "edit"},
-                    {"event": "marker-ping", "icon": "flag"}];
 
-
-
-    //------------------------------------------------------------------------
-    // explicit user actions, button pushes, choices
-    /**
-    * User tapped or clicked on a marker
-    */
-    Action.selectMarkerOnMap = (marker) => {
-
-        if (LT.view.menu.isLocked()) return;
-        if (Interface.waitingForMarkerMove()) return;
-        self.latlng = marker.latlng;
-        LT.atlas.removePointer();
-        self.target_marker = marker;
-        self.target_marker.focus()
-        Interface.openRadial(Data.menu.marker);
-
-        // close radial menu if another user modified our target
-        marker.once("update", (data) => {
-            LT.view.menu.close();
-            LT.view.menu.unlock();
-        });
-
-    }
 
     /**
     * User tapped or clicked on a point on the map
     */
     Action.selectPointOnMap = (e) => {
         if (LT.view.menu.isLocked()) return;
-        Interface.clearMarker();
         self.latlng = e.latlng;
         Interface.openRadial(Data.menu.map);   
     }
@@ -116,45 +88,6 @@
         self.menu = {};
     }
 
-
-
-    /**
-    * User wants to move marker
-    */
-    Action.relocateMarker = () => {
-
-        self.target_marker.layer.dragging.enable();
-        let original_icon = self.target_marker.getIcon();
-        self.target_marker.setIcon("arrows-alt");
-        self.menu = {};
-        self.target_marker.once("move", (val) => {
-
-            self.target_marker.setIcon(original_icon);
-            self.target_marker.layer.dragging.disable();
-            // add user to list of editors
-            self.target_marker.editor(LT.user.username);
-            self.target_marker.save(["editors","geohash"]);
-            setTimeout(() => {
-                LT.view.menu.unlock();
-            }, 300);
-        });
-
-    }
-
-    /**
-    * User wants to drop / remove marker
-    */
-    Action.dropMarker = () => {
-        self.menu = {};
-        self.target_marker.drop()
-            .then(() => {
-                let pkg = new LX.Package(Data.package, LT.db);
-                pkg.remove(self.target_marker).then(() => {
-                    Interface.clearMarker();
-                });
-                LT.view.menu.unlock();
-            });
-    }
 
     /**
     * User wants to choose menu from item,
@@ -219,15 +152,12 @@
     // interface controls
     Interface.bindAll = () => {
         // user intended actions
-        LT.atlas.on("marker-click", Action.selectMarkerOnMap);
         LT.atlas.on("map-click", Action.selectPointOnMap);
         LT.atlas.on("map-double-click", Interface.removePointer);
         LT.atlas.on("map-double-click", Action.zoomIn);
         LT.view.menu.on("zoom-in", Action.zoomToPoint);
         LT.view.menu.on("zoom-out", Action.zoomOut);
         LT.view.menu.on("marker-add", Interface.promptForNewMarker);
-        LT.view.menu.on("marker-edit", Interface.promptForEdit);
-        LT.view.menu.on("marker-ping", Interface.pingMarker)
 
         // side-effects of interactions guided by application
         LT.atlas.on("map-click-start", Interface.addPointer);
@@ -271,25 +201,6 @@
         self.menu.items = Data.categories.main;
     }
 
-    Interface.promptForEdit = () => {
-        LT.view.menu.lock();
-        self.menu = {title: "Marker"};
-        self.menu.items = [{"label":"Move", "method": Action.relocateMarker}, 
-                    {"label":"Delete", "method": Action.dropMarker}];
-    }
-
-    Interface.pingMarker = (marker) => {
-        self.target_marker.ping = [LT.user.username, new Date().getTime()]
-        self.target_marker.save(["ping"]).then(() => {
-            console.log(`(radiant) sent ping for marker ${self.target_marker.id}`)
-        })
-        LT.view.menu.unlock();
-    }
-
-
-    Interface.clearMarker = () => {
-        self.target_marker = null;
-    }
 
     Interface.addPointer = (e) => {
         if (LT.view.menu.isLocked()) return;
@@ -323,17 +234,12 @@
             LT.view.menu.unlock();                
         }
     }
-
-    Interface.waitingForMarkerMove = () => {
-        return (self.target_marker && self.target_marker.getIcon() == "arrows-alt");
-    }
  
 
 
     //------------------------------------------------------------------------
     // starting data for view
     Component.data = {
-        target_marker: null,
         draft_marker: null,
         prompt_draft_save: false,
         menu: {

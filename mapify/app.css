@@ -45,23 +45,6 @@
 
 
 /*----------------------------------------------------------------------------*/
-
-
-#lx-app-mapify-detail .app-frame {
-	margin: 0px 1.5em;
-	padding: 0em;
-	border-bottom-left-radius: 0px;
-	border-bottom-right-radius: 0px;
-	border-top: 1em solid #FFF;
-}
-
-#lx-app-mapify-detail section {
-	border-top: 1px solid #EEE;
-	padding: 1em;
-	text-align: center;
-}
-
-/*----------------------------------------------------------------------------*/
 #lx-app-mapify-search {
 	height: 100%;
 	overflow: hidden;

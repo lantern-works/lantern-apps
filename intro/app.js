@@ -9,6 +9,7 @@
     
         setTimeout(() => {
             LT.openOneApp("radiant");
+            LT.openOneApp("xray");
         }, 150);
     }
 
