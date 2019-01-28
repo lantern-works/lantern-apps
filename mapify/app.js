@@ -46,7 +46,9 @@
 
     Interface.showMarker = (e) => {
         if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
-            let marker = new LX.MarkerItem(e.id, e.data);
+            let marker = new LX.MarkerItem(LT.db);
+            marker.id = e.id;
+            marker.data = e.data
             //console.log("(mapify) show marker", marker.id, marker.geohash);
             marker.show();
             marker.setIcons(Data.icons);

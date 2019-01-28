@@ -62,14 +62,10 @@
     * User wants to save marker to database
     */
     Action.saveMarker = () => {
-
-
         if (self.is_saving) return;
-        
         self.is_saving = true;            
-
         self.draft_marker.layer.dragging.disable();
-
+        self.draft_marker.owner = LT.user.username;
         self.draft_marker.once("save", () => {
             // make sure save event is intended from this app
             console.log("(radiant) marker saved:", self.draft_marker.id);               
@@ -182,7 +178,7 @@
     }
 
     Interface.promptForNewMarker = () => {
-        self.draft_marker = new LX.MarkerItem();
+        self.draft_marker = new LX.MarkerItem(LT.db);
         self.draft_marker.geohash = LV.Geohash.encode(self.latlng.lat, self.latlng.lng);
         self.draft_marker.show();
         self.draft_marker.layer.dragging.enable();
