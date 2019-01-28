@@ -14,7 +14,6 @@
 
 
 
-
     //------------------------------------------------------------------------
     // data
     Data.package = "umbriel@0.0.1";
@@ -26,8 +25,10 @@
                     {"event": "marker-add", "icon": "plus-circle"}];
 
     Data.menu.marker = [{"event": "zoom-in", "icon": "search-plus"},
-                    {"event": "zoom-out", "icon": "search-minus"},
-                    {"event": "marker-edit", "icon": "edit"}];
+                    {"event": "marker-edit", "icon": "edit"},
+                    {"event": "marker-ping", "icon": "flag"}];
+
+
 
     //------------------------------------------------------------------------
     // explicit user actions, button pushes, choices
@@ -38,11 +39,10 @@
 
         if (LT.view.menu.isLocked()) return;
         if (Interface.waitingForMarkerMove()) return;
-        marker.inspect();
         self.latlng = marker.latlng;
         LT.atlas.removePointer();
         self.target_marker = marker;
-        self.show_target_marker_detail = true;
+        self.target_marker.focus()
         Interface.openRadial(Data.menu.marker);
 
         // close radial menu if another user modified our target
@@ -51,9 +51,6 @@
             LT.view.menu.unlock();
         });
 
-        LT.view.menu.on("close", () => {
-            self.show_target_marker_detail = false;
-        })
     }
 
     /**
@@ -63,7 +60,7 @@
         if (LT.view.menu.isLocked()) return;
         Interface.clearMarker();
         self.latlng = e.latlng;
-        Interface.openRadial(Data.menu.map);            
+        Interface.openRadial(Data.menu.map);   
     }
 
     /**
@@ -230,6 +227,7 @@
         LT.view.menu.on("zoom-out", Action.zoomOut);
         LT.view.menu.on("marker-add", Interface.promptForNewMarker);
         LT.view.menu.on("marker-edit", Interface.promptForEdit);
+        LT.view.menu.on("marker-ping", Interface.pingMarker)
 
         // side-effects of interactions guided by application
         LT.atlas.on("map-click-start", Interface.addPointer);
@@ -251,17 +249,13 @@
                 }
             })
         }
-
-
     }
 
     Interface.promptForNewMarker = () => {
-
         self.draft_marker = new LX.MarkerItem();
         self.draft_marker.geohash = LV.Geohash.encode(self.latlng.lat, self.latlng.lng);
         self.draft_marker.show();
         self.draft_marker.layer.dragging.enable();
-
 
         self.draft_marker.on("tag", () => {
             self.draft_marker.setIcons(Data.icons);
@@ -284,10 +278,17 @@
                     {"label":"Delete", "method": Action.dropMarker}];
     }
 
+    Interface.pingMarker = (marker) => {
+        self.target_marker.ping = [LT.user.username, new Date().getTime()]
+        self.target_marker.save(["ping"]).then(() => {
+            console.log(`(radiant) sent ping for marker ${self.target_marker.id}`)
+        })
+        LT.view.menu.unlock();
+    }
+
 
     Interface.clearMarker = () => {
         self.target_marker = null;
-        self.show_target_marker_detail = false;
     }
 
     Interface.addPointer = (e) => {
@@ -326,32 +327,6 @@
     Interface.waitingForMarkerMove = () => {
         return (self.target_marker && self.target_marker.getIcon() == "arrows-alt");
     }
-
-    /**
-    * Computes a marker title based on available categories
-    */
-    Interface.getCategory = (marker, categories) => {
-        let title = "";
-        let cat = "";
-        for (var idx in categories) {
-            let item = categories[idx];
-            for (var idy in item) {
-                let tag = item[idy].tag;
-                if (marker.tags.indexOf(tag) != -1) {
-                    if (idx == "main") {
-                        cat = item[idy].label;
-                    }
-                    else {
-                        title = item[idy].label;
-                        return cat + " — " + title;
-                    }
-                }
-                
-            }
-        }
-        return "Unknown Category";
-    }
-
  
 
 
@@ -359,7 +334,6 @@
     // starting data for view
     Component.data = {
         target_marker: null,
-        show_target_marker_detail: true,
         draft_marker: null,
         prompt_draft_save: false,
         menu: {
@@ -378,15 +352,6 @@
         saveMarker: Action.saveMarker,
         goToPreviousMenu: Action.goToPreviousMenu
     }
-
-
-    // compute marker titles
-    Component.computed = {};
-    Component.computed.marker_title = () => {
-        if (!self.target_marker) return null;
-        return Interface.getCategory(self.target_marker, Data.categories);
-    }
-
 
 
 

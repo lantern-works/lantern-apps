@@ -43,10 +43,28 @@
     Interface.showMarker = (e) => {
         if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
             let marker = new LX.MarkerItem(e.id, e.data);
-            console.log("(mapify) show marker", marker.id, marker.geohash);
+            //console.log("(mapify) show marker", marker.id, marker.geohash);
             marker.show();
-            marker.setIcons(Data.icons);                                          
+            marker.setIcons(Data.icons);         
+
+            // watch for selection so we can show details
+            marker.on("focus", () => {
+                //marker.inspect();
+                self.target_marker = marker;
+                self.show_target_marker_detail = true;
+
+                // let user close the focus any time by clicking elsewhere
+                LT.atlas.once("marker-click", Interface.clearMarker);
+                LT.atlas.once("map-click", Interface.clearMarker);
+            })                                 
+
+
         }
+    }
+
+    Interface.clearMarker = () => {
+        self.target_marker = null;
+        self.show_target_marker_detail = false;
     }
 
     Interface.hideMarker = (e) => {
@@ -62,6 +80,13 @@
             let obj = {}
             obj[e.key] = e.data
             marker.refresh(obj);
+
+            // if this is a ping, open details on map
+            if (e.key && e.key == 'p') {
+                marker.focus()
+                LT.atlas.panToPoint(marker.latlng);
+            }
+
         }
     }
 
@@ -145,7 +170,7 @@
         return "Unknown Category";
     }
 
- 
+
     //------------------------------------------------------------------------
 
     Component.methods = {
@@ -165,11 +190,14 @@
             
         },
         chooseFromMenu: (item) => {
-            LT.atlas.zoomToPoint(item.latlng);
+            LT.atlas.panToPoint(item.latlng);
             self.show_search = false;
         },
         closeMenu: () => {
             self.show_search = false;
+        },
+        closeMarkerDetail: () => {
+            Interface.clearMarker()
         },
         getCategory: (item) => {
             return Interface.getCategory(item, Data.categories);
@@ -189,11 +217,20 @@
     };
 
     Component.data = {
+        "username": LT.user.username,
         "marker_count": -1,
+        "target_marker": null,
         "show_search": false,
         "snapback": false,
         "markers": LT.atlas.markers
     };
+
+    // compute marker titles
+    Component.computed = {};
+    Component.computed.marker_title = () => {
+        if (!self.target_marker) return null;
+        return Interface.getCategory(self.target_marker, Data.categories);
+    }
 
     return Component;
 }());
