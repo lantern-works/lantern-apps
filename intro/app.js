@@ -40,10 +40,10 @@
             this.username = LT.user.username
             
             // make sure we have an organization to work with
-            let org = new LX.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
+            let org = new LD.Organization("lnt-dev", "Project Lantern Development Team", LT.db);
 
             // select package to follow data from
-            let pkg = new LX.Package(package_name, LT.db);
+            let pkg = new LD.Package(package_name, LT.db);
             pkg.publish().then(() => {
 
                 // let user watch the package for updates

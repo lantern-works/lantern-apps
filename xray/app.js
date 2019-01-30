@@ -86,7 +86,7 @@
     * User wants to drop / remove marker
     */
     Action.dropMarker = () => {
-        let pkg = new LX.Package(Data.package, LT.db);
+        let pkg = new LD.Package(Data.package, LT.db);
         pkg.remove(self.marker).then(() => {
             console.log(`(xray) removed marker ${self.marker.id}`)
             self.marker.drop()

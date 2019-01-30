@@ -46,7 +46,7 @@
 
     Interface.showMarker = (e) => {
         if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
-            let marker = new LX.MarkerItem(LT.db);
+            let marker = new LM.MarkerItem(LT.db);
             marker.id = e.id;
             marker.data = e.data
             //console.log("(mapify) show marker", marker.id, marker.geohash);
@@ -128,7 +128,15 @@
         zoom_out.appendChild(elem2);
 
         // // add locate control
-        L.control.locate(LC.leaflet_locatecontrol).addTo(LT.atlas.map);
+        L.control.locate( {
+            returnToPreviousBounds: true,
+            cacheLocation: true,
+            showCompass: true,
+            flyTo: false,
+            showPopup: false,
+            setView: 'untilPanOrZoom',
+            position: 'bottomright'
+        }).addTo(LT.atlas.map);
     }
 
 

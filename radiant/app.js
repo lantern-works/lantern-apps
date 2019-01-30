@@ -77,7 +77,7 @@
         });
 
         self.draft_marker.save().then(() => {
-            let pkg = new LX.Package(Data.package, LT.db);
+            let pkg = new LD.Package(Data.package, LT.db);
             pkg.add(self.draft_marker);
         })
         self.prompt_draft_save = false;
@@ -178,8 +178,8 @@
     }
 
     Interface.promptForNewMarker = () => {
-        self.draft_marker = new LX.MarkerItem(LT.db);
-        self.draft_marker.geohash = LV.Geohash.encode(self.latlng.lat, self.latlng.lng);
+        self.draft_marker = new LM.MarkerItem(LT.db);
+        self.draft_marker.geohash = LM.Location.toGeohash(self.latlng)
         self.draft_marker.show();
         self.draft_marker.layer.dragging.enable();
 
