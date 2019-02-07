@@ -39,6 +39,16 @@
 
 
 
+#map  .lx-marker.srv, .menu .tag-icon.srv  {
+	background: #363535;
+}
+
+#app-container .app .app-frame.srv {
+	border-color: #363535;
+}
+
+
+
 #map  .lx-marker.net, .menu .tag-icon.net  {
 	background: #73cc72;
 }

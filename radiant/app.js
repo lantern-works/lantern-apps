@@ -13,9 +13,6 @@
 
     // ------------------------------------------------------------------------
     // data
-    Data.package = 'umbriel@0.0.1'
-    Data.icons = { 'bed': 'bed', 'wtr': 'tint', 'net': 'globe', 'clo': 'tshirt', 'eat': 'utensils', 'pwr': 'plug', 'med': 'prescription-bottle-alt', 'ful': 'gas-pump', 'ven': 'building', 'sit': 'exclamation', 'obs': 'hand-paper' }
-    Data.categories = { 'main': [{ 'label': 'Place', 'tag': 'ven' }, { 'label': 'Resource', 'tag': 'rsc' }, { 'label': 'Obstacle', 'tag': 'obs' }, { 'label': 'Situation', 'tag': 'sit' }], 'rsc': [{ 'label': 'Bed', 'tag': 'bed' }, { 'label': 'Clothing', 'tag': 'clo' }, { 'label': 'Food', 'tag': 'eat' }, { 'label': 'Fuel', 'tag': 'ful' }, { 'label': 'Internet', 'tag': 'net' }, { 'label': 'Medical', 'tag': 'med' }, { 'label': 'Power', 'tag': 'pwr' }, { 'label': 'Water', 'tag': 'wtr' }], 'ven': [{ 'label': 'Shelter', 'tag': 'shl' }, { 'label': 'Relief Camp', 'tag': 'cmp' }, { 'label': 'Hospital', 'tag': 'hsp' }, { 'label': 'Operating Base', 'tag': 'bse' }], 'obs': [{ 'label': 'Road Debris', 'tag': 'rdb' }, { 'label': 'Detour', 'tag': 'dtr' }, { 'label': 'Destroyed', 'tag': 'dst' }], 'sit': [{ 'label': 'Power Outage', 'tag': 'pwo' }, { 'label': 'Fire', 'tag': 'fir' }, { 'label': 'Flooding', 'tag': 'fld' }, { 'label': 'Looting', 'tag': 'lot' }, { 'label': 'Closed by Authorities', 'tag': 'cba' }] }
     Data.menu = {}
     Data.menu.map = [{ 'event': 'zoom-in', 'icon': 'search-plus' },
         { 'event': 'zoom-out', 'icon': 'search-minus' },
@@ -63,7 +60,7 @@
         self.draft_marker.owner = LT.user.username
 
         self.draft_marker.save().then(() => {
-            let pkg = new LD.Package(Data.package, LT.db)
+            let pkg = new LD.Package(self.package, LT.db)
             pkg.add(self.draft_marker)
 
             // make sure save event is intended from this app
@@ -84,7 +81,7 @@
     Action.chooseFromMenu = (item) => {
         if (self.draft_marker) {
             // special actions for reporting menu
-            if (Data.categories.hasOwnProperty(item.tag)) {
+            if (self.categories.hasOwnProperty(item.tag)) {
                 if (self.menu.items && self.menu.title) {
                     self.previous = {
                         title: self.menu.title,
@@ -93,7 +90,7 @@
                     }
                 }
 
-                self.menu.items = Data.categories[item.tag]
+                self.menu.items = self.categories[item.tag]
                 self.menu.title = item.label
             } else if (self.previous.tag) {
                 self.draft_marker.tag(self.previous.tag)
@@ -149,13 +146,13 @@
         window.addEventListener('resize', Interface.closeRadial)
 
         // set up custom icons for menu
-        for (var idx in Data.categories) {
-            let menu = Data.categories[idx]
+        for (var idx in self.categories) {
+            let menu = self.categories[idx]
             menu.forEach((item) => {
-                if (Data.icons.hasOwnProperty(item.tag)) {
+                if (self.icons.hasOwnProperty(item.tag)) {
                     // only show sub-menu icons
-                    if (!Data.categories.hasOwnProperty(item.tag)) {
-                        item.icon_class = 'fa fa-' + Data.icons[item.tag]
+                    if (!self.categories.hasOwnProperty(item.tag)) {
+                        item.icon_class = 'fa fa-' + self.icons[item.tag]
                         item.tag_class = 'tag-icon ' + item.tag
                         if (idx != 'main') {
                             item.tag_class += ' ' + idx
@@ -173,17 +170,17 @@
         self.draft_marker.layer.dragging.enable()
 
         self.draft_marker.on('tag', () => {
-            self.draft_marker.setIcons(Data.icons)
+            self.draft_marker.setIcons(self.icons)
         })
 
         self.draft_marker.on('untag', () => {
-            self.draft_marker.setIcons(Data.icons)
+            self.draft_marker.setIcons(self.icons)
         })
 
         self.menu = {
             title: "What's here?"
         }
-        self.menu.items = Data.categories.main
+        self.menu.items = self.categories.main
     }
 
     Interface.addPointer = (e) => {

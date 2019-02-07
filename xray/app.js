@@ -13,11 +13,6 @@
         }
     }
     let Action = {}
-    let Data = {}
-
-    // ------------------------------------------------------------------------
-    Data.package = 'umbriel@0.0.1'
-    Data.categories = { 'main': [{ 'label': 'Place', 'tag': 'ven' }, { 'label': 'Resource', 'tag': 'rsc' }, { 'label': 'Obstacle', 'tag': 'obs' }, { 'label': 'Situation', 'tag': 'sit' }], 'rsc': [{ 'label': 'Bed', 'tag': 'bed' }, { 'label': 'Clothing', 'tag': 'clo' }, { 'label': 'Food', 'tag': 'eat' }, { 'label': 'Fuel', 'tag': 'ful' }, { 'label': 'Internet', 'tag': 'net' }, { 'label': 'Medical', 'tag': 'med' }, { 'label': 'Power', 'tag': 'pwr' }, { 'label': 'Water', 'tag': 'wtr' }], 'ven': [{ 'label': 'Shelter', 'tag': 'shl' }, { 'label': 'Relief Camp', 'tag': 'cmp' }, { 'label': 'Hospital', 'tag': 'hsp' }, { 'label': 'Operating Base', 'tag': 'bse' }], 'obs': [{ 'label': 'Road Debris', 'tag': 'rdb' }, { 'label': 'Detour', 'tag': 'dtr' }, { 'label': 'Destroyed', 'tag': 'dst' }], 'sit': [{ 'label': 'Power Outage', 'tag': 'pwo' }, { 'label': 'Fire', 'tag': 'fir' }, { 'label': 'Flooding', 'tag': 'fld' }, { 'label': 'Looting', 'tag': 'lot' }, { 'label': 'Closed by Authorities', 'tag': 'cba' }] }
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
@@ -81,7 +76,7 @@
     * User wants to drop / remove marker
     */
     Action.dropMarker = () => {
-        let pkg = new LD.Package(Data.package, LT.db)
+        let pkg = new LD.Package(self.package, LT.db)
         pkg.remove(self.marker).then(() => {
             self.marker.drop().then(() => {
                 self.marker = null
@@ -135,7 +130,7 @@
     Component.computed = {}
     Component.computed.marker_title = () => {
         if (!self.marker) return null
-        return self.marker.getCategory(Data.categories)
+        return self.marker.getCategory(self.categories)
     }
     return Component
 }())

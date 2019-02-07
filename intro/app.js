@@ -1,5 +1,6 @@
 (function () {
-    const package_name = 'umbriel@0.0.1'
+
+    var self
 
     // ------------------------------------------------------------------------
     const startMapApplications = function () {
@@ -26,6 +27,10 @@
         callback: function () {
         },
         mounted () {
+
+            if (self) return
+            self = this
+
             if (localStorage.hasOwnProperty('lx-app-intro-skip')) {
                 // we saved a map position, therefore must be a return user...
                 startMapApplications.call(this)
@@ -40,7 +45,7 @@
             let org = new LD.Organization('lnt-dev', 'Project Lantern Development Team', LT.db)
 
             // select package to follow data from
-            let pkg = new LD.Package(package_name, LT.db)
+            let pkg = new LD.Package(self.package, LT.db)
             pkg.publish().then(() => {
                 // let user watch the package for updates
                 LT.user.install(pkg).then(() => {
