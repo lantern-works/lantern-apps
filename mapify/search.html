@@ -6,7 +6,7 @@
 				<div :class="getMarkerClass(item)"> 
 					<i :class="getMarkerIconClass(item)"></i>
 				</div>
-				<span> {{ getCategory(item)}} </span>
+				<span> {{ item.label || getCategory(item)}} </span>
 				<span class="icon is-large">
 					<i class="fas fa-angle-right"></i>
 				</span>

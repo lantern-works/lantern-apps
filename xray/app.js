@@ -38,6 +38,7 @@
         }
         self.marker = marker
         marker.inspect()
+
     }
 
     // ------------------------------------------------------------------------
@@ -88,8 +89,10 @@
     // ------------------------------------------------------------------------
     Component.data = {
         'marker': null,
+        'label': null,
         'username': LT.user.username,
-        'readyToDrop': false
+        'readyToDrop': false,
+        'readyForLabel': false
     }
     Component.methods = {
         ping: Action.pingMarker,
@@ -111,6 +114,12 @@
         promptForDrop: () => {
             self.readyToDrop = true
         },
+        promptForLabel: () => {
+            // allow user to define name
+            self.readyForLabel = !self.readyForLabel
+            self.label = self.marker.label
+
+        },
         scoreDown: () => {
             if (self.marker.score < 0.10) {
                 return
@@ -120,6 +129,12 @@
                 self.marker.score = 0
             }
             self.marker.save(['score'])
+        },
+        saveLabel: () => {
+            console.log(self.label)
+            self.readyForLabel = false
+            self.marker.label = self.label
+            self.marker.save(['label'])
         },
         close: () => {
             self.readyToDrop = false

@@ -18,17 +18,22 @@
     min-width: 200px;
 }
 
-#lx-app-xray-index section {
+#lx-app-xray-index section, #lx-app-xray-index form {
     border-top: 1px solid #EEE;
     padding: 2em;
     text-align: center;
+}
+
+#lx-app-xray-index form .button {
+    width: 100%;
+    margin-top: 1em;
 }
 
 #lx-app-xray-index .app-mask {
     opacity: 0.5;
 }
 
-#lx-app-xray-index header:hover {
+#lx-app-xray-index header:hover, #lx-app-xray-index .marker-label:hover {
     background: #F9F9F9;
     cursor: pointer;
 }
