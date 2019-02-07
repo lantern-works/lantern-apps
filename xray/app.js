@@ -138,6 +138,7 @@
         },
         close: () => {
             self.readyToDrop = false
+            self.readyForLabel = false
             self.marker = null
         }
     }

@@ -1,4 +1,10 @@
 
+#map .lx-marker.usr, .menu .tag-icon.usr {
+	background-color: #1051ba;
+}
+#app-container .app .app-frame.usr {
+	border-color: #1051ba;
+}
 
 #map .lx-marker.ven,  .menu .tag-icon.ven {
 	background-color: #3273dc;
@@ -96,10 +102,21 @@
 
 
 
-#map .lx-marker.obs, .menu .tag-icon.obs {
+#map .lx-marker.sit, .menu .tag-icon.sit {
+	background-color: #FFB000;
+}
+#app-container .app .app-frame.sit {
+	border-color: #FFB000;
+}
+
+
+#map .lx-marker.rdb, .menu .tag-icon.rdb, 
+	#map .lx-marker.dtr,.menu .tag-icon.dtr,  
+	#map .lx-marker.cba,.menu .tag-icon.cba,  
+ 	#map .lx-marker.dst, .menu .tag-icon.dst {
 	background: #ff844d;
 }
-#app-container .app .app-frame.obs {
+#app-container .app .app-frame.rdb {
 	border-color: #ff844d;
 }
 
@@ -113,10 +130,4 @@
 	border-color: #c075c9;
 }
 
-#map .lx-marker.sit, .menu .tag-icon.sit {
-	background-color: #FFB000;
-}
-#app-container .app .app-frame.sit {
-	border-color: #FFB000;
-}
 

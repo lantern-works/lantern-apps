@@ -11,8 +11,22 @@
     "ful": "gas-pump",
     "ven": "building",
     "sit": "exclamation",
-    "obs": "hand-paper",
-    "srv": "server"
+    "dst": "hand-paper",
+    "rdb": "hand-paper",
+    "dtr": "hand-paper",
+    "pwo": "exclamation",
+    "fir": "exclamation",
+    "fld": "exclamation",
+    "lot": "exclamation",
+    "cba": "hand-paper",
+    "srv": "server",
+    "usr": "user",
+    "drv": "truck",
+    "cmd": "user-alt",
+    "doc": "user-md",
+    "ctz": "user",
+    "agn": "clipboard",
+    "inj": "user-injured"
   },
   "categories": {
     "main": [
@@ -25,12 +39,12 @@
         "tag": "rsc"
       },
       {
-        "label": "Obstacle",
-        "tag": "obs"
-      },
-      {
         "label": "Situation",
         "tag": "sit"
+      },
+      {
+        "label": "Person",
+        "tag": "usr"
       }
     ],
     "rsc": [
@@ -89,7 +103,35 @@
         "tag": "bse"
       }
     ],
-    "obs": [
+    "usr": [
+   
+    
+      {
+        "label": "Commander",
+        "tag": "cmd"
+      },
+      {
+        "label": "Driver",
+        "tag": "drv"
+      },  
+      {
+        "label": "Surveyor",
+        "tag": "agn"
+      }, 
+      {
+        "label": "Doctor",
+        "tag": "doc"
+      },         
+      {
+        "label": "Citizen",
+        "tag": "ctz"
+      },
+      {
+        "label": "Injured",
+        "tag": "inj"
+      }
+    ],
+    "sit": [
       {
         "label": "Road Debris",
         "tag": "rdb"
@@ -101,9 +143,11 @@
       {
         "label": "Destroyed",
         "tag": "dst"
-      }
-    ],
-    "sit": [
+      },
+      {
+        "label": "Closed by Authorities",
+        "tag": "cba"
+      },
       {
         "label": "Power Outage",
         "tag": "pwo"
@@ -119,10 +163,6 @@
       {
         "label": "Looting",
         "tag": "lot"
-      },
-      {
-        "label": "Closed by Authorities",
-        "tag": "cba"
       }
     ]
   }
