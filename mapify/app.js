@@ -145,7 +145,10 @@
             LT.atlas.map.zoomOut()
         },
         chooseFromMenu: (item) => {
-            LT.atlas.panToPoint(item.latlng, 4) // zoom after
+            LT.atlas.panToPoint(item.latlng) // zoom after
+            setTimeout(() => {
+                LT.atlas.map.zoomIn(4)
+            }, 500)
             self.show_search = false
         },
         closeMenu: () => {
