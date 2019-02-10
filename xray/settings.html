@@ -4,14 +4,16 @@
         <header>
            <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
         </header>
-
+        <section class="marker-label" v-if="!readyForLabel && marker.label">
+            {{ marker.label }}
+        </section>
         <ul class="menu">
             <li @click="promptForLabel">
-                <span v-if="marker.label">Change Marker Label</span>
-                <span v-if="!marker.label">Label This Marker</span>
+                <span v-if="marker.label">Change Label</span>
+                <span v-if="!marker.label">Add Label</span>
             </li>
             <li @click="move">
-                <span> Relocate Marker On Map</span>
+                <span> Relocate On Map</span>
             </li>
             <li @click="approve" v-if="!marker.hasSignature(username)">
                 <span> Mark As Verified</span>

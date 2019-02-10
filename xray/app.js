@@ -33,12 +33,12 @@
     }
 
     Interface.selectMarker = (marker) => {
+        self.readyForSettings = false
         if (self.marker === marker) {
             return
         }
         self.marker = marker
         marker.inspect()
-        self.rating = marker.trustability
     }
 
     // ------------------------------------------------------------------------
@@ -177,7 +177,6 @@
             self.readyForLabel = false
             self.readyForSettings = false
             self.marker = null
-            self.rating = null
         }
     }
     // compute marker titles

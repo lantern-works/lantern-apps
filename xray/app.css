@@ -17,10 +17,15 @@
     bottom: 0;
 }
 
-#lx-app-xray-index section, #lx-app-xray-index form {
-    border-top: 1px solid #EEE;
-    padding: 2em;
+#lx-app-xray-index section, #lx-app-xray-settings section, #lx-app-xray-index form {
     text-align: center;
+    border-top: 1px solid #EEE;
+    padding: 1em;
+}
+
+#lx-app-xray-settings section {
+    border-top: none;
+    border-bottom: 1px solid #EEE;
 }
 
 #lx-app-xray-index form .button {
