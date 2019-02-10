@@ -1,8 +1,8 @@
 <div class="app-top" v-if="show_search">	
-	<div class="app-frame">
+	<div class="app-frame menu-app-frame">
 		<h1>{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}</h1>
 		<ul class="menu">
-			<li v-for="item in markers" v-if="item" @click="chooseFromMenu(item)" >
+			<li v-for="item in markers" v-if="item && item.mode != 'draft'" @click="chooseFromMenu(item)" v-bind:data-marker-id="item.id">
 				<div :class="getMarkerClass(item)"> 
 					<i :class="getMarkerIconClass(item)"></i>
 				</div>

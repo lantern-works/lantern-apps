@@ -1,0 +1,30 @@
+<div class="app-bottom" v-if="marker && readyForSettings">
+
+    <div :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        <header>
+           <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
+        </header>
+
+        <ul class="menu">
+            <li @click="promptForLabel">
+                <span v-if="marker.label">Change Marker Label</span>
+                <span v-if="!marker.label">Label This Marker</span>
+            </li>
+            <li @click="move">
+                <span> Relocate Marker On Map</span>
+            </li>
+            <li @click="approve" v-if="!marker.hasSignature(username)">
+                <span> Mark As Verified</span>
+            </li>
+            <li @click="dispute" v-if="marker.hasSignature(username)">
+                <span> Remove My Verification</span>
+            </li>
+            <li @click="promptForDrop">
+                <span> Remove Marker</span>
+            </li>
+            <li class="inline-btn" @click="closeSettingsMenu">
+                Close
+            </li>
+        </ul>
+    </div>
+</div>

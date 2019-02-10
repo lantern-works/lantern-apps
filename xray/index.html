@@ -1,7 +1,7 @@
-<div class="app-bottom" v-if="marker">
+<div class="app-bottom" v-if="marker && !readyForSettings">
 	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
-        <header v-long-press="promptForDrop" @click="promptForLabel">
-	   	   <h1>{{marker_title}}</h1>
+        <header @click="promptForLabel">
+	   	   <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
         </header>
 
         <form class="marker-label-form" v-if="readyForLabel" v-on:submit.prevent="saveLabel">
@@ -11,7 +11,7 @@
             </div>
         </form>
 
-        <section class="marker-label" v-if="!readyForLabel && marker.label" @click="promptForLabel">
+        <section class="marker-label" v-if="!readyForLabel && marker.label">
             {{ marker.label }}
         </section>
 
@@ -27,22 +27,22 @@
             </div>
         </section>
 
-        <section v-if="!readyToDrop">
-            <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
+        <section v-if="!readyToDrop" class="score" @click="scoreUp" >
+            <progress @click="scoreDown" class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
         <section v-if="!readyToDrop">
             <div class="buttons is-centered">
                 <div class="button"  @click="ping">
                     <i class="fa fa-flag"/>
-                </div>
+                </div>            
                 <div class="button"  @click="scoreUp">
                     <i class="fa fa-caret-up"/>
                 </div>
                 <div class="button"  @click="scoreDown">
                     <i class="fa fa-caret-down"/>
                 </div>
-                <div class="button"  @click="move">
-                    <i class="fa fa-arrows-alt"/>
+                <div class="button"  @click="showSettings">
+                    <i class="fa fa-cog"/>
                 </div>
             </div>
         </section>

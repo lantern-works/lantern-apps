@@ -4,8 +4,10 @@
     background: none;
     z-index: 1000;
 }
-
-#lx-app-xray-index .app-frame {
+#lx-app-xray-index .app-frame, #lx-app-xray-settings .app-frame {
+    z-index: 1001;
+    width: 94%;
+    min-width: 200px;
     margin: 0 3%;
     padding: 0em;
     border-bottom-left-radius: 0px;
@@ -13,9 +15,6 @@
     border-top: 1em solid #FFF;
     position: absolute;
     bottom: 0;
-    z-index: 1001;
-    width: 94%;
-    min-width: 200px;
 }
 
 #lx-app-xray-index section, #lx-app-xray-index form {
@@ -33,7 +32,7 @@
     opacity: 0.5;
 }
 
-#lx-app-xray-index header:hover, #lx-app-xray-index .marker-label:hover {
+#lx-app-xray-index header:hover {
     background: #F9F9F9;
     cursor: pointer;
 }
@@ -56,6 +55,20 @@
 #lx-app-xray-index .buttons .button:hover {
     border-color: #DDD;
 }
+
 #lx-app-xray-index progress::-webkit-progress-value {background-color: #3273dc !important;}
 #lx-app-xray-index progress::-moz-progress-bar {background-color: #3273dc !important;}
 #lx-app-xray-index progress {color: #3273dc;}
+
+#lx-app-xray-settings .rating {
+    padding: 1em;
+    text-align: center;
+    border-bottom: 1px solid #EEE;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+#lx-app-xray-settings {
+    z-index: 1000;
+}

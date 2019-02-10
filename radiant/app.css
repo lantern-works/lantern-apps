@@ -4,7 +4,6 @@
 	min-width: 320px;
 }
 
-
 #lx-app-radiant-index .app-frame {
 	padding: 0em;
 }
@@ -19,17 +18,6 @@
 #lx-app-radiant-menu {
 	max-width: 94%;
 	min-width: 320px;
-}
-
-#lx-app-radiant-menu .app-frame {
-	padding: 0em;
-	margin-bottom: 0;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
-
-#lx-app-radiant-menu h1 {
-	border-bottom: 1px solid #EEE;
 }
 
 

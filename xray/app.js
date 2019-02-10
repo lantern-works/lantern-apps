@@ -38,7 +38,7 @@
         }
         self.marker = marker
         marker.inspect()
-
+        self.rating = marker.trustability
     }
 
     // ------------------------------------------------------------------------
@@ -47,6 +47,7 @@
     * User wants to move marker
     */
     Action.relocateMarker = () => {
+        self.readyForSettings = false
         targetMarker = self.marker
         targetMarker.layer.dragging.enable()
         let original_icon = self.marker.getIcon()
@@ -77,6 +78,7 @@
     * User wants to drop / remove marker
     */
     Action.dropMarker = () => {
+        self.readyForSettings = false
         let pkg = new LD.Package(self.package, LT.db)
         pkg.remove(self.marker).then(() => {
             self.marker.drop().then(() => {
@@ -85,14 +87,36 @@
             })
         })
     }
+    
+    /**
+    * User wants to agree with accuracy of data connected with this marker
+    */
+    Action.approveMarker = () => {      
+        self.readyForSettings = false
+        self.marker.approve(LT.user.username).then(() => {
+            console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)      
+        })
+    }
+    
+    /**
+    * User wants to dispute accuracy of data connected with this marker
+    */
+    Action.disputeMarker = () => {
+        self.readyForSettings = false
+        self.marker.dispute(LT.user.username).then(() => {
+            console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)
+        })
+    }
 
     // ------------------------------------------------------------------------
     Component.data = {
+        'rating': null,
         'marker': null,
         'label': null,
         'username': LT.user.username,
         'readyToDrop': false,
-        'readyForLabel': false
+        'readyForLabel': false,
+        'readyForSettings': false
     }
     Component.methods = {
         ping: Action.pingMarker,
@@ -112,9 +136,12 @@
             self.marker.save(['score'])
         },
         promptForDrop: () => {
+            self.readyForSettings = false
+            self.readyForLabel = false
             self.readyToDrop = true
         },
         promptForLabel: () => {
+            self.readyForSettings = false
             // allow user to define name
             self.readyForLabel = !self.readyForLabel
             self.label = self.marker.label
@@ -136,10 +163,21 @@
             self.marker.label = self.label
             self.marker.save(['label'])
         },
+        approve: Action.approveMarker,
+        dispute: Action.disputeMarker,
+        showSettings: () => {
+            console.log("show settings")
+            self.readyForSettings = true
+        },
+        closeSettingsMenu: () => {
+            self.readyForSettings = false
+        },
         close: () => {
             self.readyToDrop = false
             self.readyForLabel = false
+            self.readyForSettings = false
             self.marker = null
+            self.rating = null
         }
     }
     // compute marker titles
