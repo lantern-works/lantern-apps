@@ -18,10 +18,14 @@
     Interface.bindAll = () => {
         Object.keys(LT.atlas.markers).forEach((k) => {
             let marker = LT.atlas.markers[k]
-            marker.on('focus', Interface.selectMarker)
+            if (marker) {
+                marker.on('focus', Interface.selectMarker)
+            }
         })
         LT.atlas.on('marker-add', (marker) => {
-            marker.on('focus', Interface.selectMarker)
+            if (marker) {
+                marker.on('focus', Interface.selectMarker)
+            }
         })
         LT.atlas.on('marker-click', Interface.selectMarker)
         LT.user.feed.on('drop', (e) => {
@@ -34,6 +38,8 @@
 
     Interface.selectMarker = (marker) => {
         self.readyForSettings = false
+        self.readyToDrop = false
+        self.readyForLabel = false
         if (self.marker === marker) {
             return
         }

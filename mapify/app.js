@@ -90,7 +90,9 @@
             if (self.marker_count == -1) {
                 self.marker_count = 0
             }
-        }, 500)
+            LT.atlas.setViewFromCenterLocationCache()
+        }, 750)
+        
     }
 
     /**
@@ -140,9 +142,10 @@
             self.snapback = true
             LT.atlas.cacheCenterLocation(0)
             LT.atlas.fitMapToAllMarkers()
+            LT.atlas.map.zoomOut()
         },
         chooseFromMenu: (item) => {
-            LT.atlas.panToPoint(item.latlng)
+            LT.atlas.panToPoint(item.latlng, 4) // zoom after
             self.show_search = false
         },
         closeMenu: () => {
