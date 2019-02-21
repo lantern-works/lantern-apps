@@ -5,17 +5,17 @@
     // ------------------------------------------------------------------------
     const startMapApplications = () => {
         LT.closeOneApp('intro')
+        LT.openOneApp('radiant')
         self.show = false
     }
 
     const signIn = () => {
-        LT.user.authOrRegister()
+        return LT.user.authOrRegister()
     }
 
     const authenticated = (user) => {
+
         startMapApplications.call(self)
-        self.username = user.username
-            
         // make sure we have an organization to work with
         let org = new LD.Organization('lnt-dev', 'Project Lantern Development Team', LT.db)
 
@@ -23,9 +23,7 @@
         let pkg = new LD.Package(self.package, LT.db)
         pkg.publish().then(() => {
             // let user watch the package for updates
-            LT.user.install(pkg).then(() => {
-                LT.openOneApp('mapify')
-            })
+            LT.user.install(pkg)
 
             // link our organization
             org.register()
@@ -43,8 +41,7 @@
             'title': '',
             'slide': 0,
             'max_slide': 3,
-            'show': false,
-            'username': null
+            'show': false
         },
         callback: function () {
         },
@@ -53,13 +50,13 @@
             self = this
             if (localStorage.hasOwnProperty('lx-app-intro-skip') || localStorage.hasOwnProperty('lx-auth') ) {
                 // sign in right away
-                signIn()
+                signIn().then(startMapApplications())
             }
             else {
                 this.title = 'Lantern Network'
                 this.show = true
+                LT.withUser(authenticated)
             }
-            LT.withUser(authenticated)
         },
         open: true
     }
