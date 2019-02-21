@@ -191,5 +191,7 @@
         if (!self.marker) return null
         return self.marker.getCategory(self.categories)
     }
+
+    Component.open = true
     return Component
 }())

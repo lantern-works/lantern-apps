@@ -3,14 +3,36 @@
     var self
 
     // ------------------------------------------------------------------------
-    const startMapApplications = function () {
+    const startMapApplications = () => {
         LT.closeOneApp('intro')
-        this.show = false
+        self.show = false
+    }
 
-        setTimeout(() => {
-            LT.openOneApp('radiant')
-            LT.openOneApp('xray')
-        }, 150)
+    const signIn = () => {
+        LT.user.authOrRegister()
+    }
+
+    const authenticated = (user) => {
+        startMapApplications.call(self)
+        self.username = user.username
+            
+        // make sure we have an organization to work with
+        let org = new LD.Organization('lnt-dev', 'Project Lantern Development Team', LT.db)
+
+        // select package to follow data from
+        let pkg = new LD.Package(self.package, LT.db)
+        pkg.publish().then(() => {
+            // let user watch the package for updates
+            LT.user.install(pkg).then(() => {
+                LT.openOneApp('mapify')
+            })
+
+            // link our organization
+            org.register()
+                .then(() => {
+                    org.claim(pkg)
+                })
+        })
     }
 
     // ------------------------------------------------------------------------
@@ -27,45 +49,23 @@
         callback: function () {
         },
         mounted () {
-
             if (self) return
             self = this
-
-            if (localStorage.hasOwnProperty('lx-app-intro-skip')) {
-                // we saved a map position, therefore must be a return user...
-                startMapApplications.call(this)
-            } else {
+            if (localStorage.hasOwnProperty('lx-app-intro-skip') || localStorage.hasOwnProperty('lx-auth') ) {
+                // sign in right away
+                signIn()
+            }
+            else {
                 this.title = 'Lantern Network'
                 this.show = true
             }
-
-            this.username = LT.user.username
-
-            // make sure we have an organization to work with
-            let org = new LD.Organization('lnt-dev', 'Project Lantern Development Team', LT.db)
-
-            // select package to follow data from
-            let pkg = new LD.Package(self.package, LT.db)
-            pkg.publish().then(() => {
-                // let user watch the package for updates
-                LT.user.install(pkg).then(() => {
-                    LT.openOneApp('mapify')
-                })
-
-                // link our organization
-                org.register()
-                    .then(() => {
-                        org.claim(pkg)
-                    })
-            })
+            LT.withUser(authenticated)
         },
         open: true
     }
 
     // ------------------------------------------------------------------------
-    config.methods.doComplete = function () {
-        startMapApplications.call(this)
-    }
+    config.methods.doComplete = signIn
 
     config.methods.doContinue = function () {
         this.$data.slide++

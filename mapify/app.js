@@ -16,19 +16,21 @@
 
     // ------------------------------------------------------------------------
     Interface.refresh = () => {
-        LT.user.feed.forEachItem((v, k) => {
-            if (v && v.g && v.o && v.t) {
-                // this is a marker
-                if (!LT.atlas.markers.hasOwnProperty(k)) {
-                    Interface.showMarker({ id: k, data: v })
+        LT.withUser(user => {
+            user.feed.forEachItem((v, k) => {
+                if (v && v.g && v.o && v.t) {
+                    // this is a marker
+                    if (!LT.atlas.markers.hasOwnProperty(k)) {
+                        Interface.showMarker({ id: k, data: v })
+                    } else {
+                        // exists in UI
+                        let marker = LT.atlas.markers[k]
+                        marker.refresh(v)
+                    }
                 } else {
-                    // exists in UI
-                    let marker = LT.atlas.markers[k]
-                    marker.refresh(v)
+                    Interface.hideMarker({ id: k })
                 }
-            } else {
-                Interface.hideMarker({ id: k })
-            }
+            })
         })
     }
 
@@ -97,20 +99,19 @@
         // sync with all available markers from user-specific feed
         // this is pre-filtered based on installed packages
         Interface.refresh()
-        LT.user.feed.on('change', Interface.refreshMarker)
-        LT.user.feed.on('add', Interface.showMarker)
-        LT.user.feed.on('drop', Interface.hideMarker)
-
-        // filter by default to first selected type in search menu
-        Interface.searchFilter(self.types[0])
-
-        setTimeout(() => {
-            if (self.marker_count == -1) {
-                self.marker_count = 0
-            }
-            LT.atlas.setViewFromCenterLocationCache()
-        }, 750)
-        
+        LT.withUser(user => {        
+            user.feed.on('change', Interface.refreshMarker)
+            user.feed.on('add', Interface.showMarker)
+            user.feed.on('drop', Interface.hideMarker)
+                
+            setTimeout(() => {
+                if (self.marker_count == -1) {
+                    self.marker_count = 0
+                }
+                // filter by default to first selected type in search menu
+                Interface.searchFilter(self.types[0])
+            }, 750)
+        })
     }
 
     /**
@@ -222,6 +223,8 @@
     }
 
     Component.data.filter = Component.data.types[0]
+
+    Component.open = true
 
     return Component
 }())
