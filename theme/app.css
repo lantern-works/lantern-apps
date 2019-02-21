@@ -1,3 +1,11 @@
+.button.is-info {
+	background-color: #3273dc
+}
+
+.button.is-info:hover {
+	background-color: #3273dc;
+}
+
 #map .lx-marker.usr, .menu .tag-icon.usr {
 	background-color: #1051ba;
 }

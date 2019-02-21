@@ -27,8 +27,8 @@
             </div>
         </section>
 
-        <section v-if="!readyToDrop" class="score" @click="scoreUp" >
-            <progress @click="scoreDown" class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
+        <section v-if="!readyToDrop" class="score">
+            <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
         <section v-if="!readyToDrop">
             <div class="buttons is-centered">

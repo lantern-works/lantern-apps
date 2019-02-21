@@ -61,3 +61,17 @@
 	opacity: 0.5;
 	z-index: -100;
 }
+
+#lx-app-mapify-search .menu li span {
+	white-space: nowrap;
+}
+
+#lx-app-mapify-search #search-button-bar {
+	padding: 1em;
+	border-bottom: 1px solid #EEE;
+}
+
+#lx-app-mapify-search #search-button-bar .button {
+	min-width: 6em;
+	width: 30%;
+}

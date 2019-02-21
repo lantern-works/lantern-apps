@@ -65,6 +65,21 @@
         }
     }
 
+    Interface.searchFilter = (type) => {
+        self.filter = type
+        let list = []
+        Object.keys(LT.atlas.markers).forEach(key => {
+            let item = LT.atlas.markers[key]
+            if (item) {
+                let intersection = type.match.filter(x => item.tags.includes(x));
+                if (intersection.length) {
+                    list.push(item)
+                }
+            }
+        })
+        self.markers = list
+    }
+
     Interface.bindAll = () => {
         // keep the UI up-to-date based on changes to marker count
         LT.atlas.on('marker-add', () => {
@@ -85,6 +100,9 @@
         LT.user.feed.on('change', Interface.refreshMarker)
         LT.user.feed.on('add', Interface.showMarker)
         LT.user.feed.on('drop', Interface.hideMarker)
+
+        // filter by default to first selected type in search menu
+        Interface.searchFilter(self.types[0])
 
         setTimeout(() => {
             if (self.marker_count == -1) {
@@ -146,6 +164,8 @@
         },
         chooseFromMenu: (item) => {
             LT.atlas.panToPoint(item.latlng) // zoom after
+            // open up item details
+            item.focus()
             setTimeout(() => {
                 LT.atlas.map.zoomIn(4)
             }, 500)
@@ -168,15 +188,40 @@
                 }
             })
             return cls
+        },
+        searchFilter: Interface.searchFilter,
+        getSearchButtonClass: (type) => {
+            if (type.label == self.filter.label) {
+                return 'button is-selected is-info'
+            }
+            else {
+                return 'button'
+            }
         }
     }
 
     Component.data = {
+        'markers': [],
         'marker_count': -1,
         'show_search': false,
         'snapback': false,
-        'markers': LT.atlas.markers
+        'types': [
+            {
+                'label': 'Reports',
+                'match': ['rsc', 'sit']
+            },
+            {
+                'label': 'Places',
+                'match': ['ven']
+            },
+            {
+                'label': 'People',
+                'match': ['usr']
+            }
+        ]
     }
+
+    Component.data.filter = Component.data.types[0]
 
     return Component
 }())
