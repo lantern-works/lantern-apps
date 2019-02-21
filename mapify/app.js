@@ -9,7 +9,8 @@
         mounted () {
             if (self) return
             self = this
-            Interface.bindAll()
+            // wait for atlas and then bind map interface
+            LT.on('atlas',  Interface.bindAll)
         }
     }
     let Action = {}
@@ -82,36 +83,38 @@
         self.markers = list
     }
 
-    Interface.bindAll = () => {
-        // keep the UI up-to-date based on changes to marker count
-        LT.atlas.on('marker-add', () => {
-            self.marker_count = LT.atlas.getMarkerCount()
-        })
-
-        LT.atlas.on('marker-remove', () => {
-            self.marker_count = LT.atlas.getMarkerCount()
-        })
+    Interface.bindAll = (atlas) => {
+ 
+        // visualize known markers
+        // sync with all available markers from user-specific feed
+        // this is pre-filtered based on installed packages  
 
         // add map controls
         Interface.setupControls()
-
-        // visualize known markers
-        // sync with all available markers from user-specific feed
-        // this is pre-filtered based on installed packages
+        
         Interface.refresh()
-        LT.withUser(user => {        
+        // keep the UI up-to-date based on changes to marker count
+        atlas.on('marker-add', () => {
+            self.marker_count = atlas.getMarkerCount()
+        })
+        atlas.on('marker-remove', () => {
+            self.marker_count = atlas.getMarkerCount()
+        })
+        LT.withUser( user => {
             user.feed.on('change', Interface.refreshMarker)
             user.feed.on('add', Interface.showMarker)
             user.feed.on('drop', Interface.hideMarker)
-                
-            setTimeout(() => {
-                if (self.marker_count == -1) {
-                    self.marker_count = 0
-                }
-                // filter by default to first selected type in search menu
-                Interface.searchFilter(self.types[0])
-            }, 750)
         })
+
+
+        setTimeout(() => {
+            if (self.marker_count == -1) {
+                self.marker_count = 0
+            }
+            // filter by default to first selected type in search menu
+            Interface.searchFilter(self.types[0])
+        }, 750)
+            
     }
 
     /**

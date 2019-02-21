@@ -9,25 +9,25 @@
         mounted () {
             if (self) return
             self = this
-            Interface.bindAll()
+            LT.withAtlas(Interface.bindAll)
         }
     }
     let Action = {}
 
     // ------------------------------------------------------------------------
-    Interface.bindAll = () => {
-        Object.keys(LT.atlas.markers).forEach((k) => {
-            let marker = LT.atlas.markers[k]
+    Interface.bindAll = (atlas) => {
+        Object.keys(atlas.markers).forEach((k) => {
+            let marker = atlas.markers[k]
             if (marker) {
                 marker.on('focus', Interface.selectMarker)
             }
         })
-        LT.atlas.on('marker-add', (marker) => {
+        atlas.on('marker-add', (marker) => {
             if (marker) {
                 marker.on('focus', Interface.selectMarker)
             }
         })
-        LT.atlas.on('marker-click', Interface.selectMarker)
+        atlas.on('marker-click', Interface.selectMarker)
         LT.user.feed.on('drop', (e) => {
             if (self.marker && e.id === self.marker.id) {
                 // don't display a marker that has been dropped

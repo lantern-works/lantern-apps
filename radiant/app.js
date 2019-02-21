@@ -5,7 +5,7 @@
         mounted () {
             if (self) return
             self = this
-            Interface.bindAll()
+            LT.withAtlas(Interface.bindAll)
         }
     }
     let Action = {}
@@ -132,19 +132,18 @@
 
     // ------------------------------------------------------------------------
     // interface controls
-    Interface.bindAll = () => {
+    Interface.bindAll = (atlas) => {
         // user intended actions
-        LT.atlas.on('map-click', Action.selectPointOnMap)
-        LT.atlas.on('map-double-click', Interface.removePointer)
-        LT.atlas.on('map-double-click', Action.zoomIn)
+        atlas.on('map-click', Action.selectPointOnMap)
+        atlas.on('map-double-click', Interface.removePointer)
+        atlas.on('map-double-click', Action.zoomIn)
         LT.view.menu.on('zoom-in', Action.zoomToPoint)
         LT.view.menu.on('zoom-out', Action.zoomOut)
         LT.view.menu.on('marker-add', Interface.promptForNewMarker)
-
         // side-effects of interactions guided by application
-        LT.atlas.on('map-click-start', Interface.addPointer)
+        atlas.on('map-click-start', Interface.addPointer)
         window.addEventListener('resize', Interface.closeRadial)
-
+        
         // set up custom icons for menu
         for (var idx in self.categories) {
             let menu = self.categories[idx]

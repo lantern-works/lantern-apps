@@ -30,16 +30,16 @@
   "categories": {
     "main": [
       {
-        "label": "Place",
-        "tag": "ven"
-      },
-      {
         "label": "Resource",
         "tag": "rsc"
       },
       {
         "label": "Situation",
         "tag": "sit"
+      },
+      {
+        "label": "Place",
+        "tag": "ven"
       },
       {
         "label": "Person",
