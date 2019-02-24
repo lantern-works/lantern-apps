@@ -50,18 +50,23 @@
 
             if (marker.icon) {
                 LT.atlas.addToMap(marker)
+                Interface.searchFilter()
             }
             else {
                 console.log("(mapify) skip marker with no icon", marker)
             }
         }
+
     }
 
     Interface.hideMarker = (e) => {
         if (LT.atlas.markers[e.id]) {
             console.log('(mapify) hide existing marker', e.id)
             LT.atlas.removeFromMap(LT.atlas.markers[e.id])
+
+            Interface.searchFilter()
         }
+
     }
 
     Interface.refreshMarker = (e) => {
@@ -80,12 +85,13 @@
     }
 
     Interface.searchFilter = (type) => {
-        self.filter = type
+        self.filter = type || self.filter
+        if (!self.filter) return
         let list = []
         Object.keys(LT.atlas.markers).forEach(key => {
             let item = LT.atlas.markers[key]
             if (item) {
-                let intersection = type.match.filter(x => item.tags.includes(x));
+                let intersection = self.filter.match.filter(x => item.tags.includes(x));
                 if (intersection.length) {
                     list.push(item)
                 }
