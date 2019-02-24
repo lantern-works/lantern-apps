@@ -3,7 +3,7 @@
   "icons": {
     "bed": "bed",
     "wtr": "tint",
-    "net": "globe",
+    "net": "wifi",
     "clo": "tshirt",
     "eat": "utensils",
     "pwr": "plug",
@@ -19,31 +19,45 @@
     "fld": "exclamation",
     "lot": "exclamation",
     "cba": "hand-paper",
-    "srv": "server",
     "drv": "truck",
     "cmd": "user-alt",
     "doc": "user-md",
     "ctz": "user",
     "agn": "clipboard",
-    "inj": "user-injured"
+    "inj": "user-injured",
+    "rpr": "hammer"
   },
   "categories": {
     "main": [
-      {
-        "label": "Resource",
-        "tag": "rsc"
-      },
-      {
-        "label": "Situation",
-        "tag": "sit"
-      },
       {
         "label": "Place",
         "tag": "ven"
       },
       {
-        "label": "Person",
-        "tag": "usr"
+        "label": "Asset",
+        "tag": "rsc"
+      },
+      {
+        "label": "Task",
+        "tag": "tsk"
+      },
+      {
+        "label": "Report",
+        "tag": "sit"
+      }
+    ],
+    "tsk": [
+      {
+        "label": "Repair",
+        "tag": "rpr"
+      },
+      {
+        "label": "Delivery",
+        "tag": "drv"
+      },  
+      {
+        "label": "Survey",
+        "tag": "agn"
       }
     ],
     "rsc": [
@@ -78,19 +92,15 @@
       {
         "label": "Water",
         "tag": "wtr"
-      },
-      {
-        "label": "Lantern",
-        "tag": "srv"
       }
     ],
     "ven": [
       {
-        "label": "Shelter",
-        "tag": "shl"
+        "label": "Base",
+        "tag": "bse"
       },
       {
-        "label": "Relief Camp",
+        "label": "Camp",
         "tag": "cmp"
       },
       {
@@ -98,36 +108,8 @@
         "tag": "hsp"
       },
       {
-        "label": "Operating Base",
-        "tag": "bse"
-      }
-    ],
-    "usr": [
-   
-    
-      {
-        "label": "Commander",
-        "tag": "cmd"
-      },
-      {
-        "label": "Driver",
-        "tag": "drv"
-      },  
-      {
-        "label": "Surveyor",
-        "tag": "agn"
-      }, 
-      {
-        "label": "Doctor",
-        "tag": "doc"
-      },         
-      {
-        "label": "Citizen",
-        "tag": "ctz"
-      },
-      {
-        "label": "Injured",
-        "tag": "inj"
+        "label": "Shelter",
+        "tag": "shl"
       }
     ],
     "sit": [

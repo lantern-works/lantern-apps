@@ -1,6 +1,5 @@
 <div class="app-top" v-if="show_search">	
 	<div class="app-frame menu-app-frame">
-		<h1>{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}</h1>
 		<div id="search-button-bar">
 			<div class="buttons has-addons is-centered">
 				<span v-for="type in types" v-bind:class="getSearchButtonClass(type)" @click="searchFilter(type)">

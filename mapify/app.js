@@ -41,8 +41,19 @@
             marker.id = e.id
             marker.data = e.data
             // console.log("(mapify) show marker", marker.id, marker.geohash);
-            LT.atlas.addToMap(marker)
-            marker.setIcons(self.icons)
+
+            marker.tags.forEach((tag) => {
+                if (self.icons.hasOwnProperty(tag)) {
+                    marker.icon = self.icons[tag]
+                }
+            })
+
+            if (marker.icon) {
+                LT.atlas.addToMap(marker)
+            }
+            else {
+                console.log("(mapify) skip marker with no icon", marker)
+            }
         }
     }
 
@@ -211,16 +222,20 @@
         'snapback': false,
         'types': [
             {
-                'label': 'Reports',
-                'match': ['rsc', 'sit']
-            },
-            {
-                'label': 'Places',
+                'label': 'Place',
                 'match': ['ven']
             },
             {
-                'label': 'People',
-                'match': ['usr']
+                'label': 'Asset',
+                'match': ['rsc']
+            },
+            {
+                'label': 'Task',
+                'match': ['tsk']
+            },
+            {
+                'label': 'Report',
+                'match': [ 'sit'], 
             }
         ]
     }

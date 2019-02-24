@@ -54,7 +54,7 @@
 }
 
 #lx-app-mapify-search h1 {
-	border-bottom: 1px solid #EEE;
+	border-bottom: 1px solid #FFF;
 }
 
 #lx-app-mapify-search .app-mask {
@@ -72,6 +72,6 @@
 }
 
 #lx-app-mapify-search #search-button-bar .button {
-	min-width: 6em;
-	width: 30%;
+	padding: 1em 0.5em;
+	width: 25%;
 }

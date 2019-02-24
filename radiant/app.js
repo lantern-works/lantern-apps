@@ -168,12 +168,14 @@
         LT.atlas.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
 
-        self.draft_marker.on('tag', () => {
-            self.draft_marker.setIcons(self.icons)
+        self.draft_marker.on('tag', (tag) => {
+           if (self.icons.hasOwnProperty(tag)) {
+                self.draft_marker.icon = self.icons[tag]
+           }
         })
 
         self.draft_marker.on('untag', () => {
-            self.draft_marker.setIcons(self.icons)
+            self.draft_marker.icon = null
         })
 
         self.menu = {

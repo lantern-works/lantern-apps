@@ -61,6 +61,11 @@
 }
 
 
+#map  .lx-marker.tsk, .menu .tag-icon.tsk  {
+	background: #474646;
+}
+
+
 
 #map .lx-marker.eat, .menu .tag-icon.eat  {
 	background: #ffcc54;
