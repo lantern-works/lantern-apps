@@ -56,12 +56,12 @@
         self.readyForSettings = false
         targetMarker = self.marker
         targetMarker.layer.dragging.enable()
-        let original_icon = self.marker.getIcon()
-        targetMarker.setIcon('arrows-alt')
+        let original_icon = self.marker.icon
+        targetMarker.icon = 'arrows-alt'
         self.menu = {}
         console.log(`(xray) ready for relocation of ${self.marker.id}`)
         targetMarker.once('move', (val) => {
-            targetMarker.setIcon(original_icon)
+            targetMarker.icon = original_icon
             targetMarker.layer.dragging.disable()
             // add user to list of editors
             targetMarker.editor(LT.user.username)
