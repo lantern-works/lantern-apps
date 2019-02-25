@@ -3,22 +3,20 @@
     <div :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
 
         <ul class="menu">
-            <li @click="promptForLabel">
-                <span v-if="marker.label">Change Label</span>
-                <span v-if="!marker.label">Add Label</span>
-            </li>
+
             <li @click="move">
-                <span> Relocate On Map</span>
+                <span> Move On Map</span>
             </li>
+
             <li @click="approve" v-if="!marker.hasSignature(username)">
                 <span> Mark As Verified</span>
             </li>
             <li @click="dispute" v-if="marker.hasSignature(username)">
-                <span> Remove My Verification</span>
+                <span> Undo Verification</span>
             </li>
             <li @click="promptForDrop">
-                <span> Remove Marker</span>
-            </li>
+                <span> Delete</span>
+            </li>   
             <li class="inline-btn" @click="closeSettingsMenu">
                 Close
             </li>

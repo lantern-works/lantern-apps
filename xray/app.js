@@ -127,6 +127,24 @@
         })
     }
 
+    /**
+    * User wants to map this
+    */
+    Action.mapMarker = () => {
+        let lat = self.marker.latlng.lat 
+        let lng = self.marker.latlng.lon
+        if /* if we're on iOS, open in Apple Maps */
+            ((navigator.platform.indexOf("iPhone") != -1) || 
+             (navigator.platform.indexOf("iPad") != -1) || 
+             (navigator.platform.indexOf("iPod") != -1)) {
+            window.open(`maps://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=`)
+        }
+        else {
+            /* else use Google */
+            window.open(`https://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=`)
+        }
+    }
+
     // ------------------------------------------------------------------------
     Component.data = {
         'rating': null,
@@ -154,6 +172,7 @@
                 self.marker.score = 1.0
             }
             self.marker.save(['score'])
+            self.readyForSettings = false
         },
         promptForDrop: () => {
             self.readyForSettings = false
@@ -167,6 +186,9 @@
             self.label = self.marker.label
 
         },
+        zoom: () => {
+            LT.atlas.zoomToPoint(self.marker.latlng)
+        },
         scoreDown: () => {
             if (self.marker.score < 0.10) {
                 return
@@ -176,6 +198,7 @@
                 self.marker.score = 0
             }
             self.marker.save(['score'])
+            self.readyForSettings = false
         },
         saveLabel: () => {
             console.log(self.label)
@@ -185,6 +208,7 @@
         },
         approve: Action.approveMarker,
         dispute: Action.disputeMarker,
+        map: Action.mapMarker,
         showSettings: () => {
             console.log("show settings")
             self.readyForSettings = true

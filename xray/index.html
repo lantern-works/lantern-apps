@@ -13,9 +13,9 @@
 
 
         <section v-if="pingInProgress">
-            <p>Sending viewers to this marker now&hellip;</p>
+            <p>Showing viewers this marker&hellip;</p>
         </section>
-        <section class="marker-label" v-if="!pingInProgress && !readyForLabel && marker.label">
+        <section class="marker-label" v-if="!pingInProgress && !readyForLabel && marker.label" @click="promptForLabel">
             {{ marker.label }}
         </section>
 
@@ -32,20 +32,24 @@
         </section>
 
         <section v-if="!readyToDrop" class="score">
+            <div @click="scoreUp" class="score-up">
+            </div>
+            <div @click="scoreDown" class="score-down">
+            </div>
             <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
 
         <section v-if="!readyToDrop" class="actions">
             <div class="buttons is-centered">
-                <div class="button"  @click="ping">
-                    <i class="fa fa-flag"/>
+                <div class="button"  @click="map">
+                    <i class="fa fa-map"/>
                 </div>            
-                <div class="button"  @click="scoreUp">
-                    <i class="fa fa-caret-up"/>
-                </div>
-                <div class="button"  @click="scoreDown">
-                    <i class="fa fa-caret-down"/>
-                </div>
+                <div class="button"  @click="zoom">
+                    <i class="fa fa-search-plus"/>
+                </div>                      
+                <div class="button"  @click="ping">
+                    <i class="fa fa-bullhorn"/>
+                </div>            
                 <div class="button"  @click="showSettings">
                     <i class="fa fa-ellipsis-v"/>
                 </div>
