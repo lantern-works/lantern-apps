@@ -44,13 +44,6 @@
 	border-color: #696E8E;
 }
 
-#map  .lx-marker.srv, .menu .tag-icon.srv  {
-	background: #474646;
-}
-
-#app-container .app .app-frame.srv {
-	border-color: #474646;
-}
 
 #map  .lx-marker.net, .menu .tag-icon.net  {
 	background: #73cc72;
@@ -65,6 +58,9 @@
 	background: #474646;
 }
 
+#app-container .app .app-frame.tsk {
+	border-color: #474646;
+}
 
 
 #map .lx-marker.eat, .menu .tag-icon.eat  {

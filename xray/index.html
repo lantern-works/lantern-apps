@@ -1,5 +1,5 @@
-<div class="app-bottom" v-if="marker && !readyForSettings">
-	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+<div class="app-bottom" v-if="marker">
+	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id" v-if="!readyForSettings">
         <header @click="promptForLabel">
 	   	   <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
         </header>
@@ -11,7 +11,11 @@
             </div>
         </form>
 
-        <section class="marker-label" v-if="!readyForLabel && marker.label">
+
+        <section v-if="pingInProgress">
+            <p>Sending viewers to this marker now&hellip;</p>
+        </section>
+        <section class="marker-label" v-if="!pingInProgress && !readyForLabel && marker.label">
             {{ marker.label }}
         </section>
 
@@ -30,6 +34,7 @@
         <section v-if="!readyToDrop" class="score">
             <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
+
         <section v-if="!readyToDrop">
             <div class="buttons is-centered">
                 <div class="button"  @click="ping">
@@ -42,7 +47,7 @@
                     <i class="fa fa-caret-down"/>
                 </div>
                 <div class="button"  @click="showSettings">
-                    <i class="fa fa-cog"/>
+                    <i class="fa fa-ellipsis-v"/>
                 </div>
             </div>
         </section>

@@ -10,6 +10,9 @@
             if (self) return
             self = this
             LT.withAtlas(Interface.bindAll)
+            LT.withUser((user) => {
+                self.username = user.username
+            })
         }
     }
     let Action = {}
@@ -44,6 +47,10 @@
             return
         }
         self.marker = marker
+
+
+
+        LT.atlas.zoomToPoint(self.marker.latlng)
         marker.inspect()
     }
 
@@ -74,9 +81,13 @@
     * User wants others to be on the same page and see this marker detail sheet
     */
     Action.pingMarker = () => {
+        self.pingInProgress = true
         self.marker.ping = [LT.user.username, new Date().getTime()]
         self.marker.save(['ping']).then(() => {
             console.log(`(xray) sent ping for marker ${self.marker.id}`)
+            setTimeout(() => {
+                self.pingInProgress = false
+            }, 5000)
         })
     }
 
@@ -119,10 +130,11 @@
         'rating': null,
         'marker': null,
         'label': null,
-        'username': LT.user.username,
+        'username': null,
         'readyToDrop': false,
         'readyForLabel': false,
-        'readyForSettings': false
+        'readyForSettings': false,
+        'pingInProgress': false
     }
     Component.methods = {
         ping: Action.pingMarker,
@@ -179,6 +191,7 @@
             self.readyForSettings = false
         },
         close: () => {
+            self.pingInProgress = false
             self.readyToDrop = false
             self.readyForLabel = false
             self.readyForSettings = false
