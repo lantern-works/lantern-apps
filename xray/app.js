@@ -4,6 +4,8 @@
 (function () {
     var self
     var targetMarker
+    var pingTimeout
+
     let Interface = {}
     let Component = {
         mounted () {
@@ -50,7 +52,7 @@
 
 
 
-        LT.atlas.zoomToPoint(self.marker.latlng)
+        LT.atlas.panToPoint(self.marker.latlng)
         marker.inspect()
     }
 
@@ -85,7 +87,7 @@
         self.marker.ping = [LT.user.username, new Date().getTime()]
         self.marker.save(['ping']).then(() => {
             console.log(`(xray) sent ping for marker ${self.marker.id}`)
-            setTimeout(() => {
+            pingTimeout = setTimeout(() => {
                 self.pingInProgress = false
             }, 5000)
         })
@@ -191,6 +193,9 @@
             self.readyForSettings = false
         },
         close: () => {
+            if (pingTimeout) {
+                clearInterval(pingTimeout)
+            }
             self.pingInProgress = false
             self.readyToDrop = false
             self.readyForLabel = false

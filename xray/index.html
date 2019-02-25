@@ -35,7 +35,7 @@
             <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
 
-        <section v-if="!readyToDrop">
+        <section v-if="!readyToDrop" class="actions">
             <div class="buttons is-centered">
                 <div class="button"  @click="ping">
                     <i class="fa fa-flag"/>
