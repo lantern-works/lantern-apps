@@ -44,9 +44,15 @@
                 <div class="button"  @click="map">
                     <i class="fa fa-map"/>
                 </div>            
-                <div class="button"  @click="zoom">
-                    <i class="fa fa-search-plus"/>
+
+                <div class="button"  @click="zoomIn" v-if="!maxZoom">
+                    <i class="fa fa-search-plus" />
                 </div>                      
+
+                <div class="button"  @click="zoomOut" v-if="maxZoom">
+                    <i class="fa fa-search-minus" />
+                </div>
+
                 <div class="button"  @click="ping">
                     <i class="fa fa-bullhorn"/>
                 </div>            

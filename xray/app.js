@@ -21,6 +21,7 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = (atlas) => {
+        self.maxZoom = atlas.hasMaxZoom()
         Object.keys(atlas.markers).forEach((k) => {
             let marker = atlas.markers[k]
             if (marker) {
@@ -154,7 +155,8 @@
         'readyToDrop': false,
         'readyForLabel': false,
         'readyForSettings': false,
-        'pingInProgress': false
+        'pingInProgress': false,
+        'maxZoom': false 
     }
     Component.methods = {
         ping: Action.pingMarker,
@@ -186,8 +188,16 @@
             self.label = self.marker.label
 
         },
-        zoom: () => {
+        zoomIn: () => {
             LT.atlas.zoomToPoint(self.marker.latlng)
+            self.maxZoom = LT.atlas.hasMaxZoom() 
+            setTimeout(() => {
+                self.maxZoom = LT.atlas.hasMaxZoom() 
+            }, 500)
+        },   
+        zoomOut: () => {
+            LT.atlas.map.zoomOut()
+            self.maxZoom = LT.atlas.hasMaxZoom() 
         },
         scoreDown: () => {
             if (self.marker.score < 0.10) {
@@ -225,6 +235,7 @@
             self.readyForLabel = false
             self.readyForSettings = false
             self.marker = null
+            self.maxZoom = false
         }
     }
     // compute marker titles
