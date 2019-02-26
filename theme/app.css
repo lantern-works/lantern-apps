@@ -104,7 +104,7 @@
  	#map .lx-marker.dst, .menu .tag-icon.dst {
 	background: #ff844d;
 }
-#app-container .app .app-frame.rdb {
+#app-container .app .app-frame.rdb, #app-container .app .app-frame.dtr,#app-container .app .app-frame.cba, #app-container .app .app-frame.dst {
 	border-color: #ff844d;
 }
 

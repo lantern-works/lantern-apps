@@ -61,26 +61,22 @@
 }
 
 #lx-app-xray-index .actions {
-    padding: 1em;
+    padding: 0.5em;
+}
+#lx-app-xray-index .buttons {
+    margin: 0.25em;
 }
 
 #lx-app-xray-index .buttons .button {
-    padding: 2em;
     color: #3273dc;
     border-color: #ECECEC;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01), 0 0 0 1px rgba(0, 0, 0, 0.01);
     background-color: rgba(255,255,255,0.8);
     max-width: 4em;
-    margin-left: 0.4em;
+    padding: 1.75em;
+    margin: 0.25em;
 }
 
-#lx-app-xray-index .button:first-child {
-    margin-left: 0;
-}
-
-#lx-app-xray-index .button:last-child {
-    margin-right: 0;
-}
 
 #lx-app-xray-index .buttons .button:hover {
     border-color: #DDD;
