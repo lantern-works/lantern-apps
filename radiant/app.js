@@ -9,46 +9,8 @@
         }
     }
     let Action = {}
-    let Data = {}
 
     // ------------------------------------------------------------------------
-    // data
-    Data.menu = {}
-    Data.menu.map = [{ 'event': 'zoom-in', 'icon': 'search-plus' },
-        { 'event': 'zoom-out', 'icon': 'search-minus' },
-        { 'event': 'marker-add', 'icon': 'map-marker-alt' }]
-
-    /**
-    * User tapped or clicked on a point on the map
-    */
-    Action.selectPointOnMap = (e) => {
-        if (LT.view.menu.isLocked()) return
-        self.latlng = e.latlng
-        Interface.openRadial(Data.menu.map)
-    }
-
-    /**
-    * User wants to zoom in
-    */
-    Action.zoomToPoint = (e) => {
-        LT.atlas.zoomToPoint(self.latlng)
-        LT.view.menu.unlock()
-    }
-
-    Action.zoomIn = () => {
-        LT.atlas.map.zoomIn()
-    }
-
-    /**
-    * User wants to zoom out
-    */
-    Action.zoomOut = () => {
-        LT.atlas.map.zoomOut()
-        LT.atlas.map.once('moveend', () => {
-            LT.atlas.removePointer()
-            LT.view.menu.unlock()
-        })
-    }
 
     /**
     * User wants to save marker to database
@@ -68,14 +30,10 @@
             self.is_saving = false
 
             Interface.removeDraftMarker()
-            LT.view.menu.unlock()
         })
         self.prompt_draft_save = false
         self.menu = {}
     }
-
-
-
 
     /**
     * User wants to choose menu from item,
@@ -109,7 +67,6 @@
     */
     Action.closeMenu = () => {
         self.menu = {}
-        LT.view.menu.unlock()
         if (self.draft_marker) {
             LT.atlas.removeFromMap(self.draft_marker)
             self.draft_marker = null
@@ -132,20 +89,12 @@
         }
     }
 
+
     // ------------------------------------------------------------------------
     // interface controls
     Interface.bindAll = (atlas) => {
         // user intended actions
-        atlas.on('map-click', Action.selectPointOnMap)
-        atlas.on('map-double-click', Interface.removePointer)
-        atlas.on('map-double-click', Action.zoomIn)
-        LT.view.menu.on('zoom-in', Action.zoomToPoint)
-        LT.view.menu.on('zoom-out', Action.zoomOut)
-        LT.view.menu.on('marker-add', Interface.promptForNewMarker)
         LT.on("intent:marker-add", Interface.promptForNewMarker)
-        // side-effects of interactions guided by application
-        atlas.on('map-click-start', Interface.addPointer)
-        window.addEventListener('resize', Interface.closeRadial)
         
         // set up custom icons for menu
         for (var idx in self.categories) {
@@ -190,32 +139,6 @@
             title: "What's here?"
         }
         self.menu.items = self.categories.main
-    }
-
-    Interface.addPointer = (e) => {
-        if (LT.view.menu.isLocked()) return
-        self.latlng = e.latlng
-        LT.atlas.addPointer(self.latlng)
-    }
-
-    Interface.removePointer = (e) => {
-        LT.atlas.removePointer()
-    }
-
-    Interface.openRadial = (items) => {
-        LT.atlas.moveFromEdge(self.latlng)
-            .then(() => {
-                return LT.atlas.moveFromEdge(self.latlng)
-            })
-            .then(() => {
-                let pos = LT.atlas.map.latLngToContainerPoint(self.latlng)
-                LT.view.menu.open(items, pos)
-                LT.view.menu.lock()
-                // clicking anywhere on the mask element closes radial menu
-                LT.view.menu.once('close', () => {
-                    LT.atlas.removePointer()
-                })
-            })
     }
 
     Interface.removeDraftMarker = () => {
