@@ -53,7 +53,7 @@
         self.marker = marker
 
         LT.atlas.map.once("moveend", () => {
-            LT.atlas.zoomMinimum(15)
+            LT.atlas.zoomMinimum(14)
         })
 
         LT.atlas.panToPoint(self.marker.latlng)

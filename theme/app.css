@@ -6,6 +6,10 @@
 	background-color: #3273dc;
 }
 
+#map .lx-marker-draft {
+	background: #EE452A;
+}
+
 #map .lx-marker.usr, .menu .tag-icon.usr {
 	background-color: #1051ba;
 }

@@ -1,5 +1,5 @@
 <div class="app-top">	
-	<div class="app-frame" @click="fitMap">
+	<div class="app-frame">
 		<!-- search icon -->
 		<span @click.stop="searchMap" v-if="marker_count > -1" :class="'search icon ' + (show_search ? 'active' : 'inactive') ">	<i class="fas fa-search"></i>
 		</span>
@@ -11,12 +11,12 @@
 
 
 		<!-- loading text -->
-		<div v-if="marker_count == -1">
+		<div class="marker-count" v-if="marker_count == -1">
 			Loading&hellip;
 		</div> 
 
 		<!-- marker count -->
-		<div class="marker-count" v-if="marker_count > -1">
+		<div class="marker-count" v-if="marker_count > -1"  @click="fitMap">
 			{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}
 		</div>
 

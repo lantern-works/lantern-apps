@@ -105,13 +105,18 @@
 
         self.draft_marker = new LM.MarkerItem(LT.db)
         self.draft_marker.icon = "map-marker-alt"
-        self.draft_marker.geohash = LM.Location.toGeohash(self.latlng || LT.atlas.map.getCenter())
+
+        let latlng = LT.atlas.map.getCenter()
+        latlng.lat = (latlng.lat + LT.atlas.map.getBounds().getNorth() * 3) / 4
+        self.draft_marker.geohash = LM.Location.toGeohash(latlng)
+
+
         LT.atlas.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
 
         self.$root.$emit('marker-draft', self.draft_marker)
 
-        LT.atlas.zoomMinimum(10)
+        LT.atlas.zoomMinimum(8)
 
         self.draft_marker.on('tag', (tag) => {
            if (self.icons.hasOwnProperty(tag)) {
@@ -322,7 +327,6 @@
             self.snapback = true
             LT.atlas.cacheCenterLocation(0)
             LT.atlas.fitMapToAllMarkers()
-            LT.atlas.map.zoomOut()
         },
         chooseFromMenu: (item) => {
             LT.atlas.panToPoint(item.latlng).then(() => {

@@ -1,18 +1,23 @@
 /*----------------------------------------------------------------------------*/
 #lx-app-mapify-index {
-	max-width: 20em;
+	max-width: 24em;
 	font-size: small;
 	text-transform: uppercase;
 	font-weight: 600;
 }
 
+#lx-app-mapify-index .marker-count {
+	line-height: 2.5em;
+	margin-left: 4em;
+	margin-right: 4em;
+}
+
 #lx-app-mapify-index .app-frame {
 	text-align: center;
 	border-radius: 6px;
-	height: 2.25rem;
 }
 
-#lx-app-mapify-index:hover {
+#lx-app-mapify-index .marker-count:hover, #lx-app-mapify-index .icon:hover {
 	cursor: pointer;
 }
 
@@ -23,8 +28,10 @@
 
 #lx-app-mapify-index .icon {
 	background: #EEE;
-	border-radius: 1em;
+	border-radius: 3em;
 	border-color: #EEE;
+	padding: 1.3em;
+	margin-top: 0.2em;
 }
 
 #lx-app-mapify-index .new.icon {
@@ -111,3 +118,4 @@
 #lx-app-mapify-search #search-button-bar .button.is-selected {
 	color: #FFF;
 } 
+
