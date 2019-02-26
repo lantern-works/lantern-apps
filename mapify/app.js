@@ -101,12 +101,16 @@
         if (self.draft_marker) {
             // remove old draft
             Interface.removeDraftMarker()
-        }
+        }   
 
         self.draft_marker = new LM.MarkerItem(LT.db)
         self.draft_marker.geohash = LM.Location.toGeohash(self.latlng || LT.atlas.map.getCenter())
         LT.atlas.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
+
+        self.$root.$emit('marker-draft', self.draft_marker)
+
+        LT.atlas.zoomMinimum(10)
 
         self.draft_marker.on('tag', (tag) => {
            if (self.icons.hasOwnProperty(tag)) {
@@ -125,6 +129,7 @@
     }
 
     Interface.removeDraftMarker = () => {
+        self.prompt_draft_save = false
         LT.atlas.removeFromMap(self.draft_marker)
         delete self.draft_marker
         self.draft_marker = null
@@ -194,7 +199,7 @@
             // if this is a ping, open details on map
             if (e.key && e.key == 'p') {
                 LT.atlas.panToPoint(marker.latlng)
-                marker.focus()
+                self.$root.$emit('marker-focus', marker)
             }
         }
     }
@@ -232,6 +237,9 @@
         atlas.on('marker-remove', () => {
             self.marker_count = atlas.getMarkerCount()
         })
+
+        atlas.on('marker-click', Action.closeBottomMenu)
+
         LT.withUser( user => {
             user.feed.on('change', Interface.refreshMarker)
             user.feed.on('add', Interface.showMarker)
@@ -316,13 +324,12 @@
             LT.atlas.map.zoomOut()
         },
         chooseFromMenu: (item) => {
-            LT.atlas.panToPoint(item.latlng) // zoom after
-            // open up item details
-            item.focus()
-            setTimeout(() => {
-                LT.atlas.map.zoomIn(4)
-            }, 500)
+            LT.atlas.panToPoint(item.latlng).then(() => {
+                // open up item details
+                self.$root.$emit('marker-focus', item)
+            }) // zoom after
             self.show_search = false
+            Action.closeBottomMenu()
         },
         closeMenu: () => {
             self.show_search = false

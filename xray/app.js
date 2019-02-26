@@ -22,17 +22,14 @@
     // ------------------------------------------------------------------------
     Interface.bindAll = (atlas) => {
         self.maxZoom = atlas.hasMaxZoom()
-        Object.keys(atlas.markers).forEach((k) => {
-            let marker = atlas.markers[k]
-            if (marker) {
-                marker.on('focus', Interface.selectMarker)
-            }
+        self.$root.$on('marker-focus', (marker) => {
+            Interface.selectMarker(marker)
         })
-        atlas.on('marker-add', (marker) => {
-            if (marker) {
-                marker.on('focus', Interface.selectMarker)
-            }
+
+        self.$root.$on('marker-draft', (marker) => {
+            Action.closeMenu()
         })
+        
         atlas.on('marker-click', Interface.selectMarker)
         LT.user.feed.on('drop', (e) => {
             if (self.marker && e.id === self.marker.id) {
@@ -51,13 +48,32 @@
         }
         self.marker = marker
 
-
+        LT.atlas.map.once("moveend", () => {
+            LT.atlas.zoomMinimum(15)
+        })
 
         LT.atlas.panToPoint(self.marker.latlng)
+
         marker.inspect()
     }
 
     // ------------------------------------------------------------------------
+
+    /**
+    * User wants to close menu
+    */
+    Action.closeMenu = () => {
+            if (pingTimeout) {
+                clearInterval(pingTimeout)
+            }
+            self.pingInProgress = false
+            self.readyToDrop = false
+            self.readyForLabel = false
+            self.readyForSettings = false
+            self.marker = null
+            self.maxZoom = false
+    }
+
 
     /**
     * User wants to move marker
@@ -226,17 +242,7 @@
         closeSettingsMenu: () => {
             self.readyForSettings = false
         },
-        close: () => {
-            if (pingTimeout) {
-                clearInterval(pingTimeout)
-            }
-            self.pingInProgress = false
-            self.readyToDrop = false
-            self.readyForLabel = false
-            self.readyForSettings = false
-            self.marker = null
-            self.maxZoom = false
-        }
+        close: Action.closeMenu
     }
     // compute marker titles
     Component.computed = {}

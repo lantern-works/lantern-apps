@@ -1,9 +1,3 @@
-#lx-app-xray-index {
-    height: 100%;
-    overflow: hidden;
-    background: none;
-    z-index: 1000;
-}
 #lx-app-xray-index .app-frame, #lx-app-xray-settings .app-frame {
     z-index: 1001;
     width: 94%;
@@ -59,10 +53,6 @@
 #lx-app-xray-index form .button {
     width: 100%;
     margin-top: 1em;
-}
-
-#lx-app-xray-index .app-mask {
-    opacity: 0.60;
 }
 
 #lx-app-xray-index header:hover, #lx-app-xray-index .marker-label {
