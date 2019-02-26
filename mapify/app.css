@@ -21,10 +21,6 @@
 }
 
 
-.lx-map-zoom-far #map .lx-default, .lx-map-zoom-very-far #map .lx-default {
-	background: #3273dc;
-}
-
 #lx-app-mapify-index .icon {
 	background: #EEE;
 	border-radius: 1em;

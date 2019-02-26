@@ -104,6 +104,7 @@
         }   
 
         self.draft_marker = new LM.MarkerItem(LT.db)
+        self.draft_marker.icon = "map-marker-alt"
         self.draft_marker.geohash = LM.Location.toGeohash(self.latlng || LT.atlas.map.getCenter())
         LT.atlas.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
