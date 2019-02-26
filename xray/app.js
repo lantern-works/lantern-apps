@@ -30,6 +30,10 @@
             Action.closeMenu()
         })
         
+        atlas.map.on('click', () => {
+            Action.closeMenu()
+        })
+
         atlas.on('marker-click', Interface.selectMarker)
         LT.user.feed.on('drop', (e) => {
             if (self.marker && e.id === self.marker.id) {
