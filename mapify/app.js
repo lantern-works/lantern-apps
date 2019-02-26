@@ -43,7 +43,7 @@
     /**
     * User wants to choose menu from item,
     */
-    Action.chooseFromMenu = (item) => {
+    Action.chooseFromBottomMenu = (item) => {
         if (self.draft_marker) {
             // special actions for reporting menu
             if (self.categories.hasOwnProperty(item.tag)) {
@@ -70,7 +70,7 @@
     /**
     * User wants to close menu
     */
-    Action.closeMenu = () => {
+    Action.closeBottomMenu = () => {
         self.menu = {}
         if (self.draft_marker) {
             LT.atlas.removeFromMap(self.draft_marker)
@@ -352,8 +352,8 @@
             }
         },
         promptForNewMarker:  Interface.promptForNewMarker,
-        closeMenu: Action.closeMenu,
-        chooseFromMenu: Action.chooseFromMenu,
+        closeBottomMenu: Action.closeBottomMenu,
+        chooseFromBottomMenu: Action.chooseFromBottomMenu,
         saveMarker: Action.saveMarker,
         goToPreviousMenu: Action.goToPreviousMenu
     }

@@ -15,7 +15,7 @@
 
 		<!-- multi-purpose menu -->
 		<ul class="menu" v-if="!prompt_draft_save">
-			<li v-for="item in menu.items" @click="chooseFromMenu(item)" >
+			<li v-for="item in menu.items" @click="chooseFromBottomMenu(item)" >
 				<div v-if="item.icon_class" :class="item.tag_class"> 
 					<i :class="item.icon_class"></i>
 				</div>
@@ -29,7 +29,7 @@
 			<li class="inline-btn" v-if="previous.title" @click="goToPreviousMenu">
 				Back
 			</li>
-			<li class="inline-btn" v-if="!previous.title" @click="closeMenu">
+			<li class="inline-btn" v-if="!previous.title" @click="closeBottomMenu">
 				Close
 			</li>
 		</ul>
