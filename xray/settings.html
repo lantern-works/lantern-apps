@@ -4,15 +4,15 @@
 
         <ul class="menu">
 
-            <li @click="move">
-                <span> Move On Map</span>
-            </li>
 
             <li @click="approve" v-if="!marker.hasSignature(username)">
-                <span> Mark As Verified</span>
+                <span> Verify</span>
             </li>
             <li @click="dispute" v-if="marker.hasSignature(username)">
                 <span> Undo Verification</span>
+            </li>
+            <li @click="ping">
+                <span> Ping </span>
             </li>
             <li @click="promptForDrop">
                 <span> Delete</span>

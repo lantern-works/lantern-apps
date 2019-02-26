@@ -16,7 +16,7 @@
     Data.menu = {}
     Data.menu.map = [{ 'event': 'zoom-in', 'icon': 'search-plus' },
         { 'event': 'zoom-out', 'icon': 'search-minus' },
-        { 'event': 'marker-add', 'icon': 'plus-circle' }]
+        { 'event': 'marker-add', 'icon': 'map-marker-alt' }]
 
     /**
     * User tapped or clicked on a point on the map
@@ -66,14 +66,16 @@
             // make sure save event is intended from this app
             console.log('(radiant) marker saved:', self.draft_marker.id)
             self.is_saving = false
-            LT.atlas.removeFromMap(self.draft_marker)
-            delete self.draft_marker
-            self.draft_marker = null
+
+            Interface.removeDraftMarker()
             LT.view.menu.unlock()
         })
         self.prompt_draft_save = false
         self.menu = {}
     }
+
+
+
 
     /**
     * User wants to choose menu from item,
@@ -140,6 +142,7 @@
         LT.view.menu.on('zoom-in', Action.zoomToPoint)
         LT.view.menu.on('zoom-out', Action.zoomOut)
         LT.view.menu.on('marker-add', Interface.promptForNewMarker)
+        LT.on("intent:marker-add", Interface.promptForNewMarker)
         // side-effects of interactions guided by application
         atlas.on('map-click-start', Interface.addPointer)
         window.addEventListener('resize', Interface.closeRadial)
@@ -163,8 +166,13 @@
     }
 
     Interface.promptForNewMarker = () => {
+        if (self.draft_marker) {
+            // remove old draft
+            Interface.removeDraftMarker()
+        }
+
         self.draft_marker = new LM.MarkerItem(LT.db)
-        self.draft_marker.geohash = LM.Location.toGeohash(self.latlng)
+        self.draft_marker.geohash = LM.Location.toGeohash(self.latlng || LT.atlas.map.getCenter())
         LT.atlas.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
 
@@ -210,11 +218,10 @@
             })
     }
 
-    Interface.closeRadial = () => {
-        if (LT.view.menu.isOpen()) {
-            LT.view.menu.close()
-            LT.view.menu.unlock()
-        }
+    Interface.removeDraftMarker = () => {
+        LT.atlas.removeFromMap(self.draft_marker)
+        delete self.draft_marker
+        self.draft_marker = null
     }
 
     // ------------------------------------------------------------------------

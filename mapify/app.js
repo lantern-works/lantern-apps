@@ -163,7 +163,8 @@
             flyTo: false,
             showPopup: false,
             setView: 'untilPanOrZoom',
-            position: 'bottomright'
+            position: 'bottomright',
+            icon: 'fa fa-location-arrow'
         }).addTo(LT.atlas.map)
     }
 
@@ -218,6 +219,9 @@
             else {
                 return 'button'
             }
+        },
+        newMarkerIntent: () => {
+            LT.emit("intent:marker-add")
         }
     }
 
@@ -228,11 +232,7 @@
         'snapback': false,
         'types': [
             {
-                'label': 'Place',
-                'match': ['ven']
-            },
-            {
-                'label': 'Asset',
+                'label': 'Resource',
                 'match': ['rsc']
             },
             {
@@ -242,6 +242,10 @@
             {
                 'label': 'Report',
                 'match': [ 'sit'], 
+            },
+            {
+                'label': 'Site',
+                'match': ['ven']
             }
         ]
     }

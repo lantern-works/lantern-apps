@@ -13,7 +13,7 @@
 
 
         <section v-if="pingInProgress">
-            <p>Showing viewers this marker&hellip;</p>
+            <p>Sharing with connected users&hellip;</p>
         </section>
         <section class="marker-label" v-if="!pingInProgress && !readyForLabel && marker.label" @click="promptForLabel">
             {{ marker.label }}
@@ -41,10 +41,6 @@
 
         <section v-if="!readyToDrop" class="actions">
             <div class="buttons is-centered">
-                <div class="button"  @click="map">
-                    <i class="fa fa-map"/>
-                </div>            
-
                 <div class="button"  @click="zoomIn" v-if="!maxZoom">
                     <i class="fa fa-search-plus" />
                 </div>                      
@@ -53,8 +49,13 @@
                     <i class="fa fa-search-minus" />
                 </div>
 
-                <div class="button"  @click="ping">
-                    <i class="fa fa-bullhorn"/>
+
+                <div class="button"  @click="map">
+                    <i class="fa fa-route"/>
+                </div>            
+
+                <div class="button"  @click="move">
+                    <i class="fa fa-arrows-alt"/>
                 </div>            
                 <div class="button"  @click="showSettings">
                     <i class="fa fa-ellipsis-v"/>

@@ -30,11 +30,7 @@
   "categories": {
     "main": [
       {
-        "label": "Place",
-        "tag": "ven"
-      },
-      {
-        "label": "Asset",
+        "label": "Resource",
         "tag": "rsc"
       },
       {
@@ -44,6 +40,10 @@
       {
         "label": "Report",
         "tag": "sit"
+      },
+      {
+        "label": "Site",
+        "tag": "ven"
       }
     ],
     "tsk": [
