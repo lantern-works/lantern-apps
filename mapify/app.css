@@ -104,7 +104,12 @@
 
 #lx-app-mapify-search #search-button-bar {
 	padding: 0.4em;
+	margin-top: 0.5em;
 	border-bottom: 1px solid #EEE;
+}
+
+#lx-app-mapify-search .buttons:last-child {
+	margin-bottom: inherit;
 }
 
 #lx-app-mapify-search #search-button-bar .button {
