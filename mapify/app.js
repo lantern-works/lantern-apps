@@ -10,10 +10,14 @@
             if (self) return
             self = this
             // wait for atlas and then bind map interface
-            LT.on('atlas',  Interface.bindAll)
+            LT.withAtlas(Interface.bindAll)
         }
     }
     let Action = {}
+
+    const getTargetPackage = () => {
+        return window.location.hash.replace('#','').split(',')[0] // assume first package
+    }
 
     // ------------------------------------------------------------------------
 
@@ -26,16 +30,21 @@
         self.draft_marker.layer.dragging.disable()
         self.draft_marker.owner = LT.user.username
 
+        // find package we want to save to
+        let pkgId = getTargetPackage()
+        if (!pkgId) {
+            console.log(`(radiant) cannot save marker since missing package`)
+            return
+        }
+        let pkg = new LD.Package(pkgId, LT.db)
         self.draft_marker.save().then(() => {
-            let pkg = new LD.Package(self.package, LT.db)
             pkg.add(self.draft_marker)
-
             // make sure save event is intended from this app
             console.log('(radiant) marker saved:', self.draft_marker.id)
             self.is_saving = false
-
             Interface.removeDraftMarker()
         })
+
         self.prompt_draft_save = false
         self.menu = {}
     }
@@ -147,7 +156,7 @@
             user.feed.forEachItem((v, k) => {
                 if (v && v.g && v.o && v.t) {
                     // this is a marker
-                    if (!LT.atlas.markers.hasOwnProperty(k)) {
+                    if (!LT.atlas.markers[k]) {
                         Interface.showMarker({ id: k, data: v })
                     } else {
                         // exists in UI
@@ -162,41 +171,33 @@
     }
 
     Interface.showMarker = (e) => {
-        if (!LT.atlas.markers.hasOwnProperty(e.id) && e.data.g && e.data.o && e.data.t) {
+        if (!LT.atlas.markers[e.id] && e.data.g && e.data.o && e.data.t) {
             let marker = new LM.MarkerItem(LT.db)
             marker.id = e.id
             marker.data = e.data
             // console.log("(mapify) show marker", marker.id, marker.geohash);
-
             marker.tags.forEach((tag) => {
                 if (self.icons.hasOwnProperty(tag)) {
                     marker.icon = self.icons[tag]
                 }
             })
 
-            if (marker.icon) {
-                LT.atlas.addToMap(marker)
-                Interface.searchFilter()
-            }
-            else {
-                console.log("(mapify) skip marker with no icon", marker)
-            }
+            LT.atlas.addToMap(marker)
         }
 
     }
 
     Interface.hideMarker = (e) => {
         if (LT.atlas.markers[e.id]) {
-            console.log('(mapify) hide existing marker', e.id)
+            //console.log('(mapify) hide existing marker', e.id)
             LT.atlas.removeFromMap(LT.atlas.markers[e.id])
-
-            Interface.searchFilter()
         }
 
     }
 
     Interface.refreshMarker = (e) => {
         if (LT.atlas.markers[e.id]) {
+            console.log("(mapify) refresh marker" + e.id)
             let marker = LT.atlas.markers[e.id]
             let obj = {}
             obj[e.key] = e.data
@@ -210,24 +211,10 @@
         }
     }
 
-    Interface.searchFilter = (type) => {
-        self.filter = type || self.filter
-        if (!self.filter) return
-        let list = []
-        Object.keys(LT.atlas.markers).forEach(key => {
-            let item = LT.atlas.markers[key]
-            if (item) {
-                let intersection = self.filter.match.filter(x => item.tags.includes(x));
-                if (intersection.length) {
-                    list.push(item)
-                }
-            }
-        })
-        self.markers = list
-    }
-
     Interface.bindAll = (atlas) => {
- 
+    
+        self.markers = atlas.markerList
+
         // visualize known markers
         // sync with all available markers from user-specific feed
         // this is pre-filtered based on installed packages  
@@ -235,7 +222,7 @@
         // add map controls
         Interface.setupControls()
         
-        Interface.refresh()
+
         // keep the UI up-to-date based on changes to marker count
         atlas.on('marker-add', () => {
             self.marker_count = atlas.getMarkerCount()
@@ -250,6 +237,7 @@
             user.feed.on('change', Interface.refreshMarker)
             user.feed.on('add', Interface.showMarker)
             user.feed.on('drop', Interface.hideMarker)
+            user.feed.on('watch', Interface.refresh)
         })
         
         // set up custom icons for menu
@@ -273,8 +261,6 @@
             if (self.marker_count == -1) {
                 self.marker_count = 0
             }
-            // filter by default to first selected type in search menu
-            Interface.searchFilter(self.types[0])
         }, 750)
             
     }
@@ -354,7 +340,9 @@
             })
             return cls
         },
-        searchFilter: Interface.searchFilter,
+        searchFilter: (type) => {
+            self.filter = type || self.filter
+        }, 
         getSearchButtonClass: (type) => {
             if (type.label == self.filter.label) {
                 return 'button is-selected is-info'
@@ -405,6 +393,23 @@
     }
 
     Component.data.filter = Component.data.types[0]
+
+    Component.computed = {}
+
+    Component.computed.filtered_markers = () => {
+        let filter = self.filter || self.types[0]
+        let list = []
+        self.markers.forEach(key => {
+            let item = LT.atlas.markers[key]
+            if (item) {
+                let intersection = filter.match.filter(x => item.tags.includes(x));
+                if (intersection.length) {
+                    list.push(item)
+                }
+            }
+        })
+        return list
+    }
 
     Component.open = true
 

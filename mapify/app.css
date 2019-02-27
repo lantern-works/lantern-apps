@@ -7,9 +7,11 @@
 }
 
 #lx-app-mapify-index .marker-count {
-	line-height: 2.5em;
+	line-height: 2.3em;
 	margin-left: 4em;
 	margin-right: 4em;
+	font-size: 11pt;
+	border-radius: 100px;
 }
 
 #lx-app-mapify-index .app-frame {

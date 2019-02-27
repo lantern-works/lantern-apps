@@ -19,6 +19,10 @@
     }
     let Action = {}
 
+    const getTargetPackage = () => {
+        return window.location.hash.replace('#','').split(',')[0] // assume first package
+    }
+
     // ------------------------------------------------------------------------
     Interface.bindAll = (atlas) => {
         self.maxZoom = atlas.hasMaxZoom()
@@ -31,6 +35,11 @@
         })
         
         atlas.map.on('click', () => {
+            Action.closeMenu()
+        })
+
+
+        atlas.on('marker-remove', () => {
             Action.closeMenu()
         })
 
@@ -57,8 +66,6 @@
         })
 
         LT.atlas.panToPoint(self.marker.latlng)
-
-        marker.inspect()
     }
 
     // ------------------------------------------------------------------------
@@ -119,7 +126,7 @@
     */
     Action.dropMarker = () => {
         self.readyForSettings = false
-        let pkg = new LD.Package(self.package, LT.db)
+        let pkg = new LD.Package(getTargetPackage(), LT.db)
         pkg.remove(self.marker).then(() => {
             self.marker.drop().then(() => {
                 self.marker = null
@@ -240,13 +247,15 @@
         dispute: Action.disputeMarker,
         map: Action.mapMarker,
         showSettings: () => {
-            console.log("show settings")
             self.readyForSettings = true
         },
         closeSettingsMenu: () => {
             self.readyForSettings = false
         },
-        close: Action.closeMenu
+        close: Action.closeMenu,
+        inspect: () => {
+            self.marker.inspect()
+        }
     }
     // compute marker titles
     Component.computed = {}

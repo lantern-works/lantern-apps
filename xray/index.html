@@ -39,25 +39,25 @@
             <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
 
-        <section v-if="!readyToDrop" class="actions">
+        <section v-if="!readyToDrop" class="actions" @click="inspect">
             <div class="buttons is-centered">
-                <div class="button"  @click="zoomIn" v-if="!maxZoom">
+                <div class="button"  @click.stop="zoomIn" v-if="!maxZoom">
                     <i class="fa fa-search-plus" />
                 </div>                      
 
-                <div class="button"  @click="zoomOut" v-if="maxZoom">
+                <div class="button"  @click.stop="zoomOut" v-if="maxZoom">
                     <i class="fa fa-search-minus" />
                 </div>
 
 
-                <div class="button"  @click="map">
+                <div class="button"  @click.stop="map">
                     <i class="fa fa-route"/>
                 </div>            
 
-                <div class="button"  @click="move">
+                <div class="button"  @click.stop="move">
                     <i class="fa fa-arrows-alt"/>
                 </div>            
-                <div class="button"  @click="showSettings">
+                <div class="button"  @click.stop="showSettings">
                     <i class="fa fa-ellipsis-v"/>
                 </div>
             </div>

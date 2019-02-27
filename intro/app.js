@@ -20,7 +20,8 @@
         let org = new LD.Organization('lnt-dev', 'Project Lantern Development Team', LT.db)
 
         // select package to follow data from
-        let pkg = new LD.Package(self.package, LT.db)
+        let pkgId = window.location.hash.replace('#','').split(',')[0] // assume first package
+        let pkg = new LD.Package(pkgId, LT.db)
         pkg.publish().then(() => {
             // let user watch the package for updates
             LT.user.install(pkg)
