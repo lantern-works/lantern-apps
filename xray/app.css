@@ -83,13 +83,16 @@
 }
 
 @media only screen and (max-width: 350px) {
-        #lx-app-xray-index .buttons .button {
-                margin-top: 0em;
-                margin-bottom: 0em; 
-                padding: 1em;
-                max-width: 3em;
-        }
-
+    #lx-app-xray-index .actions {
+        padding: 0em;
+    }
+    #lx-app-xray-index h1 {
+        padding: 0.5em;
+    }
+    #lx-app-xray-index .buttons .button {
+            padding: 1em;
+            max-width: 3em;
+    }
 }
 
 
