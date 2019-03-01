@@ -189,7 +189,7 @@
 
     Interface.hideMarker = (e) => {
         if (LT.atlas.markers[e.id]) {
-            //console.log('(mapify) hide existing marker', e.id)
+            console.log('(mapify) hide existing marker', e.id)
             LT.atlas.removeFromMap(LT.atlas.markers[e.id])
         }
 
@@ -286,17 +286,6 @@
         zoom_out.innerHTML = ''
         zoom_out.appendChild(elem2)
 
-        // // add locate control
-        L.control.locate({
-            returnToPreviousBounds: true,
-            cacheLocation: true,
-            showCompass: true,
-            flyTo: false,
-            showPopup: false,
-            setView: 'untilPanOrZoom',
-            position: 'bottomright',
-            icon: 'fa fa-location-arrow'
-        }).addTo(LT.atlas.map)
     }
 
     // ------------------------------------------------------------------------

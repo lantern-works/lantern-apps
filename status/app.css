@@ -1,0 +1,19 @@
+#lx-app-status-index .button-box {
+    text-align: center;
+    padding: 1em;
+}
+
+
+#lx-app-status-index .button-box .icon {
+    margin: auto;
+    opacity: 0.9;
+    font-size: xx-large;
+}
+
+#lx-app-status-index .button-box p {
+    padding: 1em;
+}
+#lx-app-status-index .button-box .button {
+    margin-top: 1em;
+    width: 100%;
+}

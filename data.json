@@ -144,6 +144,20 @@
         "label": "Looting",
         "tag": "lot"
       }
+    ],
+    "usr": [
+      {
+        "label": "Citizen",
+        "tag": "ctz"
+      },
+      {
+        "label": "Doctor",
+        "tag": "doc"
+      },
+      {
+        "label": "Official",
+        "tag": "cmd"
+      }
     ]
   }
 }

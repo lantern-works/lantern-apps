@@ -1,0 +1,19 @@
+<div class="app-bottom" v-if="prompt_for_save" v-cloak>
+    <div class="app-frame sheet-app-frame">
+        <section>
+            <div class="button-box">
+                    <span class="icon is-large">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </span>
+                <p>Would you like to share your current location? This will be visibile for all connected users.</p>
+                <div :class="(is_saving ? 'is-loading' : '') + ' button is-primary'" @click="save">
+                    Share
+                </div>
+                <div class="button is-secondary" :disabled="is_saving" @click="skip">
+                    No Thanks
+                </div>
+            </div>
+        </section>
+
+    </div> 
+</div>
