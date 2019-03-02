@@ -2,7 +2,7 @@
 * Reports location and safety data for users 
 */
 (function () {
-    var self, map, user, feed, latlng;
+    var self, map, user, ctx, latlng;
     let Interface = {}
     let Component = {
         mounted () {
@@ -29,7 +29,6 @@
             ctx = data.app.context
             user = data.app.context.user
             map = data.app.context.map
-            feed = data.app.context.feed
         }
     }
     let Action = {}
@@ -92,7 +91,7 @@
     }
 
     Interface.refreshExistingMarker = (id) => {       
-        let myMarker = feed.items[id]
+        let myMarker = ctx.feed.items[id]
         if (myMarker) {
             if (myMarker.latlng.lat !== latlng.latitude 
                 || myMarker.latlng.lon !== latlng.longitude) {

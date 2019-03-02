@@ -1,4 +1,21 @@
 <div class="app-center" v-if="show" v-cloak>
+	<div class="app-frame menu-app-frame" v-if="!title">
+		
+		<h1>Choose A Map</h1>
+		<section>
+			<p class="intro">Maps are shared across all connected devices, so you can always stay on the same page.</p>
+		</section>
+		<section>
+			<ul class="menu">
+				<li v-for="map in maps" @click="chooseMap(map)" :data-map-id="map.id" :key="map.id">
+					<span> {{ map.name }} </span>
+					<span class="icon is-large">
+						<i class="fas fa-angle-right"></i>
+					</span>
+				</li>
+			</ul>
+		</section>
+	</div>
 	<div class="app-frame" v-if="title">
 		<section v-if="slide === 0">
 			<img class="logo" src="../theme/logo.png">
@@ -30,7 +47,7 @@
 	        <h1>Tell Folks You&#39;re Safe</h1>
 	        <p class="intro"> Any data reported will be shared with others in the community once uploaded to a nearby device.</p>
 		    <div class="button-single">
-	       		<a class="button is-fullwidth" @click="doContinue">Get Started</a> 
+	       		<a class="button is-fullwidth" @click="promptForMap">Choose A Map</a> 
 	       	</div>
 	    </section>
 	</div>

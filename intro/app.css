@@ -4,7 +4,6 @@
 	background: none;	
 	z-index: 1000;
 	padding: 1em;
-
 }
 
 
@@ -20,15 +19,6 @@
 }
 
 
-#lx-app-intro-index section {
-	padding: 0;
-}
-
-#lx-app-intro-index h1 {
-	padding-bottom: 0;
-	padding-top: 0;
-}
-
 #app-container #lx-app-intro-index .app-mask {
 	z-index: -100;
 	opacity: 0.5;
@@ -39,10 +29,6 @@
 	width: 60px;
 	height: 60px;
 	margin-top: 1.5em;
-}
-
-#lx-app-intro-index section {
-	padding: 0em;
 }
 
 
@@ -70,4 +56,8 @@
 
 #lx-app-intro-index .button:last-child {
 	margin-top: 0.5em;
+}
+
+#lx-app-intro-index .menu {
+	border-top: 1px solid #EEE;
 }

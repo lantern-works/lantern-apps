@@ -2,7 +2,7 @@
 * Inspects a selected marker to reveal data and real-time insights
 */
 (function () {
-    var self, user, ctx, feed, map, targetMarker, pingTimeout
+    var self, user, ctx, map, targetMarker, pingTimeout
 
     let Interface = {}
     let Component = {
@@ -15,7 +15,6 @@
             ctx = data.app.context
             user = data.app.context.user
             map = data.app.context.map
-            feed = data.app.context.feed
         }
     }
     let Action = {}
@@ -41,12 +40,21 @@
         })
 
         map.on('marker-click', Interface.selectMarker)
-        feed.on('drop', (e) => {
-            if (self.marker && e.id === self.marker.id) {
-                // don't display a marker that has been dropped
-                self.marker = null
-            }
+
+        if (ctx.feed) {
+            ctx.feed.on('drop', Interface.dropMarker)
+        }
+
+        ctx.on('change', (e) => {
+            ctx.feed.on('drop', Interface.dropMarker)
         })
+    }
+
+    Interface.dropMarker = () => {
+        if (self.marker && e.id === self.marker.id) {
+            // don't display a marker that has been dropped
+            self.marker = null
+        }
     }
 
     Interface.selectMarker = (marker) => {
@@ -71,15 +79,15 @@
     * User wants to close menu
     */
     Action.closeMenu = () => {
-            if (pingTimeout) {
-                clearInterval(pingTimeout)
-            }
-            self.pingInProgress = false
-            self.readyToDrop = false
-            self.readyForLabel = false
-            self.readyForSettings = false
-            self.marker = null
-            self.maxZoom = false
+        if (pingTimeout) {
+            clearInterval(pingTimeout)
+        }
+        self.pingInProgress = false
+        self.readyToDrop = false
+        self.readyForLabel = false
+        self.readyForSettings = false
+        self.marker = null
+        self.maxZoom = false
     }
 
 

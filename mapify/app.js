@@ -3,13 +3,12 @@
 * Also offers a search-box to find relevant markers
 */
 (function () {
-    var self, ctx, user, map, feed
+    var self, ctx, user, map
     let Interface = {}
     let Component = {
         mounted () {
             if (self) return
             self = this
-            self.markers = feed.itemsList
             Interface.bindAll()
         },
         callback: (data) => {
@@ -17,8 +16,7 @@
             ctx = data.app.context
             user = data.app.context.user
             map = data.app.context.map
-            feed = data.app.context.feed
-            map.render()
+            map.render(ctx.cloud)
         }
     }
     let Action = {}
@@ -63,25 +61,22 @@
 
 
     Interface.showMarker = (marker) => {
+
+        if (marker.layer && marker.layer._map) {
+            // already added to map
+            //console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
+            return
+        }
+
         //console.log("(mapify) show marker", marker.id, marker.geohash);
+
         marker.tags.forEach((tag) => {
             if (self.icons.hasOwnProperty(tag)) {
                 marker.icon = self.icons[tag]
             }
         })
         map.addToMap(marker)
-    }
 
-    Interface.hideMarker = (marker) => {
-        //console.log('(mapify) hide existing marker', marker.id)
-        map.removeFromMap(marker)
-    }
-
-    Interface.refreshMarker = (e) => {
-        let marker = feed.items[e.id]
-        let obj = {}
-        obj[e.key] = e.data
-        marker.refresh(obj)
         marker.on('change', (key) => {
             console.log(key)
             // if this is a ping, open details on map
@@ -90,6 +85,11 @@
                 self.$root.$emit('marker-focus', marker)
             }
         })
+    }
+
+    Interface.hideMarker = (marker) => {
+        //console.log('(mapify) hide existing marker', marker.id)
+        map.removeFromMap(marker)
     }
 
     Interface.defineIconClasses = () => {
@@ -113,39 +113,45 @@
 
     Interface.bindAll = () => {
         Interface.setupControls()
-
-
-        self.markers.forEach((id) => {
-            Interface.showMarker(feed.items[id])
-        })
-
-        feed.on('item-watch', (e) => {
-            Interface.showMarker(e.item)
-        })
-
-        feed.on('item-unwatch', (e) => {
-            if (e.item && e.item.layer) {
-                Interface.hideMarker(e.item)
-            }
-        })
-
+        Interface.displayMarkers()
+        ctx.feed.on('reset', Interface.displayMarkers)
         Interface.defineIconClasses()
-
         // try to save center location after the map moves
         map.view.on('moveend', (e) => {
             cacheCenterLocation()
         })
-
-        map.fitMapToAllMarkers(feed.items)
-
         // other marker and map-related apps
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('status')
 
 
-        // start watching for changes only after initial data load
-        feed.on('item-change', Interface.refreshMarker)
+        ctx.feed.on('item-watch', (e) => {
+            Interface.showMarker(e.item)
+            if (self.markers.length == 1) {
+                map.panToPoint(e.item.latlng)
+            }
+        })
+
+        ctx.feed.on('item-unwatch', (e) => {
+            if (e.item && e.item.layer) {
+                Interface.hideMarker(e.item)
+            }
+        })
+
+    }
+
+    Interface.displayMarkers = () => {
+        let feed = ctx.feed
+
+        self.markers = feed.itemsList
+
+        feed.itemsList.forEach((id) => {
+            Interface.showMarker(feed.items[id])
+        })
+        if (feed.itemsList.length) {
+            map.fitMapToAllMarkers(feed.activeItems)
+        }
     }
 
     /**
@@ -190,7 +196,7 @@
             }
             else {
                 self.snapback = map.getCenterAsString()
-                map.fitMapToAllMarkers(feed.items)
+                map.fitMapToAllMarkers(ctx.feed.activeItems)
             }
 
         },
@@ -263,15 +269,17 @@
     Component.computed.filtered_markers = () => {
         let filter = self.filter || self.types[0]
         let list = []
-        self.markers.forEach(key => {
-            let item = feed.items[key]
-            if (item) {
-                let intersection = filter.match.filter(x => item.tags.includes(x));
-                if (intersection.length) {
-                    list.push(item)
+        if (self.markers) {
+            self.markers.forEach(key => {
+                let item = ctx.feed.items[key]
+                if (item) {
+                    let intersection = filter.match.filter(x => item.tags.includes(x));
+                    if (intersection.length) {
+                        list.push(item)
+                    }
                 }
-            }
-        })
+            })
+        }
         return list
     }
 

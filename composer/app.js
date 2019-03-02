@@ -2,7 +2,7 @@
 * Allows users to create new markers on the map
 */
 (function () {
-    var self,user,map
+    var self,user,map,ctx
 
     let Interface = {}
     let Action = {}
