@@ -2,30 +2,27 @@
 * Inspects a selected marker to reveal data and real-time insights
 */
 (function () {
-    var self
-    var targetMarker
-    var pingTimeout
+    var self, user, ctx, feed, map, targetMarker, pingTimeout
 
     let Interface = {}
     let Component = {
         mounted () {
             if (self) return
             self = this
-            LT.withAtlas(Interface.bindAll)
-            LT.withUser((user) => {
-                self.username = user.username
-            })
+            Interface.bindAll()
+        },
+        callback: (data) => {
+            ctx = data.app.context
+            user = data.app.context.user
+            map = data.app.context.map
+            feed = data.app.context.feed
         }
     }
     let Action = {}
 
-    const getTargetPackage = () => {
-        return window.location.hash.replace('#','').split(',')[0] // assume first package
-    }
-
     // ------------------------------------------------------------------------
-    Interface.bindAll = (atlas) => {
-        self.maxZoom = atlas.hasMaxZoom()
+    Interface.bindAll = () => {
+        self.maxZoom = map.hasMaxZoom()
         self.$root.$on('marker-focus', (marker) => {
             Interface.selectMarker(marker)
         })
@@ -34,17 +31,17 @@
             Action.closeMenu()
         })
         
-        atlas.map.on('click', () => {
+        map.view.on('click', () => {
             Action.closeMenu()
         })
 
 
-        atlas.on('marker-remove', () => {
+        map.on('marker-remove', () => {
             Action.closeMenu()
         })
 
-        atlas.on('marker-click', Interface.selectMarker)
-        LT.user.feed.on('drop', (e) => {
+        map.on('marker-click', Interface.selectMarker)
+        feed.on('drop', (e) => {
             if (self.marker && e.id === self.marker.id) {
                 // don't display a marker that has been dropped
                 self.marker = null
@@ -61,11 +58,11 @@
         }
         self.marker = marker
 
-        LT.atlas.map.once("moveend", () => {
-            LT.atlas.zoomMinimum(14)
+        map.view.once("moveend", () => {
+            map.zoomMinimum(13)
         })
 
-        LT.atlas.panToPoint(self.marker.latlng)
+        map.panToPoint(self.marker.latlng)
     }
 
     // ------------------------------------------------------------------------
@@ -101,7 +98,7 @@
             targetMarker.icon = original_icon
             targetMarker.layer.dragging.disable()
             // add user to list of editors
-            targetMarker.editor(LT.user.username)
+            targetMarker.editor(user.username)
             targetMarker.save(['editors', 'geohash'])
         })
         self.marker = null
@@ -112,7 +109,7 @@
     */
     Action.pingMarker = () => {
         self.pingInProgress = true
-        self.marker.ping = [LT.user.username, new Date().getTime()]
+        self.marker.ping = [user.username, new Date().getTime()]
         self.marker.save(['ping']).then(() => {
             console.log(`(xray) sent ping for marker ${self.marker.id}`)
             pingTimeout = setTimeout(() => {
@@ -126,12 +123,10 @@
     */
     Action.dropMarker = () => {
         self.readyForSettings = false
-        let pkg = new LD.Package(getTargetPackage(), LT.db)
-        pkg.remove(self.marker).then(() => {
-            self.marker.drop().then(() => {
-                self.marker = null
-                self.readyToDrop = false
-            })
+        ctx.removeFromPackages(self.marker)
+        self.marker.drop().then(() => {
+            self.marker = null
+            self.readyToDrop = false
         })
     }
     
@@ -140,7 +135,7 @@
     */
     Action.approveMarker = () => {      
         self.readyForSettings = false
-        self.marker.approve(LT.user.username).then(() => {
+        self.marker.approve(user.username).then(() => {
             console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)      
         })
     }
@@ -150,7 +145,7 @@
     */
     Action.disputeMarker = () => {
         self.readyForSettings = false
-        self.marker.dispute(LT.user.username).then(() => {
+        self.marker.dispute(user.username).then(() => {
             console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)
         })
     }
@@ -216,15 +211,15 @@
 
         },
         zoomIn: () => {
-            LT.atlas.zoomToPoint(self.marker.latlng)
-            self.maxZoom = LT.atlas.hasMaxZoom() 
+            map.zoomToPoint(self.marker.latlng)
+            self.maxZoom = map.hasMaxZoom() 
             setTimeout(() => {
-                self.maxZoom = LT.atlas.hasMaxZoom() 
+                self.maxZoom = map.hasMaxZoom() 
             }, 500)
         },   
         zoomOut: () => {
-            LT.atlas.map.zoomOut()
-            self.maxZoom = LT.atlas.hasMaxZoom() 
+            map.view.zoomOut()
+            self.maxZoom = map.hasMaxZoom() 
         },
         scoreDown: () => {
             if (self.marker.score < 0.10) {
@@ -263,7 +258,5 @@
         if (!self.marker) return null
         return self.marker.getCategory(self.categories)
     }
-
-    Component.open = true
     return Component
 }())

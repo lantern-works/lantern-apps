@@ -2,35 +2,34 @@
 * Reports location and safety data for users 
 */
 (function () {
-    var self, atlas, user, latlng;
+    var self, map, user, feed, latlng;
     let Interface = {}
     let Component = {
         mounted () {
             if (self) return
             self = this
+            // // add locate control
+            L.control.locate({
+                returnToPreviousBounds: true,
+                cacheLocation: true,
+                showCompass: true,
+                flyTo: false,
+                showPopup: false,
+                setView: 'untilPanOrZoom',
+                position: 'bottomright',
+                icon: 'fa fa-location-arrow',
+                onLocationError: (err) => {
+                    console.warn("(status) location error", err)
+                }
+            }).addTo(map.view)
 
-            LT.withUser(result => {
-                user = result
-                LT.withAtlas(result => {
-                    atlas = result
-                    // // add locate control
-                    L.control.locate({
-                        returnToPreviousBounds: true,
-                        cacheLocation: true,
-                        showCompass: true,
-                        flyTo: false,
-                        showPopup: false,
-                        setView: 'untilPanOrZoom',
-                        position: 'bottomright',
-                        icon: 'fa fa-location-arrow',
-                        onLocationError: (err) => {
-                            console.warn("(status) location error", err)
-                        }
-                    }).addTo(atlas.map)
-
-                    Interface.bindAll()
-                })
-            })
+            Interface.bindAll()
+        },
+        callback: (data) => {
+            ctx = data.app.context
+            user = data.app.context.user
+            map = data.app.context.map
+            feed = data.app.context.feed
         }
     }
     let Action = {}
@@ -64,7 +63,7 @@
             self.marker.save().then(() => {
                 addMarkerToPackage(self.marker)
                 user.setMarker(self.marker).then(() => {                
-                    atlas.removeFromMap(self.marker)
+                    map.removeFromMap(self.marker)
                     self.is_saving = false
                     self.prompt_for_save = false
                 })
@@ -77,7 +76,7 @@
         if (self.marker) {
             self.did_skip = true
             if (self.marker.mode === 'draft') {
-                atlas.removeFromMap(self.marker) 
+                map.removeFromMap(self.marker) 
             }
 
         }
@@ -88,12 +87,12 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
-        atlas.map.on('locationfound', Interface.promptForSave)
-        atlas.on('marker-click', Action.skip)
+        map.view.on('locationfound', Interface.promptForSave)
+        map.on('marker-click', Action.skip)
     }
 
     Interface.refreshExistingMarker = (id) => {       
-        let myMarker = LT.atlas.markers[id]
+        let myMarker = feed.items[id]
         if (myMarker) {
             if (myMarker.latlng.lat !== latlng.latitude 
                 || myMarker.latlng.lon !== latlng.longitude) {
@@ -120,7 +119,7 @@
         marker.icon = 'user'
         marker.latlng = latlng
         marker.owner = user.username
-        atlas.addToMap(marker)
+        map.addToMap(marker)
         marker.layer.dragging.enable()
         self.marker = marker
     }
@@ -158,8 +157,6 @@
         is_saving: false,
         did_skip: false
     }
-
-    Component.open = true
 
     Component.methods = {
         skip: Action.skip,

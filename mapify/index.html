@@ -1,23 +1,23 @@
 <div class="app-top">	
 	<div class="app-frame">
 		<!-- search icon -->
-		<span @click.stop="searchMap" v-if="marker_count > -1" :class="'search icon ' + (show_search ? 'active' : 'inactive') ">	<i class="fas fa-search"></i>
+		<span @click.stop="searchMap" :class="'search icon ' + (show_search ? 'active' : 'inactive') ">	<i class="fas fa-search"></i>
 		</span>
 
 		<!-- new marker icon -->
-		<span v-if="marker_count > -1" @click.stop="promptForNewMarker" class="icon new">
+		<span @click.stop="promptForNewMarker" class="icon new">
 			<i class="fas fa-map-marker-alt"></i>
 		</span>
 
 
 		<!-- loading text -->
-		<div class="marker-count" v-if="marker_count == -1">
+		<div class="marker-count" v-if="markers === null">
 			Loading&hellip;
 		</div> 
 
 		<!-- marker count -->
-		<div class="marker-count" v-if="marker_count > -1"  @click="fitMap">
-			{{ marker_count }} {{ 'Marker' | pluralize(marker_count) }}
+		<div class="marker-count" v-if="markers !== null"  @click="fitMap">
+			{{ markers.length }} {{ 'Marker' | pluralize(markers.length) }}
 		</div>
 
 	</div>

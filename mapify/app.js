@@ -3,243 +3,96 @@
 * Also offers a search-box to find relevant markers
 */
 (function () {
-    var self
+    var self, ctx, user, map, feed
     let Interface = {}
     let Component = {
         mounted () {
             if (self) return
             self = this
-            // wait for atlas and then bind map interface
-            LT.withAtlas(Interface.bindAll)
+            self.markers = feed.itemsList
+            Interface.bindAll()
+        },
+        callback: (data) => {
+            if (ctx) return
+            ctx = data.app.context
+            user = data.app.context.user
+            map = data.app.context.map
+            feed = data.app.context.feed
+            map.render()
         }
     }
     let Action = {}
 
-    const getTargetPackage = () => {
-        return window.location.hash.replace('#','').split(',')[0] // assume first package
-    }
+
 
     // ------------------------------------------------------------------------
 
     /**
-    * User wants to save marker to database
+    * Preserves center map location with browser-based storage
     */
-    Action.saveMarker = () => {
-        if (self.is_saving) return
-        self.is_saving = true
-        self.draft_marker.layer.dragging.disable()
-        self.draft_marker.owner = LT.user.username
-
-        // find package we want to save to
-        let pkgId = getTargetPackage()
-        if (!pkgId) {
-            console.log(`(radiant) cannot save marker since missing package`)
-            return
-        }
-        let pkg = new LD.Package(pkgId, LT.db)
-        self.draft_marker.save().then(() => {
-            pkg.add(self.draft_marker)
-            // make sure save event is intended from this app
-            console.log('(radiant) marker saved:', self.draft_marker.id)
-            self.is_saving = false
-            Interface.removeDraftMarker()
-        })
-
-        self.prompt_draft_save = false
-        self.menu = {}
-    }
-
-    /**
-    * User wants to choose menu from item,
-    */
-    Action.chooseFromBottomMenu = (item) => {
-        if (self.draft_marker) {
-            // special actions for reporting menu
-            if (self.categories.hasOwnProperty(item.tag)) {
-                if (self.menu.items && self.menu.title) {
-                    self.previous = {
-                        title: self.menu.title,
-                        items: self.menu.items,
-                        tag: item.tag
-                    }
-                }
-
-                self.menu.items = self.categories[item.tag]
-                self.menu.title = item.label
-            } else if (self.previous.tag) {
-                self.draft_marker.tag(self.previous.tag)
-                self.prompt_draft_save = true
+    const cacheCenterLocation  = (timeout) => {
+        let center = map.getCenter()
+        // only save to database if user has paused on this map for a few seconds
+        setTimeout(() => {
+            if (center === "ew" || map.getCenterAsString() === localStorage.getItem('lx-ctr')) {
+                // don't bother saving default north american view
+                return
             }
-            self.draft_marker.tag(item.tag)
-        } else if (item.hasOwnProperty('method')) {
-            item.method(item)
-        }
+            let newCenter = map.getCenter()
+            if (center === newCenter) {
+                //console.log(`(mapify) caching center geohash: ${newCenter}`);
+                localStorage.setItem('lx-ctr', newCenter)
+            }
+        }, timeout || 5000)
     }
 
     /**
-    * User wants to close menu
+    * Use saved per-user location to center map
     */
-    Action.closeBottomMenu = () => {
-        self.menu = {}
-        if (self.draft_marker) {
-            LT.atlas.removeFromMap(self.draft_marker)
-            self.draft_marker = null
-        }
-    }
-
-    /**
-    * User wants to navigate backwards to previous menu
-    */
-    Action.goToPreviousMenu = () => {
-        if (self.is_saving) return
-
-        self.draft_marker.untagAll()
-        self.prompt_draft_save = false
-
-        if (self.previous.title && self.previous.items) {
-            self.menu.title = self.previous.title
-            self.menu.items = self.previous.items
-            self.previous = {}
+    const setViewFromCenterLocationCache = () => {
+        let ctr = localStorage.getItem('lx-ctr')
+        try {
+            let parts = ctr.split('/')
+            map.setView([parts[0], parts[1]], parts[2])
+            // console.log(`${this.logPrefix} restoring view = ${parts}`)
+        } catch (e) {
+            // will fall back to default view if no markers available
+            map.setDefaultView()
         }
     }
 
 
-    // ------------------------------------------------------------------------
-
-    Interface.promptForNewMarker = () => {
-        if (self.draft_marker) {
-            // remove old draft
-            Interface.removeDraftMarker()
-        }   
-
-        self.draft_marker = new LM.MarkerItem(LT.db)
-        self.draft_marker.icon = "map-marker-alt"
-
-        let latlng = LT.atlas.map.getCenter()
-        latlng.lat = (latlng.lat + LT.atlas.map.getBounds().getNorth() * 3) / 4
-        self.draft_marker.geohash = LM.Location.toGeohash(latlng)
-
-
-        LT.atlas.addToMap(self.draft_marker)
-        self.draft_marker.layer.dragging.enable()
-
-        self.$root.$emit('marker-draft', self.draft_marker)
-
-        LT.atlas.zoomMinimum(8)
-
-        self.draft_marker.on('tag', (tag) => {
-           if (self.icons.hasOwnProperty(tag)) {
-                self.draft_marker.icon = self.icons[tag]
-           }
+    Interface.showMarker = (marker) => {
+        //console.log("(mapify) show marker", marker.id, marker.geohash);
+        marker.tags.forEach((tag) => {
+            if (self.icons.hasOwnProperty(tag)) {
+                marker.icon = self.icons[tag]
+            }
         })
-
-        self.draft_marker.on('untag', () => {
-            self.draft_marker.icon = null
-        })
-
-        self.menu = {
-            title: "What's here?"
-        }
-        self.menu.items = self.categories.main
+        map.addToMap(marker)
     }
 
-    Interface.removeDraftMarker = () => {
-        self.prompt_draft_save = false
-        LT.atlas.removeFromMap(self.draft_marker)
-        delete self.draft_marker
-        self.draft_marker = null
-    }
-
-
-    Interface.refresh = () => {
-        LT.withUser(user => {
-            user.feed.forEachItem((v, k) => {
-                if (v && v.g && v.o && v.t) {
-                    // this is a marker
-                    if (!LT.atlas.markers[k]) {
-                        Interface.showMarker({ id: k, data: v })
-                    } else {
-                        // exists in UI
-                        let marker = LT.atlas.markers[k]
-                        marker.refresh(v)
-                    }
-                } else {
-                    Interface.hideMarker({ id: k })
-                }
-            })
-        })
-    }
-
-    Interface.showMarker = (e) => {
-        if (!LT.atlas.markers[e.id] && e.data.g && e.data.o && e.data.t) {
-            let marker = new LM.MarkerItem(LT.db)
-            marker.id = e.id
-            marker.data = e.data
-            // console.log("(mapify) show marker", marker.id, marker.geohash);
-            marker.tags.forEach((tag) => {
-                if (self.icons.hasOwnProperty(tag)) {
-                    marker.icon = self.icons[tag]
-                }
-            })
-
-            LT.atlas.addToMap(marker)
-        }
-
-    }
-
-    Interface.hideMarker = (e) => {
-        if (LT.atlas.markers[e.id]) {
-            console.log('(mapify) hide existing marker', e.id)
-            LT.atlas.removeFromMap(LT.atlas.markers[e.id])
-        }
-
+    Interface.hideMarker = (marker) => {
+        //console.log('(mapify) hide existing marker', marker.id)
+        map.removeFromMap(marker)
     }
 
     Interface.refreshMarker = (e) => {
-        if (LT.atlas.markers[e.id]) {
-            console.log("(mapify) refresh marker" + e.id)
-            let marker = LT.atlas.markers[e.id]
-            let obj = {}
-            obj[e.key] = e.data
-            marker.refresh(obj)
-
+        let marker = feed.items[e.id]
+        let obj = {}
+        obj[e.key] = e.data
+        marker.refresh(obj)
+        marker.on('change', (key) => {
+            console.log(key)
             // if this is a ping, open details on map
-            if (e.key && e.key == 'p') {
-                LT.atlas.panToPoint(marker.latlng)
+            if (key == 'ping') {
+                map.panToPoint(marker.latlng)
                 self.$root.$emit('marker-focus', marker)
             }
-        }
+        })
     }
 
-    Interface.bindAll = (atlas) => {
-    
-        self.markers = atlas.markerList
-
-        // visualize known markers
-        // sync with all available markers from user-specific feed
-        // this is pre-filtered based on installed packages  
-
-        // add map controls
-        Interface.setupControls()
-        
-
-        // keep the UI up-to-date based on changes to marker count
-        atlas.on('marker-add', () => {
-            self.marker_count = atlas.getMarkerCount()
-        })
-        atlas.on('marker-remove', () => {
-            self.marker_count = atlas.getMarkerCount()
-        })
-
-        atlas.on('marker-click', Action.closeBottomMenu)
-
-        LT.withUser( user => {
-            user.feed.on('change', Interface.refreshMarker)
-            user.feed.on('add', Interface.showMarker)
-            user.feed.on('drop', Interface.hideMarker)
-            user.feed.on('watch', Interface.refresh)
-        })
-        
+    Interface.defineIconClasses = () => {
         // set up custom icons for menu
         for (var idx in self.categories) {
             let menu = self.categories[idx]
@@ -256,13 +109,43 @@
                 }
             })
         }
+    }
 
-        setTimeout(() => {
-            if (self.marker_count == -1) {
-                self.marker_count = 0
+    Interface.bindAll = () => {
+        Interface.setupControls()
+
+
+        self.markers.forEach((id) => {
+            Interface.showMarker(feed.items[id])
+        })
+
+        feed.on('item-watch', (e) => {
+            Interface.showMarker(e.item)
+        })
+
+        feed.on('item-unwatch', (e) => {
+            if (e.item && e.item.layer) {
+                Interface.hideMarker(e.item)
             }
-        }, 750)
-            
+        })
+
+        Interface.defineIconClasses()
+
+        // try to save center location after the map moves
+        map.view.on('moveend', (e) => {
+            cacheCenterLocation()
+        })
+
+        map.fitMapToAllMarkers(feed.items)
+
+        // other marker and map-related apps
+        ctx.openOneApp('composer')
+        ctx.openOneApp('xray')
+        ctx.openOneApp('status')
+
+
+        // start watching for changes only after initial data load
+        feed.on('item-change', Interface.refreshMarker)
     }
 
     /**
@@ -272,7 +155,7 @@
         // add zoom in & out control
         let zoom = L.control.zoom()
         zoom.setPosition('bottomright')
-        zoom.addTo(LT.atlas.map)
+        zoom.addTo(map.view)
 
         // create custom zoom icons
         let zoom_in = document.getElementsByClassName('leaflet-control-zoom-in')[0]
@@ -288,6 +171,10 @@
 
     }
 
+    Interface.promptForNewMarker = () => {
+        self.$root.$emit('marker-draft')
+    }
+
     // ------------------------------------------------------------------------
 
     Component.methods = {
@@ -296,20 +183,21 @@
         },
         fitMap: () => {
             if (self.snapback) {
-                self.snapback = false
-                return LT.atlas.setViewFromCenterLocationCache()
+                let parts = self.snapback.split('/')
+                map.view.setView([parts[0], parts[1]], parts[2])
+                console.log('(mapify) snapback to ' + self.snapback)
+                self.snapback = null
             }
-            self.snapback = true
-            LT.atlas.cacheCenterLocation(0)
-            LT.atlas.fitMapToAllMarkers()
+            else {
+                self.snapback = map.getCenterAsString()
+                map.fitMapToAllMarkers(feed.items)
+            }
+
         },
         chooseFromMenu: (item) => {
-            LT.atlas.panToPoint(item.latlng).then(() => {
-                // open up item details
-                self.$root.$emit('marker-focus', item)
-            }) // zoom after
+            // open up item details
+            self.$root.$emit('marker-focus', item)
             self.show_search = false
-            Action.closeBottomMenu()
         },
         closeMenu: () => {
             self.show_search = false
@@ -340,16 +228,11 @@
                 return 'button'
             }
         },
-        promptForNewMarker:  Interface.promptForNewMarker,
-        closeBottomMenu: Action.closeBottomMenu,
-        chooseFromBottomMenu: Action.chooseFromBottomMenu,
-        saveMarker: Action.saveMarker,
-        goToPreviousMenu: Action.goToPreviousMenu
+        promptForNewMarker:  Interface.promptForNewMarker
     }
 
     Component.data = {
-        markers: [],
-        marker_count: -1,
+        markers: null,
         show_search: false,
         snapback: false,
         types: [
@@ -370,15 +253,7 @@
                 'match': ['ven']
             }
         ],
-        draft_marker: null,
-        prompt_draft_save: false,
-        menu: {
-            title: null,
-            items: null
-        },
-        previous: {},
-        latlng: null,
-        is_saving: false
+        latlng: null
     }
 
     Component.data.filter = Component.data.types[0]
@@ -389,7 +264,7 @@
         let filter = self.filter || self.types[0]
         let list = []
         self.markers.forEach(key => {
-            let item = LT.atlas.markers[key]
+            let item = feed.items[key]
             if (item) {
                 let intersection = filter.match.filter(x => item.tags.includes(x));
                 if (intersection.length) {
@@ -399,8 +274,6 @@
         })
         return list
     }
-
-    Component.open = true
 
     return Component
 }())

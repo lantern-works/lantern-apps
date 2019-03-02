@@ -1,7 +1,4 @@
 (function () {
-    // ------------------------------------------------------------------------
-    var config = {
-    }
-
-    return config
+    let Component = {}
+    return Component
 }())
