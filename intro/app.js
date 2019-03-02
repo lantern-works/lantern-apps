@@ -49,7 +49,7 @@
     }
 
     Interface.start = () => {
-        if (!ctx.id || window.location.hash == "") {
+        if (!ctx.id && window.location.hash == "") {
             if (self.maps.length) {
                 window.location.hash = self.maps[0].id
             }
@@ -72,19 +72,22 @@
                 .once((v,k) => {
                     if (!v || Object.keys(v).length === 1) {
                         ctx.db.get('ctx').set({
-                            'name': 'Demo',
+                            'name': 'Demo Map',
                             'packages': 'demo@0.0.1'
                         })
                     }
                     Interface.bindAll()
                 })
-                .map((v,k) => {
+                
+            ctx.db.get('ctx').once().map((v,k) => {
+                if (v && v.name) {
                     // display this as a canvas
                     self.maps.push({
                         id: k,
                         name: v.name
-                    })
-                })
+                    })  
+                }
+            })
 
         },
         callback: (data) => {

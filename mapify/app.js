@@ -75,7 +75,10 @@
                 marker.icon = self.icons[tag]
             }
         })
-        map.addToMap(marker)
+
+        if (marker.icon) {
+            map.addToMap(marker)
+        }
 
         marker.on('change', (key) => {
             console.log(key)
@@ -144,14 +147,14 @@
     Interface.displayMarkers = () => {
         let feed = ctx.feed
 
+        self.markers = []
         self.markers = feed.itemsList
 
         feed.itemsList.forEach((id) => {
             Interface.showMarker(feed.items[id])
         })
-        if (feed.itemsList.length) {
-            map.fitMapToAllMarkers(feed.activeItems)
-        }
+        
+        map.fitMapToAllMarkers(feed.activeItems)
     }
 
     /**
