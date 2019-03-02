@@ -68,18 +68,7 @@
             if (self) return
             self = this
             // get or create context for packages
-             ctx.db.get('ctx')
-                .once((v,k) => {
-                    if (!v || Object.keys(v).length === 1) {
-                        ctx.db.get('ctx').set({
-                            'name': 'Demo Map',
-                            'packages': 'demo@0.0.1'
-                        })
-                    }
-                    Interface.bindAll()
-                })
-                
-            ctx.db.get('ctx').once().map((v,k) => {
+            ctx.db.get('ctx').map((v,k) => {
                 if (v && v.name) {
                     // display this as a canvas
                     self.maps.push({
@@ -88,6 +77,8 @@
                     })  
                 }
             })
+                    
+            Interface.bindAll()
 
         },
         callback: (data) => {

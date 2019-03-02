@@ -144,6 +144,7 @@
 
     }
 
+
     Interface.displayMarkers = () => {
         let feed = ctx.feed
 
@@ -153,7 +154,7 @@
         feed.itemsList.forEach((id) => {
             Interface.showMarker(feed.items[id])
         })
-        
+        map.zoomMinimum(8)
         map.fitMapToAllMarkers(feed.activeItems)
     }
 
@@ -193,7 +194,8 @@
         fitMap: () => {
             if (self.snapback) {
                 let parts = self.snapback.split('/')
-                map.view.setView([parts[0], parts[1]], parts[2])
+                let zoomLevel = Number(parts[2])
+                map.view.setView([parts[0], parts[1]], (zoomLevel > 1 ? zoomLevel : 8))
                 console.log('(mapify) snapback to ' + self.snapback)
                 self.snapback = null
             }
