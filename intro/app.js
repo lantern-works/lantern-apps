@@ -18,7 +18,7 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {  
-        if (window.location.hash != "" && (
+        if ((
             localStorage.hasOwnProperty('lx-app-intro-skip') || 
             localStorage.hasOwnProperty('lx-auth') )) {
             // sign in right away
@@ -57,7 +57,17 @@
     Interface.start = () => {
         if (!ctx.id && window.location.hash == "") {
             if (self.maps.length) {
-                window.location.hash = self.maps[0].id
+
+                Object.keys(self.maps).forEach(key => {
+                    let pri = Number(self.maps[key].priority)
+                    console.log(pri)
+                    if (pri >= 5) {
+                        window.location.hash = self.maps[key].id
+                    }
+                })
+                if (window.location.hash == "") {
+                    window.location.hash = self.maps[0].id
+                }
             }
         }
 
@@ -79,7 +89,8 @@
                     // display this as a canvas
                     self.maps.push({
                         id: k,
-                        name: v.name
+                        name: v.name,
+                        priority: v.priority ? v.priority : 0
                     })  
                 }
             })

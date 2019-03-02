@@ -92,7 +92,9 @@
 
     Interface.hideMarker = (marker) => {
         //console.log('(mapify) hide existing marker', marker.id)
-        map.removeFromMap(marker)
+        if (marker.layer && marker.layer._map) {
+            map.removeFromMap(marker)
+        }
     }
 
     Interface.defineIconClasses = () => {
