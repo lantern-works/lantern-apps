@@ -208,6 +208,9 @@
             }
 
         },
+        chooseMap: () => {
+            window.location.hash = ""
+        },
         chooseFromMenu: (item) => {
             // open up item details
             self.$root.$emit('marker-focus', item)
