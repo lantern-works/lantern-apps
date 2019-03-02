@@ -154,8 +154,11 @@
         feed.itemsList.forEach((id) => {
             Interface.showMarker(feed.items[id])
         })
-        map.zoomMinimum(8)
-        map.fitMapToAllMarkers(feed.activeItems)
+
+        setTimeout(() => {
+            map.zoomMinimum(8)
+            map.fitMapToAllMarkers(feed.activeItems)
+        }, 250)
     }
 
     /**

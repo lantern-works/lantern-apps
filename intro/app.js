@@ -32,7 +32,13 @@
 
         // bind
         if (window.location.hash) {
-            ctx.id = window.location.hash.replace('#', '')
+            let id = window.location.hash.replace('#', '')
+            ctx.db.get('ctx').get(id).on((v,k) => {
+                if (!ctx.id) {
+                    console.log('(intro) open direct link to context ' + id, v)
+                    ctx.id = id                    
+                }
+            })
         }
         window.onhashchange = (e) => {
             ctx.id = window.location.hash.replace('#', '')
