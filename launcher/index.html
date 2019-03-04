@@ -1,9 +1,9 @@
-<div class="app-center" v-if="show" v-cloak>
-	<div class="app-frame menu-app-frame" v-if="!title">
+<div class="app-top" v-if="show" v-cloak>
+	<div class="app-frame menu-app-frame" v-if="slide === -1">
 		
 		<h1>Choose A Map</h1>
 		<section>
-			<p class="intro">Maps are shared across all connected devices, so you can always stay on the same page.</p>
+			<p class="intro">Maps are shared between all connected users.</p>
 		</section>
 		<section>
 			<ul class="menu">
@@ -16,7 +16,7 @@
 			</ul>
 		</section>
 	</div>
-	<div class="app-frame" v-if="title">
+	<div class="app-frame" v-if="slide > -1">
 		<section v-if="slide === 0">
 			<img class="logo" src="../theme/logo.png">
 			<h1>Welcome to the {{ title }}</h1>

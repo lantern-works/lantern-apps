@@ -16,7 +16,7 @@
     }
 
     Interface.createDraftMarker = () => {
-        console.log('(composer) create draft')
+        // console.log('(composer) create draft')
 
         if (self.draft_marker) {
             // remove old draft

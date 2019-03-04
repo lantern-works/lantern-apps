@@ -6,6 +6,10 @@
     min-width: 320px;
 }
 
+#lx-app-composer-index h1 {
+    background: #FFF;
+}
+
 
 #lx-app-composer-index .button-box {
     text-align: center;

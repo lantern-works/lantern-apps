@@ -3,7 +3,7 @@
 * Also offers a search-box to find relevant markers
 */
 (function () {
-    var self, ctx, user, map
+    var self, ctx, map
     let Interface = {}
     let Component = {
         mounted () {
@@ -14,7 +14,6 @@
         callback: (data) => {
             if (ctx) return
             ctx = data.app.context
-            user = data.app.context.user
             map = data.app.context.map
             map.render(ctx.cloud)
         }
@@ -81,7 +80,6 @@
         }
 
         marker.on('change', (key) => {
-            console.log(key)
             // if this is a ping, open details on map
             if (key == 'ping') {
                 map.panToPoint(marker.latlng)

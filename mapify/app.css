@@ -4,26 +4,22 @@
 	font-size: small;
 	text-transform: uppercase;
 	font-weight: 600;
+	min-width: 100px;
+	box-sizing: unset;
 }
 
 #lx-app-mapify-index .marker-count {
-	line-height: 2.3em;
+	line-height: 2.5em;
 	margin-left: 4em;
 	margin-right: 4em;
-	font-size: 11pt;
+	font-size: 10pt;
 	border-radius: 100px;
 }
 
-@media only screen and (max-width: 350px) {
-	#lx-app-mapify-index .marker-count {
-		font-size: 10pt;
-		line-height: 2.1em;
-	}
-
-}
 #lx-app-mapify-index .app-frame {
 	text-align: center;
 	border-radius: 100px;
+	padding: 0.25em;
 }
 
 #lx-app-mapify-index .marker-count:hover, #lx-app-mapify-index .icon:hover {
@@ -39,8 +35,7 @@
 	background: #EEE;
 	border-radius: 3em;
 	border-color: #EEE;
-	padding: 1.3em;
-	margin: 0.1em;
+	padding: 0.5em;
 }
 
 #lx-app-mapify-index .new.icon {
@@ -69,6 +64,10 @@
 	margin-top: -2px;
 }
 
+#lx-app-mapify-search #search-button-bar {
+	background: #FFF;
+}
+
 #lx-app-mapify-search h1 {
 	border-bottom: 1px solid #FFF;
 }
@@ -84,14 +83,8 @@
 
 #lx-app-mapify-search #search-button-bar {
 	padding: 0.4em;
-	margin-top: 0.5em;
 	border-bottom: 1px solid #EEE;
-}
-
-#lx-app-mapify-search .buttons:last-child {
-	margin-bottom: inherit;
-}
-
+}+
 #lx-app-mapify-search #search-button-bar .button {
 	padding: 1.5em 1em;
 	font-weight: 600;

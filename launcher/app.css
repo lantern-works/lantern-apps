@@ -1,14 +1,14 @@
-#lx-app-intro-index {
+#lx-app-launcher-index {
 	height: 100%;
 	overflow: hidden;
 	background: none;	
 	z-index: 1000;
-	padding: 1em;
+	padding: 0.5em;
 }
 
 
 
-#lx-app-intro-index .app-frame {
+#lx-app-launcher-index .app-frame {
 	text-align: center;
 	padding: 0;
 	overflow: hidden;
@@ -19,32 +19,32 @@
 }
 
 
-#app-container #lx-app-intro-index .app-mask {
+#app-container #lx-app-launcher-index .app-mask {
 	z-index: -100;
 	opacity: 0.5;
 }
 
 
-#lx-app-intro-index .logo {
+#lx-app-launcher-index .logo {
 	width: 60px;
 	height: 60px;
 	margin-top: 1.5em;
 }
 
 
-#lx-app-intro-index p {
+#lx-app-launcher-index p {
 	padding: 1em;
 }
 
-#lx-app-intro-index .intro {
+#lx-app-launcher-index .intro {
 	font-size: 0.9em;
 }
 
-#lx-app-intro-index .intro span {
+#lx-app-launcher-index .intro span {
 	font-weight: bold; 
 }
 
-#lx-app-intro-index .button-set, #lx-app-intro-index  .button-single {
+#lx-app-launcher-index .button-set, #lx-app-launcher-index  .button-single {
 	margin-top: 1em;
 	padding: 1em;
 	max-width: 448px;
@@ -54,10 +54,10 @@
 	width: 100%;
 }
 
-#lx-app-intro-index .button:last-child {
+#lx-app-launcher-index .button:last-child {
 	margin-top: 0.5em;
 }
 
-#lx-app-intro-index .menu {
+#lx-app-launcher-index .menu {
 	border-top: 1px solid #EEE;
 }

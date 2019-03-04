@@ -241,7 +241,6 @@
             self.readyForSettings = false
         },
         saveLabel: () => {
-            console.log(self.label)
             self.readyForLabel = false
             self.marker.label = self.label
             self.marker.save(['label'])
