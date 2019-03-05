@@ -27,7 +27,7 @@
     /**
     * Preserves center map location with browser-based storage
     */
-    const cacheCenterLocation  = (timeout) => {
+    const storeCenterLocation  = (timeout) => {
         let center = map.getCenter()
         // only save to database if user has paused on this map for a few seconds
         setTimeout(() => {
@@ -37,7 +37,7 @@
             }
             let newCenter = map.getCenter()
             if (center === newCenter) {
-                //console.log(`(mapify) caching center geohash: ${newCenter}`);
+                //console.log(`(mapify) storing center geohash in browser: ${newCenter}`);
                 localStorage.setItem('lx-ctr', newCenter)
             }
         }, timeout || 5000)
@@ -46,7 +46,7 @@
     /**
     * Use saved per-user location to center map
     */
-    const setViewFromCenterLocationCache = () => {
+    const setViewFromStorage = () => {
         let ctr = localStorage.getItem('lx-ctr')
         try {
             let parts = ctr.split('/')
@@ -121,7 +121,7 @@
         Interface.defineIconClasses()
         // try to save center location after the map moves
         map.view.on('moveend', (e) => {
-            cacheCenterLocation()
+            storeCenterLocation()
         })
         // other marker and map-related apps
         ctx.openOneApp('composer')
@@ -158,7 +158,21 @@
         setTimeout(() => {
             map.zoomMinimum(8)
             map.fitMapToAllMarkers(feed.activeItems)
+            Interface.backgroundCacheTiles()
         }, 250)
+    }
+
+    /**
+    * Finds markers on map and stores relevant tiles we may need for offline use
+    */
+    Interface.backgroundCacheTiles = () => {
+        let delay = 1000
+        ctx.feed.itemsList.forEach(key => {
+            let marker = ctx.feed.items[key]
+            setTimeout(() => {
+                map.cacheTilesFromMarker(marker)
+            }, delay+=10000)
+        })
     }
 
     /**
