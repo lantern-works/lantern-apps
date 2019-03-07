@@ -16,8 +16,13 @@
 		</div> 
 
 		<!-- marker count -->
-		<div class="marker-count" v-if="markers !== null"  @click="chooseMap">
+		<div class="top-badge" v-if="!context_name && markers !== null"  @click="chooseMap">
 			{{ markers.length }} {{ 'Marker' | pluralize(markers.length) }}
+		</div>
+
+		<!-- context name -->
+		<div class="top-badge" v-if="context_name" @click="chooseMap">
+			{{ context_name }}
 		</div>
 
 	</div>

@@ -148,6 +148,7 @@
     Interface.displayMarkers = () => {
         let feed = ctx.feed
 
+        self.context_name = ctx.name
         self.markers = []
         self.markers = feed.itemsList
 
@@ -263,6 +264,7 @@
     }
 
     Component.data = {
+        context_name: null,
         markers: null,
         show_search: false,
         snapback: false,

@@ -8,7 +8,7 @@
 	box-sizing: unset;
 }
 
-#lx-app-mapify-index .marker-count {
+#lx-app-mapify-index .top-badge {
 	line-height: 2.5em;
 	margin-left: 4em;
 	margin-right: 4em;
@@ -22,7 +22,7 @@
 	padding: 0.25em;
 }
 
-#lx-app-mapify-index .marker-count:hover, #lx-app-mapify-index .icon:hover {
+#lx-app-mapify-index .top-badge:hover, #lx-app-mapify-index .icon:hover {
 	cursor: pointer;
 }
 
