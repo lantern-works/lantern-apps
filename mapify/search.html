@@ -7,6 +7,9 @@
 				</span>
 			</div>
 		</div>
+		<section class="empty-set" v-if="filtered_markers.length == 0">
+			<p>No {{filter.label.toLowerCase()}} markers yet.</p>
+		</section>
 		<ul class="menu">
 			<li v-for="item in filtered_markers"  @click="chooseFromMenu(item)" v-bind:data-marker-id="item.id">
 				<div :class="getMarkerClass(item)"> 

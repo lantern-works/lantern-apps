@@ -82,7 +82,7 @@
 }
 
 #lx-app-mapify-search #search-button-bar {
-	padding: 0.4em;
+	padding: 1em 0.25em;
 	border-bottom: 1px solid #EEE;
 }+
 #lx-app-mapify-search #search-button-bar .button {
@@ -97,3 +97,19 @@
 	color: #FFF;
 } 
 
+#lx-app-mapify-search .empty-set {
+	text-align: center;
+	padding: 1em;
+}
+
+@media only screen and (max-width: 400px) {
+	#lx-app-mapify-search #search-button-bar .button {
+		padding: 1.5em 0.75em;
+	}
+}
+
+@media only screen and (max-width: 350px) {
+	#lx-app-mapify-search #search-button-bar .button {
+		padding: 1.25em 0.5em;
+	}
+}
