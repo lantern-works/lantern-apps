@@ -131,7 +131,6 @@
     */
     Action.dropMarker = () => {
         self.readyForSettings = false
-        ctx.removeFromPackages(self.marker)
         self.marker.drop().then(() => {
             self.marker = null
             self.readyToDrop = false

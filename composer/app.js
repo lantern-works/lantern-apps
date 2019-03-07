@@ -23,9 +23,12 @@
             Interface.removeDraftMarker()
         }   
 
-
-
-        self.draft_marker = new LM.MarkerItem(LT.db)
+        // @todo allow user to choose which of several possible packages in context we want to save
+        // for now defaults to first package
+        if (ctx.packages[0]) {
+            console.log(ctx.packages[0])
+        }
+        self.draft_marker = new LM.MarkerItem(ctx.packages[0])
         self.draft_marker.icon = "map-marker-alt"
 
         let latlng = map.getCenterAsLatLng()
@@ -35,8 +38,6 @@
 
         map.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
-
-
         self.draft_marker.on('tag', (tag) => {
            if (self.icons.hasOwnProperty(tag)) {
                 self.draft_marker.icon = self.icons[tag]
@@ -91,7 +92,6 @@
         self.draft_marker.owner = LT.user.username
 
         self.draft_marker.save().then(() => {
-            ctx.addToPackages(self.draft_marker)
             // make sure save event is intended from this app
             console.log('(composer) marker saved:', self.draft_marker.id)
             self.is_saving = false

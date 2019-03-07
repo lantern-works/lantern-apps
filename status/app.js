@@ -59,14 +59,10 @@
             })
         }
         else {
-            self.marker.save().then(() => {
-                addMarkerToPackage(self.marker)
-                user.setMarker(self.marker).then(() => {                
-                    map.removeFromMap(self.marker)
-                    self.is_saving = false
-                    self.prompt_for_save = false
-                })
-
+            self.marker.save().then(() => {            
+                map.removeFromMap(self.marker)
+                self.is_saving = false
+                self.prompt_for_save = false
             })   
         }
     }
@@ -90,37 +86,22 @@
         map.on('marker-click', Action.skip)
     }
 
-    Interface.refreshExistingMarker = (id) => {       
-        let myMarker = ctx.feed.items[id]
-        if (myMarker) {
-            if (myMarker.latlng.lat !== latlng.latitude 
-                || myMarker.latlng.lon !== latlng.longitude) {
-                self.prompt_for_save = true
-            } 
-            self.marker = myMarker
-        }
-        else {
-            myMarker = new LM.MarkerItem(LT.db)
-            myMarker.id = id
-            myMarker.data = data
-            myMarker.mode == 'shared'
-            self.marker = myMarker
-            addMarkerToPackage(self.marker)
-        }
-        return
-    }
 
     Interface.createNewMarker = () => {
         console.log('(status) no marker exists yet for user')
         self.prompt_for_save = true
-        let marker = new LM.MarkerItem(LT.db)
-        marker.tags = ['usr','ctz']
-        marker.icon = 'user'
-        marker.latlng = latlng
-        marker.owner = user.username
-        map.addToMap(marker)
-        marker.layer.dragging.enable()
-        self.marker = marker
+        // @todo offer choice of where to save user marker (which package from context)
+        // for now default to first package
+        if (ctx.packages[0]) {
+            let marker = new LM.MarkerItem(ctx.packages[0])
+            marker.tags = ['usr','ctz']
+            marker.icon = 'user'
+            marker.latlng = latlng
+            marker.owner = user.username
+            map.addToMap(marker)
+            marker.layer.dragging.enable()
+            self.marker = marker
+        }
     }
 
     Interface.promptForSave = (a) => {
@@ -138,15 +119,7 @@
         }
 
         latlng = a.latlng
-        user.getMarker().then(data => {
-            if (data) {
-                Interface.refreshExistingMarker(data['_']['#'])
-                return
-            }
-            else {
-                Interface.createNewMarker()
-            }
-        })
+        Interface.createNewMarker()
     }
 
     // ------------------------------------------------------------------------
