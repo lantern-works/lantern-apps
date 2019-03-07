@@ -63,10 +63,9 @@
 
         if (marker.layer && marker.layer._map) {
             // already added to map
-            //console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
+            console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
             return
         }
-
         //console.log("(mapify) show marker", marker.id, marker.geohash);
 
         marker.tags.forEach((tag) => {
@@ -159,8 +158,10 @@
         setTimeout(() => {
             map.zoomMinimum(8)
             map.fitMapToAllMarkers(feed.activeItems)
-            Interface.backgroundCacheTiles()
-        }, 250)
+            if (ctx.online) {
+                Interface.backgroundCacheTiles()
+            }
+        }, 450)
     }
 
     /**
