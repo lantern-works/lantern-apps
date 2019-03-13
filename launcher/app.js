@@ -31,18 +31,22 @@
             // if signed in, default to top priority context
             if (localStorage.hasOwnProperty('lx-auth') || localStorage.hasOwnProperty('lx-app-launcher-skip')) {
                 if (!ctx.id && window.location.hash == "") {
-                    if (self.maps.length) {
-                        Interface.chooseTopPriorityContext()
-                    }
-                    else {
-                        Interface.createFirstContext()
-                    }
+                    Interface.goToContext()
                 }
             }
             else {
                 self.slide = 0
                 self.show = true
             }
+        }
+    }
+
+    Interface.goToContext = () => {
+        if (self.maps.length) {
+            Interface.chooseTopPriorityContext()
+        }
+        else {
+            Interface.createFirstContext()
         }
     }
 
@@ -154,7 +158,7 @@
     Component.open = true
 
     Component.methods = {
-        doComplete: Interface.chooseTopPriorityContext,
+        doComplete: Interface.goToContext,
         doContinue: () => {
             self.slide++
             if (self.slide > self.max_slide) {
