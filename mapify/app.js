@@ -156,7 +156,7 @@
         })
 
         setTimeout(() => {
-            if (feed.activeItems.length) {
+            if (feed.itemsList.length) {
                 map.zoomMinimum(8)
                 map.fitMapToAllMarkers(feed.activeItems)
             }
