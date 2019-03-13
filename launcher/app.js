@@ -1,5 +1,5 @@
 (function () {
-    var self,ctx,user
+    var self,ctx,user,db
     let Interface = {}
     let Action = {}
 
@@ -34,6 +34,9 @@
                     if (self.maps.length) {
                         Interface.chooseTopPriorityContext()
                     }
+                    else {
+                        Interface.createFirstContext()
+                    }
                 }
             }
             else {
@@ -41,6 +44,23 @@
                 self.show = true
             }
         }
+    }
+
+    Interface.createFirstContext = () => {
+        let pkg = new LD.Package('demo', db)
+        pkg.publish().then(() => {
+
+            let context = {
+                id: 'demo',
+                name: 'Demo Map',
+                priority: 1,
+                packages: pkg.id
+            }
+            console.log('(launcher) creating first context', context)
+            db.get('ctx').set(context).once((v,k) => {
+                console.log(`(launcher) saved first context ${context.id} (${k}) with package ${pkg.id}`)
+            })
+        })
     }
 
     Interface.chooseTopPriorityContext = () => {
@@ -67,7 +87,7 @@
             return
         }
         // otherwise make sure context exists before we start
-        ctx.db.get('ctx').get(id).on((v,k) => {
+        db.get('ctx').get(id).on((v,k) => {
             self.show = false
             self.slide = -1
             // never begin with context unless we have valid user signed-in
@@ -76,9 +96,8 @@
 
                 //console.log('(launcher) show context = ' + id)
                 ctx.openOneApp('mapify')
-
                 ctx.packages.forEach(pkg => {
-                    let query = new LD.Query(ctx.db, pkg)
+                    let query = new LD.Query(db, pkg)
                     query.compose().then(Interface.sendQuery)
                 })
             })
@@ -86,7 +105,7 @@
     }
 
     Interface.sendQuery = (msg) => {
-        console.log("QUERY STRING " + ctx.id, msg, msg.length)
+        console.log(`(launcher) broadcast query: ${msg} (${msg.length})`)
         fetch('/api/outbox', {
             method: 'PUT',
             headers: {
@@ -101,7 +120,7 @@
             if (self) return
             self = this
             // get or create context for packages
-            ctx.db.get('ctx').map((v,k) => {
+            db.get('ctx').map((v,k) => {
                 if (v && v.name) {
                     // display this as a canvas
                     self.maps.push({
@@ -117,6 +136,7 @@
         },
         callback: (data) => {
             ctx = data.app.context
+            db = data.app.context.db
             user = data.app.context.user
             // sign in right away
             user.authOrRegister()

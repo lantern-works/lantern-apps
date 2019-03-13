@@ -51,7 +51,7 @@
         try {
             let parts = ctr.split('/')
             map.setView([parts[0], parts[1]], parts[2])
-            // console.log(`${this.logPrefix} restoring view = ${parts}`)
+            console.log(`${this.logPrefix} restoring view = ${parts}`)
         } catch (e) {
             // will fall back to default view if no markers available
             map.setDefaultView()
@@ -156,8 +156,10 @@
         })
 
         setTimeout(() => {
-            map.zoomMinimum(8)
-            map.fitMapToAllMarkers(feed.activeItems)
+            if (feed.activeItems.length) {
+                map.zoomMinimum(8)
+                map.fitMapToAllMarkers(feed.activeItems)
+            }
             if (ctx.online) {
                 Interface.backgroundCacheTiles()
             }
