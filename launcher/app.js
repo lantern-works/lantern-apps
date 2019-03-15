@@ -63,6 +63,7 @@
             console.log('(launcher) creating first context', context)
             db.get('ctx').set(context).once((v,k) => {
                 console.log(`(launcher) saved first context ${context.id} (${k}) with package ${pkg.id}`)
+                Interface.setContext(k)
             })
         })
     }
