@@ -38,12 +38,17 @@
 	padding: 0.5em;
 }
 
-#lx-app-mapify-index .new.icon {
-	float: right;
-}
-
 #lx-app-mapify-index .search.icon {
 	float: left;
+}
+
+/* marker counter */
+#lx-app-mapify-index .search.icon span {
+	margin-right: 0.15em;
+}
+
+#lx-app-mapify-index .new.icon {
+	float: right;
 }
 #lx-app-mapify-index .icon.active, #lx-app-mapify-index .icon:hover {
 	background: #3273dc;

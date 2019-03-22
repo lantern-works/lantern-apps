@@ -25,10 +25,12 @@
 
         // @todo allow user to choose which of several possible packages in context we want to save
         // for now defaults to first package
-        if (ctx.packages[0]) {
-            console.log(ctx.packages[0])
+        if (!ctx.packages[0]) {
+            console.warn('(composer) no packages in context to save marker to...')
+            return
         }
-        self.draft_marker = new LM.MarkerItem(ctx.packages[0])
+        let targetPkg = ctx.packages[0]
+        self.draft_marker = new LM.MarkerItem(targetPkg)
         self.draft_marker.icon = "map-marker-alt"
 
         let latlng = map.getCenterAsLatLng()

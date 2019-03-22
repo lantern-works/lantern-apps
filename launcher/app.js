@@ -10,8 +10,8 @@
     /**
     * User wants to open a specific context with given package and markers
     */
-    Action.chooseMap = (map) => {
-        window.location.hash = map.id
+    Action.chooseContext = (ctx) => {
+        window.location.hash = ctx.id
     }
 
 
@@ -24,13 +24,14 @@
             Interface.setContext(window.location.hash.replace('#', ''))
         }
 
-        if (window.location.hash) {
+        if (window.location.hash.length >= 1) {
             Interface.setContext(window.location.hash.replace('#', ''))
         }
         else {
             // if signed in, default to top priority context
-            if (localStorage.hasOwnProperty('lx-auth') || localStorage.hasOwnProperty('lx-app-launcher-skip')) {
+            if (localStorage.hasOwnProperty('lx-app-launcher-skip')) {
                 if (!ctx.id && window.location.hash == "") {
+                    console.log(('(launcher) skipping intro by local storage request...'))
                     Interface.goToContext()
                 }
             }
@@ -42,7 +43,7 @@
     }
 
     Interface.goToContext = () => {
-        if (self.maps.length) {
+        if (self.contexts.length) {
             Interface.chooseTopPriorityContext()
         }
         else {
@@ -63,7 +64,7 @@
             console.log('(launcher) creating first context', context)
             db.get('ctx').set(context).once((v,k) => {
                 console.log(`(launcher) saved first context ${context.id} (${k}) with package ${pkg.id}`)
-                Interface.setContext(k)
+                window.location.hash = '#' + k
             })
         })
     }
@@ -73,16 +74,27 @@
             score: -1,
             index: 0
         }
-        Object.keys(self.maps).forEach(key => {
-            let pri = Number(self.maps[key].priority)
-            if (pri >= winner.score) {
+        Object.keys(self.contexts).forEach(key => {
+            let ctx = self.contexts[key]
+            let pri = Number(ctx.priority)
+            if (pri > winner.score) {
                 winner = {
                     score: pri,
-                    index: key
+                    index: key,
+                    id: ctx.id
+                }
+            }
+            else if (pri == winner.score) {
+                if (ctx.id > winner.id) {
+                    winner = {
+                        score: pri,
+                        index: key,
+                        id: ctx.id
+                    }
                 }
             }
         })
-        window.location.hash = self.maps[winner.index].id
+        window.location.hash = self.contexts[winner.index].id
     }
 
     Interface.setContext = (id) => {
@@ -91,8 +103,16 @@
             self.show = true
             return
         }
+        console.log("(launcher) set context " + id)
+
         // otherwise make sure context exists before we start
-        db.get('ctx').get(id).on((v,k) => {
+        db.get('ctx').get(id).once((v,k) => {
+            if (!v) {
+                console.log('(launcher) requested missing context. returning home...')
+                window.location.hash = '#'
+                return
+            }
+
             self.show = false
             self.slide = -1
             // never begin with context unless we have valid user signed-in
@@ -128,7 +148,7 @@
             db.get('ctx').map((v,k) => {
                 if (v && v.name) {
                     // display this as a canvas
-                    self.maps.push({
+                    self.contexts.push({
                         id: k,
                         name: v.name,
                         priority: v.priority ? v.priority : 0
@@ -153,7 +173,7 @@
         slide: -1,
         max_slide: 3,
         show: false,
-        maps: []
+        contexts: []
     }
 
     Component.open = true
@@ -169,9 +189,12 @@
             }
         },
         promptForMap: () => {
+            if (!self.contexts.length) {
+                Interface.createFirstContext()
+            }
             self.slide = -1
         },
-        chooseMap: Action.chooseMap
+        chooseContext: Action.chooseContext
     }
 
     return Component

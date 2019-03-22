@@ -66,7 +66,8 @@
             console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
             return
         }
-        //console.log("(mapify) show marker", marker.id, marker.geohash);
+
+        //console.log("(mapify) show marker", marker.id, marker.geohash, marker);
 
         marker.tags.forEach((tag) => {
             if (self.icons.hasOwnProperty(tag)) {
@@ -115,8 +116,6 @@
 
     Interface.bindAll = () => {
         Interface.setupControls()
-        Interface.displayMarkers()
-        ctx.feed.on('reset', Interface.displayMarkers)
         Interface.defineIconClasses()
         // try to save center location after the map moves
         map.view.on('moveend', (e) => {
@@ -126,7 +125,6 @@
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('status')
-
 
         ctx.feed.on('item-watch', (e) => {
             Interface.showMarker(e.item)
@@ -141,20 +139,18 @@
             }
         })
 
+
+        ctx.feed.on('watch', Interface.displayMarkers)
+
     }
 
 
     Interface.displayMarkers = () => {
         let feed = ctx.feed
-
-        self.context_name = ctx.name
         self.markers = []
         self.markers = feed.itemsList
-
-        feed.itemsList.forEach((id) => {
-            Interface.showMarker(feed.items[id])
-        })
-
+        self.context_name = ctx.name
+        console.log(`(mapify) display ${feed.itemsList.length} markers`)
         setTimeout(() => {
             if (feed.itemsList.length) {
                 map.zoomMinimum(8)
@@ -268,7 +264,7 @@
 
     Component.data = {
         context_name: null,
-        markers: null,
+        markers: [],
         show_search: false,
         snapback: false,
         types: [

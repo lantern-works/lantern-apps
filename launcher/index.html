@@ -6,9 +6,9 @@
 			<p class="intro">Maps are shared between all connected users.</p>
 		</section>
 		<section>
-			<ul class="menu" v-if="maps.length">
-				<li v-for="map in maps" @click="chooseMap(map)" :data-map-id="map.id" :key="map.id">
-					<span> {{ map.name }} </span>
+			<ul class="menu" v-if="contexts.length">
+				<li v-for="ctx in contexts" @click="chooseContext(ctx)" :data-context-id="ctx.id" :key="ctx.id">
+					<span> {{ ctx.name }} </span>
 					<span class="icon is-large">
 						<i class="fas fa-angle-right"></i>
 					</span>
