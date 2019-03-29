@@ -44,6 +44,7 @@
 
 /* marker counter */
 #lx-app-mapify-index .search.icon span {
+	margin-left: 0.15em;
 	margin-right: 0.15em;
 }
 
@@ -105,6 +106,7 @@
 #lx-app-mapify-search .empty-set {
 	text-align: center;
 	padding: 1em;
+	border-bottom: 1px solid #EEE;
 }
 
 @media only screen and (max-width: 400px) {

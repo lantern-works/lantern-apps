@@ -50,8 +50,8 @@
         let ctr = localStorage.getItem('lx-ctr')
         try {
             let parts = ctr.split('/')
-            map.setView([parts[0], parts[1]], parts[2])
             console.log(`${this.logPrefix} restoring view = ${parts}`)
+            map.setView([parts[0], parts[1]], parts[2])
         } catch (e) {
             // will fall back to default view if no markers available
             map.setDefaultView()
@@ -60,14 +60,17 @@
 
 
     Interface.showMarker = (marker) => {
-
-        if (marker.layer && marker.layer._map) {
+        if (marker.constructor.name !== 'MarkerItem') {
+            console.log("(mapify) skip show for non-marker", marker)
+            return
+        }
+        else if (marker.layer && marker.layer._map) {
             // already added to map
-            console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
+            // console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
             return
         }
 
-        //console.log("(mapify) show marker", marker.id, marker.geohash, marker);
+        console.log(`(mapify) show marker ${marker.id} (${marker.tags})`);
 
         marker.tags.forEach((tag) => {
             if (self.icons.hasOwnProperty(tag)) {
@@ -78,6 +81,11 @@
         if (marker.icon) {
             map.addToMap(marker)
         }
+
+        if (self.markers.length == 1) {
+            map.panToPoint(marker.latlng)
+        }
+
 
         marker.on('change', (key) => {
             // if this is a ping, open details on map
@@ -115,6 +123,9 @@
     }
 
     Interface.bindAll = () => {
+        
+        self.context = ctx
+
         Interface.setupControls()
         Interface.defineIconClasses()
         // try to save center location after the map moves
@@ -125,37 +136,33 @@
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('status')
-
         ctx.feed.on('item-watch', (e) => {
             Interface.showMarker(e.item)
-            if (self.markers.length == 1) {
-                map.panToPoint(e.item.latlng)
-            }
         })
-
         ctx.feed.on('item-unwatch', (e) => {
             if (e.item && e.item.layer) {
                 Interface.hideMarker(e.item)
             }
         })
-
-
-        ctx.feed.on('watch', Interface.displayMarkers)
-
+        ctx.feed.on('watch', Interface.showMarkers)
     }
 
 
-    Interface.displayMarkers = () => {
+    Interface.showMarkers = () => {
         let feed = ctx.feed
         self.markers = []
         self.markers = feed.itemsList
-        self.context_name = ctx.name
-        console.log(`(mapify) display ${feed.itemsList.length} markers`)
+
+        if (self.markers.length) {
+            console.log(`(mapify) show ${self.markers.length} markers`)
+            self.markers.forEach(id => {
+                Interface.showMarker(feed.items[id])
+            })
+            map.fitMapToAllMarkers(feed.activeItems)
+            map.zoomMinimum(5)
+        }
+
         setTimeout(() => {
-            if (feed.itemsList.length) {
-                map.zoomMinimum(8)
-                map.fitMapToAllMarkers(feed.activeItems)
-            }
             if (ctx.online) {
                 Interface.backgroundCacheTiles()
             }
@@ -263,7 +270,7 @@
     }
 
     Component.data = {
-        context_name: null,
+        context: null,
         markers: [],
         show_search: false,
         snapback: false,

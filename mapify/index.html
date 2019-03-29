@@ -8,7 +8,7 @@
 		<!-- search icon -->
 		<span @click.stop="searchMap" :class="'search icon ' + (show_search ? 'active' : 'inactive') ">
 			<i class="fas fa-search"></i>
-			<!-- <span>{{ markers.length }}</span> -->
+			<span v-if="markers.length">{{ markers.length }}</span>
 		</span>
 
 
@@ -18,13 +18,13 @@
 		</div> 
 
 		<!-- marker count -->
-		<div class="top-badge" v-if="!context_name && markers !== null"  @click="chooseMap">
+		<div class="top-badge" v-if="!context && markers !== null"  @click="chooseMap">
 			{{ markers.length }} {{ 'Marker' | pluralize(markers.length) }}
 		</div>
 
 		<!-- context name -->
-		<div class="top-badge" v-if="context_name" @click="chooseMap">
-			{{ context_name }}
+		<div class="top-badge" v-if="context" @click="chooseMap">
+			{{ context.name }}
 		</div>
 
 	</div>

@@ -38,6 +38,9 @@
             else {
                 self.slide = 0
                 self.show = true
+                if (!self.contexts.length) {
+                    Interface.createFirstContext()
+                }
             }
         }
     }
@@ -52,19 +55,14 @@
     }
 
     Interface.createFirstContext = () => {
-        let pkg = new LD.Package('demo', db)
-        pkg.publish().then(() => {
-
-            let context = {
-                id: 'demo',
-                name: 'Demo Map',
-                priority: 1,
-                packages: pkg.id
-            }
-            console.log('(launcher) creating first context', context)
-            db.get('ctx').set(context).once((v,k) => {
-                console.log(`(launcher) saved first context ${context.id} (${k}) with package ${pkg.id}`)
-                window.location.hash = '#' + k
+        console.log('(launcher) creating first context')
+        ctx.id = 'demo'
+        ctx.name = 'Demo Map'
+        ctx.priority = 1
+        ctx.save().then(() => {
+            let pkg = new LD.Package('demo', db)
+            pkg.save().then(() => {
+                ctx.addOnePackage(pkg)
             })
         })
     }
@@ -103,7 +101,6 @@
             self.show = true
             return
         }
-        console.log("(launcher) set context " + id)
 
         // otherwise make sure context exists before we start
         db.get('ctx').get(id).once((v,k) => {
@@ -112,19 +109,14 @@
                 window.location.hash = '#'
                 return
             }
-
             self.show = false
             self.slide = -1
-            // never begin with context unless we have valid user signed-in
-            user.onReady(() => {
-                ctx.id = id
-
-                //console.log('(launcher) show context = ' + id)
-                ctx.openOneApp('mapify')
-                ctx.packages.forEach(pkg => {
-                    let query = new LD.Query(db, pkg)
-                    query.compose().then(Interface.sendQuery)
-                })
+            ctx.id = id // this causes a number of related updates within context automatically
+            // console.log('(launcher) show context: ' + id)
+            ctx.openOneApp('mapify')
+            ctx.packages.forEach(pkg => {
+                let query = new LD.Query(db, pkg)
+                query.compose().then(Interface.sendQuery)
             })
         })
     }
@@ -148,11 +140,7 @@
             db.get('ctx').map((v,k) => {
                 if (v && v.name) {
                     // display this as a canvas
-                    self.contexts.push({
-                        id: k,
-                        name: v.name,
-                        priority: v.priority ? v.priority : 0
-                    })  
+                    self.contexts.push(v)  
                 }
             })
                     
@@ -163,8 +151,6 @@
             ctx = data.app.context
             db = data.app.context.db
             user = data.app.context.user
-            // sign in right away
-            user.authOrRegister()
         }
     }
 

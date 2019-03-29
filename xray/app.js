@@ -66,9 +66,9 @@
         }
         self.marker = marker
 
-        map.view.once("moveend", () => {
-            map.zoomMinimum(13)
-        })
+        // map.view.once("moveend", () => {
+        //     map.zoomMinimum(13)
+        // })
 
         map.panToPoint(self.marker.latlng)
     }
@@ -218,11 +218,14 @@
 
         },
         zoomIn: () => {
-            map.zoomToPoint(self.marker.latlng)
-            self.maxZoom = map.hasMaxZoom() 
-            setTimeout(() => {
+            map.panToPoint(self.marker.latlng).then(() => {    
+                map.zoomToPoint(self.marker.latlng)
+                map.zoomMinimum(10)
                 self.maxZoom = map.hasMaxZoom() 
-            }, 500)
+                setTimeout(() => {
+                    self.maxZoom = map.hasMaxZoom() 
+                }, 500)
+            })
         },   
         zoomOut: () => {
             map.view.zoomOut()
