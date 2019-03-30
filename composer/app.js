@@ -44,7 +44,9 @@
            if (self.icons.hasOwnProperty(tag)) {
                 self.draft_marker.icon = self.icons[tag]
            }
+            self.draft_marker.layer._icon.classList.add('lx-marker-draft')
         })
+
 
         self.draft_marker.on('untag', () => {
             self.draft_marker.icon = null
@@ -54,6 +56,9 @@
             title: "What's here?"
         }
         self.menu.items = self.categories.main
+
+        self.draft_marker.layer._icon.classList.add('lx-marker-draft')
+        
     }
 
     Interface.removeDraftMarker = () => {
@@ -91,12 +96,13 @@
         if (self.is_saving) return
         self.is_saving = true
         self.draft_marker.layer.dragging.disable()
-        self.draft_marker.owner = LT.user.username
+        self.draft_marker.owner = user.username
 
         self.draft_marker.save().then(() => {
             // make sure save event is intended from this app
             console.log('(composer) marker saved:', self.draft_marker.id)
             self.is_saving = false
+            self.draft_marker.layer._icon.classList.remove('lx-marker-draft')
             Interface.removeDraftMarker()
         })
 
