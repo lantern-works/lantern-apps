@@ -87,7 +87,17 @@
         }
 
 
+        map.on('marker-click', (marker) => {
+            marker.layer._icon.classList.remove('did-change')
+        })  
+
+        self.$root.$on('marker-focus', (marker) => {
+            marker.layer._icon.classList.remove('did-change')
+        })
+
         marker.on('change', (key) => {
+            marker.layer._icon.classList.add('did-change')
+            
             // if this is a ping, open details on map
             if (key == 'ping') {
                 map.panToPoint(marker.latlng)
