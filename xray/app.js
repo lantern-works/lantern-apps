@@ -69,8 +69,6 @@
         // map.view.once("moveend", () => {
         //     map.zoomMinimum(13)
         // })
-
-        map.panToPoint(self.marker.latlng)
     }
 
     // ------------------------------------------------------------------------

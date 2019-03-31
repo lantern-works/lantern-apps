@@ -87,17 +87,6 @@
         }
 
 
-        map.on('marker-click', (marker) => {
-            if (marker.layer._icon) {
-                marker.layer._icon.classList.remove('did-change')
-            }
-        })  
-
-        self.$root.$on('marker-focus', (marker) => {
-            if (marker.layer._icon) {
-                marker.layer._icon.classList.remove('did-change')
-            }
-        })
 
         marker.on('change', (key) => {
             if (marker.layer._icon) {
@@ -139,18 +128,24 @@
 
     Interface.bindAll = () => {
         
-        self.context = ctx
-
+        // basic user interface setup
         Interface.setupControls()
         Interface.defineIconClasses()
+
+
         // try to save center location after the map moves
         map.view.on('moveend', (e) => {
             storeCenterLocation()
         })
+
         // other marker and map-related apps
+        ctx.openOneApp('sync')
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('status')
+
+
+        // make sure map reflects data we want to see
         ctx.feed.on('item-watch', (e) => {
             Interface.showMarker(e.item)
         })
@@ -160,6 +155,25 @@
             }
         })
         ctx.feed.on('watch', Interface.showMarkers)
+
+
+        // handle marker selection and focus
+        map.on('marker-click', (marker) => {
+            if (marker.layer._icon) {
+                marker.layer._icon.classList.remove('did-change')
+            }
+        })  
+        self.$root.$on('marker-focus', (marker) => {
+            // center the marker on the map and make sure we have some basic zoom
+            map.panToPoint(marker.latlng).then(() => {
+                map.zoomMinimum(10)
+            })
+
+            // mark the marker as "read"
+            if (marker.layer._icon) {
+                marker.layer._icon.classList.remove('did-change')
+            }
+        })
     }
 
 
@@ -300,7 +314,7 @@
             },
             {
                 'label': 'Report',
-                'match': [ 'sit'], 
+                'match': [ 'sit', 'usr'], 
             },
             {
                 'label': 'Site',

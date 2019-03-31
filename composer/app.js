@@ -31,7 +31,7 @@
         }
         let targetPkg = ctx.packages[0]
         self.draft_marker = new LM.MarkerItem(targetPkg)
-        self.draft_marker.icon = "map-marker-alt"
+        self.draft_marker.icon = "arrows-alt"
 
         let latlng = map.getCenterAsLatLng()
         latlng.lat = (latlng.lat + map.view.getBounds().getNorth() * 3) / 4

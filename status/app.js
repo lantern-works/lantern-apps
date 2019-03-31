@@ -50,21 +50,11 @@
     // ------------------------------------------------------------------------
     Action.save = () => {
         self.is_saving = true
-        let isNew = self.marker.mode === 'draft'
-        if (!isNew) {
-            self.marker.latlng = latlng
-            self.marker.update(['geohash']).then(() => {
-                self.is_saving = false
-                self.prompt_for_save = false
-            })
-        }
-        else {
-            self.marker.save().then(() => {            
-                map.removeFromMap(self.marker)
-                self.is_saving = false
-                self.prompt_for_save = false
-            })   
-        }
+        self.marker.save().then(() => {            
+            map.removeFromMap(self.marker)
+            self.is_saving = false
+            self.prompt_for_save = false
+        })   
     }
 
     Action.skip = () => {
@@ -100,6 +90,7 @@
             marker.owner = user.username
             map.addToMap(marker)
             marker.layer.dragging.enable()
+            marker.layer._icon.classList.add('lx-marker-draft')
             self.marker = marker
         }
     }

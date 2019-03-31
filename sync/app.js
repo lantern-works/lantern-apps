@@ -3,7 +3,7 @@
     let Interface = {}
     let Action = {}
 
-    const syncDisplayTime = 500
+    const syncDisplayTime = 1050
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {  
@@ -26,7 +26,6 @@
         mounted () {
             if (self) return
             self = this
-        console.log('sync')
             Interface.bindAll()
         },
         callback: (data) => {
@@ -43,7 +42,6 @@
     Component.computed = {
     }
 
-    Component.open = true
 
     Component.methods = {
     }

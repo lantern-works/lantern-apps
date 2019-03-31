@@ -35,6 +35,7 @@
 	background: #EEE;
 	border-radius: 3em;
 	border-color: #EEE;
+	min-width: 3em;
 	padding: 0.5em;
 }
 

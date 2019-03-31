@@ -1,3 +1,7 @@
+#lx-app-sync-index {
+    
+    z-index: 1000000;
+}
 #lx-app-sync-index .app-frame {
     border-radius: 0;
     border-top: 0;
