@@ -114,6 +114,9 @@
             ctx.id = id // this causes a number of related updates within context automatically
             // console.log('(launcher) show context: ' + id)
             ctx.openOneApp('mapify')
+
+            self.$root.$emit('map-reset')
+
             ctx.packages.forEach(pkg => {
                 let query = new LD.Query(db, pkg)
                 query.compose().then(Interface.sendQuery)

@@ -132,6 +132,9 @@
         Interface.setupControls()
         Interface.defineIconClasses()
 
+        self.$root.$on('map-reset', () => {
+            map.fitMapToAllMarkers(ctx.feed.activeItems)
+        })
 
         // try to save center location after the map moves
         map.view.on('moveend', (e) => {
