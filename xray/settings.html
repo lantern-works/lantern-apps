@@ -1,9 +1,16 @@
 <div class="app-bottom" v-if="marker && readyForSettings">
+    <div v-if="!username" class="app-frame">
+        <h1 class="button-box-title">Sign-In Required</h1>
+        <div class="button-box">
+            <p>To modify a marker, please sign-in first.</p>
+            <div :class="(isLoading ? 'is-loading' : '') + ' button is-primary'" @click="signIn"> Sign In </div>
+        </div>
+    </div>
 
-    <div :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+
+    <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
 
         <ul class="menu">
-
 
             <li @click="approve" v-if="!marker.hasSignature(username)">
                 <span> Verify</span>
@@ -13,6 +20,9 @@
             </li>
             <li @click="ping">
                 <span> Ping </span>
+            </li>
+            <li @click="move">
+                <span> Relocate</span>
             </li>
             <li @click="promptForDrop">
                 <span> Delete</span>

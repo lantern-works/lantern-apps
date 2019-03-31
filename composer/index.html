@@ -1,6 +1,16 @@
 <div class="app-bottom" v-if="menu.items">
-	<div class="app-frame menu-app-frame">
-		<h1 v-if="!prompt_draft_save">{{menu.title}}</h1>
+
+	<div class="app-frame" v-if="!username">
+		<h1 class="button-box-title">Sign-In Required</h1>
+		<div class="button-box">
+			<p>To save a marker, please sign-in first.</p>
+			<div :class="(is_saving ? 'is-loading' : '') + ' button is-primary'" @click="signIn"> Sign In </div>
+		</div>
+	</div>
+
+	<div class="app-frame menu-app-frame" v-if="username">
+		<h1 class="button-box-title" v-if="!prompt_draft_save">{{menu.title}}</h1>
+
 		<!-- draft marker saving -->
 		<div class="button-box" v-if="prompt_draft_save">
 				<span class="icon is-large">

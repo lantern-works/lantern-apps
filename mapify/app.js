@@ -70,7 +70,7 @@
             return
         }
 
-        console.log(`(mapify) show marker ${marker.id} (${marker.tags})`);
+        // console.log(`(mapify) show marker ${marker.id} (${marker.tags})`);
 
         marker.tags.forEach((tag) => {
             if (self.icons.hasOwnProperty(tag)) {
@@ -94,7 +94,7 @@
             }
             // if this is a ping, open details on map
             if (key == 'ping') {
-                map.panToPoint(marker.latlng)
+                console.log('ping received for', marker, key)
                 self.$root.$emit('marker-focus', marker)
             }
         })
@@ -270,6 +270,9 @@
             self.show_search = false
         },
         getCategory: (item) => {
+            if (!item.getCategory) {
+                return console.warn('(mapify) missing getCategory for', item)
+            }
             return item.getCategory(self.categories)
         },
         getMarkerClass: (item) => {

@@ -21,6 +21,16 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
+
+        user.on('auth', () => {
+            self.username = user.username
+        })
+
+        user.on('leave', () => {
+            self.username = null
+        })
+
+
         self.maxZoom = map.hasMaxZoom()
         self.$root.$on('marker-focus', (marker) => {
             Interface.selectMarker(marker)
@@ -94,18 +104,25 @@
     */
     Action.relocateMarker = () => {
         self.readyForSettings = false
+
+        if (!self.marker.owner) {
+            self.marker.owner = user.username                
+        }
+
         targetMarker = self.marker
         targetMarker.layer.dragging.enable()
         let original_icon = self.marker.icon
         targetMarker.icon = 'arrows-alt'
         self.menu = {}
         console.log(`(xray) ready for relocation of ${self.marker.id}`)
+
+
         targetMarker.once('move', (val) => {
             targetMarker.icon = original_icon
             targetMarker.layer.dragging.disable()
             // add user to list of editors
             targetMarker.editor(user.username)
-            targetMarker.save(['editors', 'geohash'])
+            targetMarker.update(['owner', 'editors', 'geohash'])
         })
         self.marker = null
     }
@@ -116,7 +133,7 @@
     Action.pingMarker = () => {
         self.pingInProgress = true
         self.marker.ping = [user.username, new Date().getTime()]
-        self.marker.save(['ping']).then(() => {
+        self.marker.update(['ping']).then(() => {
             console.log(`(xray) sent ping for marker ${self.marker.id}`)
             pingTimeout = setTimeout(() => {
                 self.pingInProgress = false
@@ -173,23 +190,41 @@
         }
     }
 
+    /**
+    * User wants to sign-in
+    */
+    Action.signIn = () => {
+            self.isLoading = true
+            user.authOrCreate().then(() => {
+                setTimeout(() => {
+                    self.isLoading = false
+                }, 1550)
+            })
+    }
     // ------------------------------------------------------------------------
     Component.data = {
-        'rating': null,
-        'marker': null,
-        'label': null,
-        'username': null,
-        'readyToDrop': false,
-        'readyForLabel': false,
-        'readyForSettings': false,
-        'pingInProgress': false,
-        'maxZoom': false 
+        rating: null,
+        marker: null,
+        label: null,
+        username: null,
+        readyToDrop: false,
+        readyForLabel: false,
+        readyForSettings: false,
+        pingInProgress: false,
+        isLoading: false,
+        maxZoom: false
     }
     Component.methods = {
         ping: Action.pingMarker,
         move: Action.relocateMarker,
         drop: Action.dropMarker,
         scoreUp: () => {
+
+
+            if (!self.marker.owner) {
+                self.marker.owner = user.username                
+            }
+
             if (self.marker.score > 0.9) {
                 return
             }
@@ -200,7 +235,7 @@
             if (self.marker.score > 1.0) {
                 self.marker.score = 1.0
             }
-            self.marker.save(['score'])
+            self.marker.update(['owner', 'score'])
             self.readyForSettings = false
         },
         promptForDrop: () => {
@@ -230,6 +265,12 @@
             self.maxZoom = map.hasMaxZoom() 
         },
         scoreDown: () => {
+
+
+            if (!self.marker.owner) {
+                self.marker.owner = user.username                
+            }
+
             if (self.marker.score < 0.10) {
                 return
             }
@@ -237,13 +278,16 @@
             if (self.marker.score < 0) {
                 self.marker.score = 0
             }
-            self.marker.save(['score'])
+            self.marker.update(['owner', 'score'])
             self.readyForSettings = false
         },
         saveLabel: () => {
             self.readyForLabel = false
+            if (!self.marker.owner) {
+                self.marker.owner = user.username                
+            }
             self.marker.label = self.label
-            self.marker.save(['label'])
+            self.marker.update(['owner', 'label'])
         },
         approve: Action.approveMarker,
         dispute: Action.disputeMarker,
@@ -257,7 +301,8 @@
         close: Action.closeMenu,
         inspect: () => {
             self.marker.inspect()
-        }
+        },
+        signIn: Action.signIn
     }
     // compute marker titles
     Component.computed = {}

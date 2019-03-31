@@ -13,6 +13,12 @@
         map.on('marker-click', Action.closeBottomMenu)
         self.$root.$on('marker-focus', Action.closeBottomMenu)
         self.$root.$on('marker-draft', Interface.createDraftMarker)
+        user.on('auth', () => {
+            self.username = user.username
+        })
+        user.on('leave', () => {
+            self.username = null
+        })
     }
 
     Interface.createDraftMarker = () => {
@@ -164,12 +170,25 @@
         }
     }
 
+    /**
+    * User wants to sign-in
+    */
+    Action.signIn = () => {
+            self.is_saving = true
+            user.authOrCreate().then(() => {
+                setTimeout(() => {
+                    self.is_saving = false
+                }, 1550)
+            })
+    }
+
     // ------------------------------------------------------------------------
     let Component = {
         mounted () {
             if (self) return
             self = this
             Interface.bindAll()
+
         },
         callback: (data) => {
             ctx = data.app.context
@@ -179,6 +198,7 @@
     }
 
     Component.data = {
+        username: null,
         draft_marker: null,
         prompt_draft_save: false,
         is_saving: false,
@@ -188,12 +208,12 @@
         },
         previous: {}
     }
-
     Component.methods = {
         closeBottomMenu: Action.closeBottomMenu,
         chooseFromBottomMenu: Action.chooseFromBottomMenu,
         saveMarker: Action.saveMarker,
-        goToPreviousMenu: Action.goToPreviousMenu
+        goToPreviousMenu: Action.goToPreviousMenu,
+        signIn: Action.signIn
     }
 
     return Component
