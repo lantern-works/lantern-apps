@@ -220,6 +220,11 @@
         drop: Action.dropMarker,
         scoreUp: () => {
 
+            if (!user.username) {
+                console.log('(xray) skip score change since user is not signed in...')
+                return
+            }
+
 
             if (!self.marker.owner) {
                 self.marker.owner = user.username                
@@ -244,6 +249,12 @@
             self.readyToDrop = true
         },
         promptForLabel: () => {
+
+            if (!user.username) {
+                console.log('(xray) skip label prompt since user is not signed in...')
+                return
+            }
+            
             self.readyForSettings = false
             // allow user to define name
             self.readyForLabel = !self.readyForLabel
@@ -266,6 +277,11 @@
         },
         scoreDown: () => {
 
+
+            if (!user.username) {
+                console.log('(xray) skip score change since user is not signed in...')
+                return
+            }
 
             if (!self.marker.owner) {
                 self.marker.owner = user.username                

@@ -4,6 +4,7 @@
         <div class="button-box">
             <p>To modify a marker, please sign-in first.</p>
             <div :class="(isLoading ? 'is-loading' : '') + ' button is-primary'" @click="signIn"> Sign In </div>
+            <div class="button is-secondary" @click="closeSettingsMenu">Cancel</div>
         </div>
     </div>
 

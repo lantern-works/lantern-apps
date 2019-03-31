@@ -5,6 +5,7 @@
 		<div class="button-box">
 			<p>To save a marker, please sign-in first.</p>
 			<div :class="(is_saving ? 'is-loading' : '') + ' button is-primary'" @click="signIn"> Sign In </div>
+			<div class="button is-secondary" @click="closeBottomMenu">Cancel</div>
 		</div>
 	</div>
 
