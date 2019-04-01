@@ -128,6 +128,9 @@
 
     Interface.bindAll = () => {
         
+        // store context for view reference
+        self.context = ctx
+
         // basic user interface setup
         Interface.setupControls()
         Interface.defineIconClasses()
