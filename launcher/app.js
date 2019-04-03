@@ -32,39 +32,14 @@
             if (localStorage.hasOwnProperty('lx-app-launcher-skip')) {
                 if (!ctx.id && window.location.hash == "") {
                     console.log(('(launcher) skipping intro by local storage request...'))
-                    Interface.goToContext()
+                    Interface.chooseTopPriorityContext()
                 }
             }
             else {
                 self.slide = 0
                 self.show = true
-                if (!self.contexts.length) {
-                    Interface.createFirstContext()
-                }
             }
         }
-    }
-
-    Interface.goToContext = () => {
-        if (self.contexts.length) {
-            Interface.chooseTopPriorityContext()
-        }
-        else {
-            Interface.createFirstContext()
-        }
-    }
-
-    Interface.createFirstContext = () => {
-        console.log('(launcher) creating first context')
-        ctx.id = 'demo'
-        ctx.name = 'Demo Map'
-        ctx.priority = 1
-        ctx.save().then(() => {
-            let pkg = new LD.Package('demo', db)
-            pkg.save().then(() => {
-                ctx.addOnePackage(pkg)
-            })
-        })
     }
 
     Interface.chooseTopPriorityContext = () => {
@@ -168,7 +143,7 @@
     Component.open = true
 
     Component.methods = {
-        doComplete: Interface.goToContext,
+        doComplete: Interface.chooseTopPriorityContext,
         doContinue: () => {
             self.slide++
             if (self.slide > self.max_slide) {
