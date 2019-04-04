@@ -21,48 +21,54 @@
 
 #map .lx-marker.usr {
 
-	color: #1051ba;
+	color: #4AADDB;
 	background: #FFF;
 }
 
 .menu .tag-icon.usr {
-	background-color: #1051ba;
+	background-color: #4AADDB;
 }
 #app-container .app .app-frame.usr {
-	border-color: #1051ba;
+	border-color: #4AADDB;
 }
 #map .lx-marker.usr.did-change {
-	background-color: #1051ba;
+	background-color: #4AADDB;
 }
 
 #map .lx-marker.ven {
-	color: #1051ba;
+	color: #474646;
 	background: #FFF;
 }
 
 .menu .tag-icon.ven {
-	background-color: #1051ba;
+	background-color: #474646;
 }
 #app-container .app .app-frame.ven {
-	border-color: #1051ba;
+	border-color: #474646;
 }
 #map .lx-marker.ven.did-change {
-	background-color: #1051ba;
+	background-color: #474646;
 }
 
-.menu .tag-icon.bed  {
-	background: #4AADDB;
-}
-#map .lx-marker.bed {
-	color: #4AADDB;
+
+#map  .lx-marker.tsk {
+	color: #1051ba;
 	background: #FFF;
+} 
+
+.menu .tag-icon.tsk  {
+	background: #1051ba;
 }
-#app-container .app .app-frame.bed {
-	border-color: #4AADDB;
+
+#app-container .app .app-frame.tsk {
+	border-color: #1051ba;
 }
-#map .lx-marker.bed.did-change {
-	background: #4AADDB;
+#map .lx-marker.tsk.did-change {
+	background: #1051ba;
 }
+
+
+
 
 .menu .tag-icon.wtr  {
 	background: #78aef9;
@@ -83,7 +89,7 @@
 
 
 .menu .tag-icon.lnt  {
-	background: #FF9F0E;
+	background: #FF9F0E;	
 }
 
 #map .lx-marker.lnt {
@@ -132,22 +138,6 @@
 	background: #73cc72;
 }
 
-
-#map  .lx-marker.tsk {
-	color: #474646;
-	background: #FFF;
-} 
-
-.menu .tag-icon.tsk  {
-	background: #474646;
-}
-
-#app-container .app .app-frame.tsk {
-	border-color: #474646;
-}
-#map .lx-marker.tsk.did-change {
-	background: #474646;
-}
 
 
 #map .lx-marker.eat {
