@@ -8,23 +8,29 @@
     "pwr": "plug",
     "med": "prescription-bottle-alt",
     "ful": "gas-pump",
-    "ven": "building",
     "sit": "exclamation",
-    "dst": "hand-paper",
     "rdb": "hand-paper",
-    "dtr": "hand-paper",
+    "dmg": "hand-paper",
     "pwo": "exclamation",
     "fir": "exclamation",
     "fld": "exclamation",
     "lot": "exclamation",
     "cba": "hand-paper",
-    "drv": "truck",
+    "drv": "box",
+    "tpt": "truck",
     "cmd": "user-alt",
     "doc": "user-md",
     "ctz": "user",
     "agn": "clipboard",
     "inj": "user-injured",
-    "rpr": "hammer"
+    "rpr": "hammer",
+    "lnt": "hdd",
+    "sns": "ruler",
+    "bse": "building",
+    "wrh": "warehouse",
+    "hsp": "clinic-medical",
+    "shl": "school",
+    "str": "store-alt"
   },
   "categories": {
     "main": [
@@ -47,17 +53,25 @@
     ],
     "tsk": [
       {
+        "label": "Delivery",
+        "tag": "drv"
+      },
+      {
+        "label": "Measurement",
+        "tag": "sns"
+      },
+      {
         "label": "Repair",
         "tag": "rpr"
       },
       {
-        "label": "Delivery",
-        "tag": "drv"
-      },  
-      {
         "label": "Survey",
         "tag": "agn"
-      }
+      },
+      {
+        "label": "Transport",
+        "tag": "tpt"
+      }  
     ],
     "rsc": [
       {
@@ -81,6 +95,10 @@
         "tag": "net"
       },
       {
+        "label": "Lantern",
+        "tag": "lnt"
+      },
+      {
         "label": "Medical",
         "tag": "med"
       },
@@ -99,38 +117,34 @@
         "tag": "bse"
       },
       {
-        "label": "Camp",
-        "tag": "cmp"
-      },
-      {
-        "label": "Hospital",
+        "label": "Medical",
         "tag": "hsp"
       },
       {
         "label": "Shelter",
         "tag": "shl"
+      },
+      {
+        "label": "Store",
+        "tag": "str"
+      },
+      {
+        "label": "Warehouse",
+        "tag": "wrh"
       }
     ],
     "sit": [
       {
-        "label": "Road Debris",
-        "tag": "rdb"
-      },
-      {
-        "label": "Detour",
-        "tag": "dtr"
-      },
-      {
-        "label": "Destroyed",
-        "tag": "dst"
-      },
-      {
-        "label": "Closed by Authorities",
+        "label": "Closure",
         "tag": "cba"
       },
       {
-        "label": "Power Outage",
-        "tag": "pwo"
+        "label": "Damage",
+        "tag": "dmg"
+      },
+      {
+        "label": "Debris",
+        "tag": "rdb"
       },
       {
         "label": "Fire",
@@ -141,8 +155,8 @@
         "tag": "fld"
       },
       {
-        "label": "Looting",
-        "tag": "lot"
+        "label": "Outage",
+        "tag": "pwo"
       }
     ],
     "usr": [

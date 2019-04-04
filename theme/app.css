@@ -79,6 +79,26 @@
 	background: #78aef9;
 }
 
+
+
+
+.menu .tag-icon.lnt  {
+	background: #FF9F0E;
+}
+
+#map .lx-marker.lnt {
+	color: #FF9F0E;
+	background: #FFF;
+}
+#app-container .app .app-frame.lnt {
+	border-color: #FF9F0E;
+}
+#map .lx-marker.lnt.did-change {
+	background: #FF9F0E;
+}
+
+
+
 #map .lx-marker.ful {
 	color: #696E8E;
 	background: #FFF;
