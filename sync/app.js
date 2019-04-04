@@ -9,6 +9,7 @@
     Interface.bindAll = () => {  
         let iv = null
         db.on('sync', (msg) => {
+            // Interface.printSyncData(msg)
             self.is_syncing = true
             if (iv) {
                 clearInterval(iv)
@@ -19,6 +20,21 @@
                 iv = null
             }, syncDisplayTime)
         })
+    }
+
+    /**
+    * Useful debug data to understand data being synchronized
+    */
+    Interface.printSyncData = (msg) => {
+        if (msg.put) {
+            Object.keys(msg.put).forEach(item => {
+                Object.keys(msg.put[item]).forEach(field => { 
+                    if (field !== '#' && field !== '>'&& field !== '_') {
+                        console.log(`(sync) ${item}.${field}`, msg.put[item][field])
+                    }  
+                })
+            })
+        }
     }
 
     // ------------------------------------------------------------------------
