@@ -15,10 +15,10 @@
 				<div :class="getMarkerClass(item)"> 
 					<i :class="getMarkerIconClass(item)"></i>
 				</div>
-				<span> {{ item.label || getCategory(item)}} </span>
 				<span class="icon is-large">
 					<i class="fas fa-angle-right"></i>
 				</span>
+				<span class="text"> {{ item.label || getCategory(item)}} </span>
 			</li>
 
 			<li class="inline-btn"  @click="closeMenu">

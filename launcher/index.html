@@ -8,10 +8,10 @@
 		<section>
 			<ul class="menu" v-if="contexts.length">
 				<li v-for="ctx in contexts" @click="chooseContext(ctx)" :data-context-id="ctx.id" :key="ctx.id">
-					<span> {{ ctx.name }} </span>
 					<span class="icon is-large">
 						<i class="fas fa-angle-right"></i>
 					</span>
+					<span class="text"> {{ ctx.name }} </span>
 				</li>
 			</ul>
 		</section>
