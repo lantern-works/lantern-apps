@@ -129,6 +129,19 @@
             ctx = data.app.context
             db = data.app.context.db
             user = data.app.context.user
+            // preserve session
+            if (localStorage.hasOwnProperty('lx-auth')) {
+                try {
+                    let creds = localStorage['lx-auth'].split(':')
+                    let username = creds[0]
+                    let pass = creds[1]
+                    console.log(`(launcher) authenticate as user ${username}`)
+                    user.authenticate(username, pass)
+                }
+                catch(e) {
+                    console.log('(launcher) unable to read credentials froms torage to authenticate...')
+                }
+            }
         }
     }
 
