@@ -160,7 +160,9 @@
                 Interface.hideMarker(e.item)
             }
         })
-        ctx.feed.on('watch', Interface.showMarkers)
+        ctx.feed.on('watch', () => {
+            Interface.showMarkers(true)
+        })
 
 
         // handle marker selection and focus
@@ -186,7 +188,7 @@
     }
 
 
-    Interface.showMarkers = () => {
+    Interface.showMarkers = (retry) => {
         let feed = ctx.feed
         self.markers = []
         self.markers = feed.itemsList
@@ -198,6 +200,9 @@
             })
             map.fitMapToAllMarkers(feed.activeItems)
             map.zoomMinimum(5)
+        }
+        else if (retry) {
+            setTimeout(Interface.showMarkers, 300)
         }
 
         setTimeout(() => {
