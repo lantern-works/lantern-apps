@@ -170,13 +170,16 @@
             }
         })  
         self.$root.$on('marker-focus', (marker) => {
+
             // center the marker on the map and make sure we have some basic zoom
-            map.panToPoint(marker.latlng).then(() => {
-                map.zoomMinimum(10)
-            })
+            if (marker.hasOwnProperty('latlng')) {
+                map.panToPoint(marker.latlng).then(() => {
+                    map.zoomMinimum(10)
+                })   
+            }
 
             // mark the marker as "read"
-            if (marker.layer._icon) {
+            if (marker.layer && marker.layer._icon) {
                 marker.layer._icon.classList.remove('did-change')
             }
         })
