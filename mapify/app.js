@@ -141,7 +141,7 @@
         ctx.openOneApp('sync')
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
-        ctx.openOneApp('status')
+        ctx.openOneApp('track')
 
         // make sure map reflects data we want to see
         ctx.feed.on('item-watch', (e) => {

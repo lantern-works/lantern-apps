@@ -22,7 +22,7 @@
                     enableHighAccuracy: true
                 },
                 onLocationError: (err) => {
-                    console.warn('(status) location error', err)
+                    console.warn('(track) location error', err)
                 }
             }).addTo(map.view)
 
@@ -73,7 +73,7 @@
 
         let geohash = LM.Location.toGeohash(a.latlng)
         user.onReady(() => {
-            console.log(`(status) update lantern ${ctx.peer} location`, geohash, ctx.cloud)
+            console.log(`(track) update lantern ${ctx.peer} location`, geohash, ctx.cloud)
             let netNode = db.get('net').get(ctx.peer)
             netNode.once((v,k) => {
                 if (!v) {
@@ -93,7 +93,7 @@
     }
 
     Interface.createNewPeerMarker = (peer, geohash, pkg) => {
-        console.log('(status) no marker exists yet for peer', peer)
+        console.log('(track) no marker exists yet for peer', peer)
         let marker = new LM.MarkerItem(pkg)
         marker.tags = ['rsc', 'lnt']
         marker.icon = 'hdd'
@@ -108,7 +108,7 @@
             // @todo offer choice of where to save user marker (which package from context)
             // for now default to first package
             if (firstPackage) {
-                console.log('(status) no marker exists yet for user')
+                console.log('(track) no marker exists yet for user')
                 self.prompt_for_save = true
 
                 let marker = new LM.MarkerItem(firstPackage)
@@ -122,7 +122,7 @@
                 self.marker = marker
             }
             else {
-                console.log('(status) no package defined for marker')
+                console.log('(track) no package defined for marker')
             }
         })
 
@@ -138,10 +138,10 @@
             Interface.updateLocation(a.latlng)
             return
         } else if (self.prompt_for_save) {
-            console.log('(status) waiting for response')
+            console.log('(track) waiting for response')
             return
         } else if (self.did_skip) {
-            console.log('(status) user declined to save marker')
+            console.log('(track) user declined to save marker')
             return
         }
 
@@ -170,7 +170,7 @@
         let userGeohash = user.node.get('marker').get('g')
         userGeohash.once(v => {
             if (v != geohash) {
-                console.log('(status) update location to: ' , geohash)
+                console.log('(track) update location to: ' , geohash)
                 userGeohash.put(geohash)
             }
         })
