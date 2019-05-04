@@ -30,6 +30,7 @@
         },
         callback: (data) => {
             ctx = data.app.context
+            db = ctx.db
             user = data.app.context.user
             map = data.app.context.map
         }
@@ -61,16 +62,52 @@
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
         map.view.on('locationfound', Interface.onLocationDetect)
+        map.view.once('locationfound', Interface.updatePeerMarker)
         map.on('marker-click', Action.skip)
+    }
+
+    Interface.updatePeerMarker = (a) => {
+        if (ctx.cloud === true) { return }
+        let pkg = ctx.packages[0]
+        if (!pkg) { return }
+
+        let geohash = LM.Location.toGeohash(a.latlng)
+        user.onReady(() => {
+            console.log(`(status) update lantern ${ctx.peer} location`, geohash, ctx.cloud)
+            let netNode = db.get('net').get(ctx.peer)
+            netNode.once((v,k) => {
+                if (!v) {
+                    Interface.createNewPeerMarker(ctx.peer, geohash, pkg)
+                        .then(v => {
+                            let markerNode = pkg.getOneItem(marker.id)
+                            console.log(markerNode, v)
+                            netNode.put(markerNode)
+                        })
+                }
+                else {
+                    netNode.get('g').put(geohash)
+                    pkg.node.get('items').set(netNode)
+                }
+            })
+        })
+    }
+
+    Interface.createNewPeerMarker = (peer, geohash, pkg) => {
+        console.log('(status) no marker exists yet for peer', peer)
+        let marker = new LM.MarkerItem(pkg)
+        marker.tags = ['rsc', 'lnt']
+        marker.icon = 'hdd'
+        marker.geohash = geohash
+        marker.owner = user.username
+        return marker.save()
     }
 
     Interface.createNewMarker = (latlng) => {
         let firstPackage = ctx.packages[0]
-        user.authOrCreate().then(() => {
+        user.onReady(() => {
             // @todo offer choice of where to save user marker (which package from context)
             // for now default to first package
             if (firstPackage) {
-
                 console.log('(status) no marker exists yet for user')
                 self.prompt_for_save = true
 
