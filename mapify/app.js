@@ -164,7 +164,7 @@
         })
         self.$root.$on('marker-focus', (marker) => {
             // center the marker on the map and make sure we have some basic zoom
-            if (marker.hasOwnProperty('latlng')) {
+            if (marker.latlng) {
                 map.panToPoint(marker.latlng).then(() => {
                     map.zoomMinimum(10)
                 })
@@ -183,7 +183,7 @@
         self.markers = feed.itemsList
 
         if (self.markers.length) {
-            console.log(`(mapify) show ${self.markers.length} markers`)
+            //console.log(`(mapify) show ${self.markers.length} markers`)
             self.markers.forEach(id => {
                 Interface.showMarker(feed.items[id])
             })

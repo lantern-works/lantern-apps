@@ -129,7 +129,7 @@
                     console.log(`(launcher) authenticate as user ${username}`)
                     user.authenticate(username, pass)
                 } catch (e) {
-                    console.log('(launcher) unable to read credentials froms torage to authenticate...')
+                    console.log('(launcher) unable to read credentials from storage to authenticate...')
                 }
             }
         }
