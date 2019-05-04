@@ -21,7 +21,6 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
-
         user.on('auth', () => {
             self.username = user.username
         })
@@ -29,7 +28,6 @@
         user.on('leave', () => {
             self.username = null
         })
-
 
         self.maxZoom = map.hasMaxZoom()
         self.$root.$on('marker-focus', (marker) => {
@@ -39,11 +37,10 @@
         self.$root.$on('marker-draft', (marker) => {
             Action.closeMenu()
         })
-        
+
         map.view.on('click', () => {
             Action.closeMenu()
         })
-
 
         map.on('marker-remove', () => {
             Action.closeMenu()
@@ -98,7 +95,6 @@
         self.maxZoom = false
     }
 
-
     /**
     * User wants to move marker
     */
@@ -106,7 +102,7 @@
         self.readyForSettings = false
 
         if (!self.marker.owner) {
-            self.marker.owner = user.username                
+            self.marker.owner = user.username
         }
 
         targetMarker = self.marker
@@ -115,7 +111,6 @@
         targetMarker.icon = 'arrows-alt'
         self.menu = {}
         console.log(`(xray) ready for relocation of ${self.marker.id}`)
-
 
         targetMarker.once('move', (val) => {
             targetMarker.icon = original_icon
@@ -151,17 +146,17 @@
             self.readyToDrop = false
         })
     }
-    
+
     /**
     * User wants to agree with accuracy of data connected with this marker
     */
-    Action.approveMarker = () => {      
+    Action.approveMarker = () => {
         self.readyForSettings = false
         self.marker.approve(user.username).then(() => {
-            console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)      
+            console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)
         })
     }
-    
+
     /**
     * User wants to dispute accuracy of data connected with this marker
     */
@@ -176,15 +171,14 @@
     * User wants to map this
     */
     Action.mapMarker = () => {
-        let lat = self.marker.latlng.lat 
+        let lat = self.marker.latlng.lat
         let lng = self.marker.latlng.lon
         if /* if we're on iOS, open in Apple Maps */
-            ((navigator.platform.indexOf("iPhone") != -1) || 
-             (navigator.platform.indexOf("iPad") != -1) || 
-             (navigator.platform.indexOf("iPod") != -1)) {
+        ((navigator.platform.indexOf('iPhone') != -1) ||
+             (navigator.platform.indexOf('iPad') != -1) ||
+             (navigator.platform.indexOf('iPod') != -1)) {
             window.open(`maps://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=`)
-        }
-        else {
+        } else {
             /* else use Google */
             window.open(`https://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=`)
         }
@@ -194,12 +188,12 @@
     * User wants to sign-in
     */
     Action.signIn = () => {
-            self.isLoading = true
-            user.authOrCreate().then(() => {
-                setTimeout(() => {
-                    self.isLoading = false
-                }, 1550)
-            })
+        self.isLoading = true
+        user.authOrCreate().then(() => {
+            setTimeout(() => {
+                self.isLoading = false
+            }, 1550)
+        })
     }
     // ------------------------------------------------------------------------
     Component.data = {
@@ -219,15 +213,13 @@
         move: Action.relocateMarker,
         drop: Action.dropMarker,
         scoreUp: () => {
-
             if (!user.username) {
                 console.log('(xray) skip score change since user is not signed in...')
                 return
             }
 
-
             if (!self.marker.owner) {
-                self.marker.owner = user.username                
+                self.marker.owner = user.username
             }
 
             if (self.marker.score > 0.9) {
@@ -249,42 +241,38 @@
             self.readyToDrop = true
         },
         promptForLabel: () => {
-
             if (!user.username) {
                 console.log('(xray) skip label prompt since user is not signed in...')
                 return
             }
-            
+
             self.readyForSettings = false
             // allow user to define name
             self.readyForLabel = !self.readyForLabel
             self.label = self.marker.label
-
         },
         zoomIn: () => {
-            map.panToPoint(self.marker.latlng).then(() => {    
+            map.panToPoint(self.marker.latlng).then(() => {
                 map.zoomToPoint(self.marker.latlng)
                 map.zoomMinimum(10)
-                self.maxZoom = map.hasMaxZoom() 
+                self.maxZoom = map.hasMaxZoom()
                 setTimeout(() => {
-                    self.maxZoom = map.hasMaxZoom() 
+                    self.maxZoom = map.hasMaxZoom()
                 }, 500)
             })
-        },   
+        },
         zoomOut: () => {
             map.view.zoomOut()
-            self.maxZoom = map.hasMaxZoom() 
+            self.maxZoom = map.hasMaxZoom()
         },
         scoreDown: () => {
-
-
             if (!user.username) {
                 console.log('(xray) skip score change since user is not signed in...')
                 return
             }
 
             if (!self.marker.owner) {
-                self.marker.owner = user.username                
+                self.marker.owner = user.username
             }
 
             if (self.marker.score < 0.10) {
@@ -300,7 +288,7 @@
         saveLabel: () => {
             self.readyForLabel = false
             if (!self.marker.owner) {
-                self.marker.owner = user.username                
+                self.marker.owner = user.username
             }
             self.marker.label = self.label
             self.marker.update(['owner', 'label'])

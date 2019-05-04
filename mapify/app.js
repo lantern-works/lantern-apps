@@ -20,24 +20,22 @@
     }
     let Action = {}
 
-
-
     // ------------------------------------------------------------------------
 
     /**
     * Preserves center map location with browser-based storage
     */
-    const storeCenterLocation  = (timeout) => {
+    const storeCenterLocation = (timeout) => {
         let center = map.getCenter()
         // only save to database if user has paused on this map for a few seconds
         setTimeout(() => {
-            if (center === "ew" || map.getCenterAsString() === localStorage.getItem('lx-ctr')) {
+            if (center === 'ew' || map.getCenterAsString() === localStorage.getItem('lx-ctr')) {
                 // don't bother saving default north american view
                 return
             }
             let newCenter = map.getCenter()
             if (center === newCenter) {
-                //console.log(`(mapify) storing center geohash in browser: ${newCenter}`);
+                // console.log(`(mapify) storing center geohash in browser: ${newCenter}`);
                 localStorage.setItem('lx-ctr', newCenter)
             }
         }, timeout || 5000)
@@ -58,13 +56,11 @@
         }
     }
 
-
     Interface.showMarker = (marker) => {
         if (marker.constructor.name !== 'MarkerItem') {
-            console.log("(mapify) skip show for non-marker", marker)
+            console.log('(mapify) skip show for non-marker', marker)
             return
-        }
-        else if (marker.layer && marker.layer._map) {
+        } else if (marker.layer && marker.layer._map) {
             // already added to map
             // console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
             return
@@ -86,8 +82,6 @@
             map.panToPoint(marker.latlng)
         }
 
-
-
         marker.on('change', (key) => {
             if (marker.layer._icon) {
                 marker.layer._icon.classList.add('did-change')
@@ -101,7 +95,7 @@
     }
 
     Interface.hideMarker = (marker) => {
-        //console.log('(mapify) hide existing marker', marker.id)
+        // console.log('(mapify) hide existing marker', marker.id)
         if (marker.layer && marker.layer._map) {
             map.removeFromMap(marker)
         }
@@ -127,7 +121,6 @@
     }
 
     Interface.bindAll = () => {
-        
         // store context for view reference
         self.context = ctx
 
@@ -150,7 +143,6 @@
         ctx.openOneApp('xray')
         ctx.openOneApp('status')
 
-
         // make sure map reflects data we want to see
         ctx.feed.on('item-watch', (e) => {
             Interface.showMarker(e.item)
@@ -164,20 +156,18 @@
             Interface.showMarkers(true)
         })
 
-
         // handle marker selection and focus
         map.on('marker-click', (marker) => {
             if (marker.layer._icon) {
                 marker.layer._icon.classList.remove('did-change')
             }
-        })  
+        })
         self.$root.$on('marker-focus', (marker) => {
-
             // center the marker on the map and make sure we have some basic zoom
             if (marker.hasOwnProperty('latlng')) {
                 map.panToPoint(marker.latlng).then(() => {
                     map.zoomMinimum(10)
-                })   
+                })
             }
 
             // mark the marker as "read"
@@ -186,7 +176,6 @@
             }
         })
     }
-
 
     Interface.showMarkers = (retry) => {
         let feed = ctx.feed
@@ -200,8 +189,7 @@
             })
             map.fitMapToAllMarkers(feed.activeItems)
             map.zoomMinimum(5)
-        }
-        else if (retry) {
+        } else if (retry) {
             setTimeout(Interface.showMarkers, 300)
         }
 
@@ -221,7 +209,7 @@
             let marker = ctx.feed.items[key]
             setTimeout(() => {
                 map.cacheTilesFromMarker(marker)
-            }, delay+=10000)
+            }, delay += 10000)
         })
     }
 
@@ -245,7 +233,6 @@
         elem2.className = 'fa fa-minus'
         zoom_out.innerHTML = ''
         zoom_out.appendChild(elem2)
-
     }
 
     Interface.promptForNewMarker = () => {
@@ -265,15 +252,13 @@
                 map.view.setView([parts[0], parts[1]], (zoomLevel > 1 ? zoomLevel : 8))
                 console.log('(mapify) snapback to ' + self.snapback)
                 self.snapback = null
-            }
-            else {
+            } else {
                 self.snapback = map.getCenterAsString()
                 map.fitMapToAllMarkers(ctx.feed.activeItems)
             }
-
         },
         chooseMap: () => {
-            window.location.hash = ""
+            window.location.hash = ''
         },
         chooseFromMenu: (item) => {
             // open up item details
@@ -303,16 +288,15 @@
         },
         searchFilter: (type) => {
             self.filter = type || self.filter
-        }, 
+        },
         getSearchButtonClass: (type) => {
             if (type.label == self.filter.label) {
                 return 'button is-selected is-info'
-            }
-            else {
+            } else {
                 return 'button'
             }
         },
-        promptForNewMarker:  Interface.promptForNewMarker
+        promptForNewMarker: Interface.promptForNewMarker
     }
 
     Component.data = {
@@ -331,7 +315,7 @@
             },
             {
                 'label': 'Report',
-                'match': [ 'sit', 'usr'], 
+                'match': [ 'sit', 'usr']
             },
             {
                 'label': 'Site',
@@ -352,7 +336,7 @@
             self.markers.forEach(key => {
                 let item = ctx.feed.items[key]
                 if (item) {
-                    let intersection = filter.match.filter(x => item.tags.includes(x));
+                    let intersection = filter.match.filter(x => item.tags.includes(x))
                     if (intersection.length) {
                         list.push(item)
                     }

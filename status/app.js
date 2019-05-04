@@ -1,8 +1,8 @@
 /**
-* Reports location and safety data for users 
+* Reports location and safety data for users
 */
 (function () {
-    var self, map, user, ctx, latlng;
+    var self, map, user, ctx, latlng
     let Interface = {}
     let Component = {
         mounted () {
@@ -19,7 +19,7 @@
                 position: 'bottomright',
                 icon: 'fa fa-location-arrow',
                 onLocationError: (err) => {
-                    console.warn("(status) location error", err)
+                    console.warn('(status) location error', err)
                 }
             }).addTo(map.view)
 
@@ -33,49 +33,42 @@
     }
     let Action = {}
 
-
-
     // ------------------------------------------------------------------------
     const getTargetPackage = () => {
-        return window.location.hash.replace('#','').split(',')[0] // assume first package
+        return window.location.hash.replace('#', '').split(',')[0] // assume first package
     }
 
     const addMarkerToPackage = (marker) => {
         let pkgId = getTargetPackage()
         let pkg = new LD.Package(pkgId, LT.db)
         pkg.add(marker)
-    } 
-
+    }
 
     // ------------------------------------------------------------------------
     Action.save = () => {
         self.is_saving = true
-        self.marker.save().then(() => {            
+        self.marker.save().then(() => {
             map.removeFromMap(self.marker)
             self.is_saving = false
             self.prompt_for_save = false
-        })   
+        })
     }
 
     Action.skip = () => {
         if (self.marker) {
             self.did_skip = true
             if (self.marker.mode === 'draft') {
-                map.removeFromMap(self.marker) 
+                map.removeFromMap(self.marker)
             }
-
         }
         self.prompt_for_save = false
     }
-
-
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
         map.view.on('locationfound', Interface.promptForSave)
         map.on('marker-click', Action.skip)
     }
-
 
     Interface.createNewMarker = () => {
         console.log('(status) no marker exists yet for user')
@@ -84,7 +77,7 @@
         // for now default to first package
         if (ctx.packages[0]) {
             let marker = new LM.MarkerItem(ctx.packages[0])
-            marker.tags = ['usr','ctz']
+            marker.tags = ['usr', 'ctz']
             marker.icon = 'user'
             marker.latlng = latlng
             marker.owner = user.username
@@ -97,15 +90,13 @@
 
     Interface.promptForSave = (a) => {
         if (self.marker) {
-            //console.log('(status) marker exists for user')
+            // console.log('(status) marker exists for user')
             return
-        }
-        else if (self.prompt_for_save) {
-            //console.log('(status) waiting for response')
+        } else if (self.prompt_for_save) {
+            // console.log('(status) waiting for response')
             return
-        }
-        else if (self.did_skip) {
-            //console.log('(status) user declined to save marker')
+        } else if (self.did_skip) {
+            // console.log('(status) user declined to save marker')
             return
         }
 

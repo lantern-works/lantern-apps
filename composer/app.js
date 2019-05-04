@@ -2,12 +2,12 @@
 * Allows users to create new markers on the map
 */
 (function () {
-    var self,user,map,ctx
+    var self, user, map, ctx
 
     let Interface = {}
     let Action = {}
 
-    // ------------------------------------------------------------------------    
+    // ------------------------------------------------------------------------
     Interface.bindAll = () => {
         Interface.defineIconClasses()
         map.on('marker-click', Action.closeBottomMenu)
@@ -27,7 +27,7 @@
         if (self.draft_marker) {
             // remove old draft
             Interface.removeDraftMarker()
-        }   
+        }
 
         // @todo allow user to choose which of several possible packages in context we want to save
         // for now defaults to first package
@@ -37,22 +37,20 @@
         }
         let targetPkg = ctx.packages[0]
         self.draft_marker = new LM.MarkerItem(targetPkg)
-        self.draft_marker.icon = "arrows-alt"
+        self.draft_marker.icon = 'arrows-alt'
 
         let latlng = map.getCenterAsLatLng()
         latlng.lat = (latlng.lat + map.view.getBounds().getNorth() * 3) / 4
         self.draft_marker.geohash = LM.Location.toGeohash(latlng)
 
-
         map.addToMap(self.draft_marker)
         self.draft_marker.layer.dragging.enable()
         self.draft_marker.on('tag', (tag) => {
-           if (self.icons.hasOwnProperty(tag)) {
+            if (self.icons.hasOwnProperty(tag)) {
                 self.draft_marker.icon = self.icons[tag]
-           }
+            }
             self.draft_marker.layer._icon.classList.add('lx-marker-draft')
         })
-
 
         self.draft_marker.on('untag', () => {
             self.draft_marker.icon = null
@@ -64,7 +62,6 @@
         self.menu.items = self.categories.main
 
         self.draft_marker.layer._icon.classList.add('lx-marker-draft')
-        
     }
 
     Interface.removeDraftMarker = () => {
@@ -73,7 +70,6 @@
         delete self.draft_marker
         self.draft_marker = null
     }
-
 
     Interface.defineIconClasses = () => {
         // set up custom icons for menu
@@ -94,7 +90,7 @@
         }
     }
 
-    // ------------------------------------------------------------------------    
+    // ------------------------------------------------------------------------
     /**
     * User wants to save marker to database
     */
@@ -174,12 +170,12 @@
     * User wants to sign-in
     */
     Action.signIn = () => {
-            self.is_saving = true
-            user.authOrCreate().then(() => {
-                setTimeout(() => {
-                    self.is_saving = false
-                }, 1550)
-            })
+        self.is_saving = true
+        user.authOrCreate().then(() => {
+            setTimeout(() => {
+                self.is_saving = false
+            }, 1550)
+        })
     }
 
     // ------------------------------------------------------------------------
@@ -188,7 +184,6 @@
             if (self) return
             self = this
             Interface.bindAll()
-
         },
         callback: (data) => {
             ctx = data.app.context
@@ -217,5 +212,4 @@
     }
 
     return Component
-
 }())

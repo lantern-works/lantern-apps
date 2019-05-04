@@ -1,12 +1,12 @@
 (function () {
-    var self,ctx,user,db
+    var self, ctx, user, db
     let Interface = {}
     let Action = {}
 
     const syncDisplayTime = 1050
 
     // ------------------------------------------------------------------------
-    Interface.bindAll = () => {  
+    Interface.bindAll = () => {
         let iv = null
         db.on('sync', (msg) => {
             // Interface.printSyncData(msg)
@@ -28,10 +28,10 @@
     Interface.printSyncData = (msg) => {
         if (msg.put) {
             Object.keys(msg.put).forEach(item => {
-                Object.keys(msg.put[item]).forEach(field => { 
-                    if (field !== '#' && field !== '>'&& field !== '_') {
+                Object.keys(msg.put[item]).forEach(field => {
+                    if (field !== '#' && field !== '>' && field !== '_') {
                         console.log(`(sync) ${item}.${field}`, msg.put[item][field])
-                    }  
+                    }
                 })
             })
         }
@@ -57,7 +57,6 @@
 
     Component.computed = {
     }
-
 
     Component.methods = {
     }

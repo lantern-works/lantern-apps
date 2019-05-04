@@ -1,11 +1,9 @@
 (function () {
-    var self,ctx,user,db
+    var self, ctx, user, db
     let Interface = {}
     let Action = {}
 
-
     // ------------------------------------------------------------------------
-
 
     /**
     * User wants to open a specific context with given package and markers
@@ -14,28 +12,23 @@
         window.location.hash = ctx.id
     }
 
-
     // ------------------------------------------------------------------------
 
-
-    Interface.bindAll = () => {  
-
+    Interface.bindAll = () => {
         window.onhashchange = (e) => {
             Interface.setContext(window.location.hash.replace('#', ''))
         }
 
         if (window.location.hash.length >= 1) {
             Interface.setContext(window.location.hash.replace('#', ''))
-        }
-        else {
+        } else {
             // if signed in, default to top priority context
             if (localStorage.hasOwnProperty('lx-app-launcher-skip')) {
-                if (!ctx.id && window.location.hash == "") {
+                if (!ctx.id && window.location.hash == '') {
                     console.log(('(launcher) skipping intro by local storage request...'))
                     Interface.chooseTopPriorityContext()
                 }
-            }
-            else {
+            } else {
                 self.slide = 0
                 self.show = true
             }
@@ -56,8 +49,7 @@
                     index: key,
                     id: ctx.id
                 }
-            }
-            else if (pri == winner.score) {
+            } else if (pri == winner.score) {
                 if (ctx.id > winner.id) {
                     winner = {
                         score: pri,
@@ -78,7 +70,7 @@
         }
 
         // otherwise make sure context exists before we start
-        db.get('ctx').get(id).once((v,k) => {
+        db.get('ctx').get(id).once((v, k) => {
             if (!v) {
                 console.log('(launcher) requested missing context. returning home...')
                 window.location.hash = '#'
@@ -106,7 +98,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({"message": msg})
+            body: JSON.stringify({ 'message': msg })
         })
     }
     // ------------------------------------------------------------------------
@@ -115,15 +107,14 @@
             if (self) return
             self = this
             // get or create context for packages
-            db.get('ctx').map((v,k) => {
+            db.get('ctx').map((v, k) => {
                 if (v && v.name) {
                     // display this as a canvas
-                    self.contexts.push(v)  
+                    self.contexts.push(v)
                 }
             })
-                    
-            Interface.bindAll()
 
+            Interface.bindAll()
         },
         callback: (data) => {
             ctx = data.app.context
@@ -137,8 +128,7 @@
                     let pass = creds[1]
                     console.log(`(launcher) authenticate as user ${username}`)
                     user.authenticate(username, pass)
-                }
-                catch(e) {
+                } catch (e) {
                     console.log('(launcher) unable to read credentials froms torage to authenticate...')
                 }
             }
