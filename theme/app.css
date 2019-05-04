@@ -8,7 +8,8 @@
 
 
 #map .lx-marker {
-	background: #FFF;
+	background: rgba(255,255,255,0.75);
+	opacity: 0.90;
 }
 #map .lx-marker-draft {
 	background: #EE452A;
@@ -20,9 +21,7 @@
 
 
 #map .lx-marker.usr {
-
 	color: #4AADDB;
-	background: #FFF;
 }
 
 .menu .tag-icon.usr {
@@ -37,7 +36,6 @@
 
 #map .lx-marker.ven {
 	color: #474646;
-	background: #FFF;
 }
 
 .menu .tag-icon.ven {
@@ -53,7 +51,6 @@
 
 #map  .lx-marker.tsk {
 	color: #1051ba;
-	background: #FFF;
 } 
 
 .menu .tag-icon.tsk  {
@@ -76,7 +73,6 @@
 
 #map .lx-marker.wtr {
 	color: #78aef9;
-	background: #FFF;
 }
 #app-container .app .app-frame.wtr {
 	border-color: #78aef9;
@@ -94,7 +90,6 @@
 
 #map .lx-marker.lnt {
 	color: #FF9F0E;
-	background: #FFF;
 }
 #app-container .app .app-frame.lnt {
 	border-color: #FF9F0E;
@@ -107,7 +102,6 @@
 
 #map .lx-marker.ful {
 	color: #696E8E;
-	background: #FFF;
 }
 
 .menu .tag-icon.ful {
@@ -123,7 +117,6 @@
 
 #map  .lx-marker.net {
 	color: #73cc72;
-	background: #FFF;
 
 }
 
@@ -142,7 +135,6 @@
 
 #map .lx-marker.eat {
 	color: #ffcc54;
-	background: #FFF;
 }
 
 .menu .tag-icon.eat  {
@@ -156,9 +148,7 @@
 }
 
 #map  .lx-marker.clo {
-
 	color: #50c1b6;
-	background: #FFF;
 }
 
 .menu .tag-icon.clo  {
@@ -172,10 +162,8 @@
 }
 
 #map  .lx-marker.pwr {
-
 	color: #f45d90;
-	background: #FFF;
-	} 
+} 
 
 .menu .tag-icon.pwr  {
 	background: #f45d90;
@@ -189,7 +177,6 @@
 
 #map .lx-marker.med {
 	color: #9478EA;
-	background: #FFF;
 } 
 .menu .tag-icon.med  {
 	background: #9478EA;
@@ -203,7 +190,6 @@
 
 #map .lx-marker.sit {
 	color: #FFB000;
-	background: #FFF;
 }
 
 .menu .tag-icon.sit {
@@ -218,9 +204,7 @@
 
 
 #map .lx-marker.rdb, #map .lx-marker.dtr, #map .lx-marker.cba,#map .lx-marker.dst {
-
 	color: #ff844d;
-	background: #FFF;
 }
 
 .menu .tag-icon.rdb, .menu .tag-icon.dtr,  ,.menu .tag-icon.cba, .menu .tag-icon.dst {
@@ -237,7 +221,6 @@
 
 #map .lx-marker.pwr {
 	color: #c075c9;
-	background: #FFF;
 }
 
 .menu .tag-icon.pwr {
