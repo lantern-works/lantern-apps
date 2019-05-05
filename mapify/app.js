@@ -143,18 +143,33 @@
         ctx.openOneApp('xray')
         ctx.openOneApp('track')
 
+
+        let waitForMoreMarkers = 3
+
+        ctx.feed.on('watch', () => {
+            let iv = setInterval(() => {
+                waitForMoreMarkers -= 1
+                if (waitForMoreMarkers <= 0) {
+                    clearInterval(iv)
+                    return Interface.showMarkers()
+                }
+            }, 150)
+        })
+
+
         // make sure map reflects data we want to see
         ctx.feed.on('item-watch', (e) => {
             Interface.showMarker(e.item)
+            waitForMoreMarkers = 3
         })
+
+
         ctx.feed.on('item-unwatch', (e) => {
             if (e.item && e.item.layer) {
                 Interface.hideMarker(e.item)
             }
         })
-        ctx.feed.on('watch', () => {
-            Interface.showMarkers(true)
-        })
+
 
         // handle marker selection and focus
         map.on('marker-click', (marker) => {
