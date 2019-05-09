@@ -72,10 +72,9 @@
             return
         }
         self.marker = marker
-
-        // map.view.once("moveend", () => {
-        //     map.zoomMinimum(13)
-        // })
+        const tagsWithScores = ['net', 'clo', 'eat', 'tsk', 'pwr', 'wtr', 'ful']
+         self.showScore  = marker.tags.filter(value => -1 !== tagsWithScores.indexOf(value)).length >= 1
+        console.log( self.showScore )
     }
 
     // ------------------------------------------------------------------------
@@ -206,7 +205,8 @@
         readyForSettings: false,
         pingInProgress: false,
         isLoading: false,
-        maxZoom: false
+        maxZoom: false,
+        showScore: false
     }
     Component.methods = {
         ping: Action.pingMarker,
@@ -245,7 +245,6 @@
                 console.log('(xray) skip label prompt since user is not signed in...')
                 return
             }
-
             self.readyForSettings = false
             // allow user to define name
             self.readyForLabel = !self.readyForLabel

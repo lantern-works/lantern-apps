@@ -30,7 +30,7 @@
             </div>
         </section>
 
-        <section v-if="!readyToDrop" class="score">
+        <section v-if="!readyToDrop && showScore" class="score">
             <div @click="scoreUp" class="score-up">
             </div>
             <div @click="scoreDown" class="score-down">
