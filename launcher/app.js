@@ -106,6 +106,8 @@
         mounted () {
             if (self) return
             self = this
+            // clear out our context list to begin
+            self.contexts = []
             // get or create context for packages
             db.get('ctx').map((v, k) => {
                 if (v && v.name) {
