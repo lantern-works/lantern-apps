@@ -8,11 +8,12 @@
 
 
 #map .lx-marker {
-	background: rgba(255,255,255,0.75);
+	background: rgba(255,255,255,0.85);
 	opacity: 0.90;
 }
 #map .lx-marker-draft {
 	background: #EE452A;
+	color: #FFF !important;
 }
 
 #map .lx-marker.did-change {

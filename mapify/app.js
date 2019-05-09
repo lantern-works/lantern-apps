@@ -128,21 +128,10 @@
         Interface.setupControls()
         Interface.defineIconClasses()
 
-        self.$root.$on('map-reset', () => {
-            map.fitMapToAllMarkers(ctx.feed.activeItems)
-        })
-
         // try to save center location after the map moves
         map.view.on('moveend', (e) => {
             storeCenterLocation()
         })
-
-        // other marker and map-related apps
-        ctx.openOneApp('sync')
-        ctx.openOneApp('composer')
-        ctx.openOneApp('xray')
-        ctx.openOneApp('track')
-
 
         let waitForMoreMarkers = 3
 
@@ -153,7 +142,7 @@
                     clearInterval(iv)
                     return Interface.showMarkers()
                 }
-            }, 150)
+            }, 75)
         })
 
 
@@ -190,6 +179,15 @@
                 marker.layer._icon.classList.remove('did-change')
             }
         })
+
+        console.log("(mapify) binding complete")
+
+
+        // other marker and map-related apps
+        ctx.openOneApp('sync')
+        ctx.openOneApp('composer')
+        ctx.openOneApp('xray')
+        ctx.openOneApp('track')
     }
 
     Interface.showMarkers = (retry) => {
