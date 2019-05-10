@@ -163,6 +163,9 @@
             }
             self.slide = -1
         },
+        close: () => {
+            window.history.back()
+        },
         chooseContext: Action.chooseContext
     }
 
