@@ -3,38 +3,41 @@
     let Interface = {}
     let Action = {}
 
-    const syncDisplayTime = 1050
+    const syncDisplayTime = 1100
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
         let iv = null
         db.on('sync', (msg) => {
-            // Interface.printSyncData(msg)
+            let peers = msg['><']
+            let changes = {}
+
+            Object.keys(msg.put).forEach(item => {
+                Object.keys(msg.put[item]).forEach(field => {
+                    if (field !== '#' && field !== '>' && field !== '_') {
+                        // only display items that have a sequence associated
+                        changes[item] = changes[item] || {}
+                        changes[item][field] = msg.put[item][field]
+                        if (field == 't') {
+                            self.sync_text = changes[item][field]
+                        }
+                    }
+                })
+            })
+
+            //console.log(`(sync)  ${peers}`, changes)
+            
             self.is_syncing = true
             if (iv) {
                 clearInterval(iv)
             }
             iv = setTimeout(() => {
+                self.sync_text = ''
                 self.is_syncing = false
                 clearInterval(iv)
                 iv = null
             }, syncDisplayTime)
         })
-    }
-
-    /**
-    * Useful debug data to understand data being synchronized
-    */
-    Interface.printSyncData = (msg) => {
-        if (msg.put) {
-            Object.keys(msg.put).forEach(item => {
-                Object.keys(msg.put[item]).forEach(field => {
-                    if (field !== '#' && field !== '>' && field !== '_') {
-                        console.log(`(sync) ${item}.${field}`, msg.put[item][field])
-                    }
-                })
-            })
-        }
     }
 
     // ------------------------------------------------------------------------
@@ -52,7 +55,8 @@
     }
 
     Component.data = {
-        is_syncing: false
+        is_syncing: false,
+        sync_text: ''
     }
 
     Component.computed = {
