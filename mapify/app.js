@@ -309,7 +309,10 @@
                 return 'button'
             }
         },
-        promptForNewMarker: Interface.promptForNewMarker
+        promptForNewMarker: Interface.promptForNewMarker,
+        openDiagnostics: () => {
+            ctx.openOneApp('diagnostics')
+        }
     }
 
     Component.data = {

@@ -18,9 +18,6 @@
                         // only display items that have a sequence associated
                         changes[item] = changes[item] || {}
                         changes[item][field] = msg.put[item][field]
-                        if (field == 't') {
-                            self.sync_text = changes[item][field]
-                        }
                     }
                 })
             })

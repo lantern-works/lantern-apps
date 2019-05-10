@@ -74,7 +74,6 @@
         self.marker = marker
         const tagsWithScores = ['net', 'clo', 'eat', 'tsk', 'pwr', 'wtr', 'ful']
          self.showScore  = marker.tags.filter(value => -1 !== tagsWithScores.indexOf(value)).length >= 1
-        console.log( self.showScore )
     }
 
     // ------------------------------------------------------------------------
