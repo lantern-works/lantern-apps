@@ -58,8 +58,15 @@
                     }
                 }
             }
-        })
-        window.location.hash = self.contexts[winner.index].id
+        })        
+
+        if (self.contexts.hasOwnProperty(winner.index)) {
+            window.location.hash = self.contexts[winner.index].id
+        }
+        else {
+            console.warn('(launcher) no context winner to use. may need to run /install first...')
+            self.slide = -1
+        }
     }
 
     Interface.setContext = (id) => {
@@ -108,10 +115,13 @@
             self = this
             // clear out our context list to begin
             self.contexts = []
+            let added = {}
+
             // get or create context for packages
             db.get('ctx').map((v, k) => {
-                if (v && v.name) {
+                if (v && v.name && !added.hasOwnProperty(v.id)) {
                     // display this as a canvas
+                    added[v.id] = true
                     self.contexts.push(v)
                 }
             })
@@ -159,9 +169,12 @@
         },
         promptForMap: () => {
             if (!self.contexts.length) {
-                Interface.createFirstContext()
+                console.warn('(launcher) no context yet. may need to run /install first...')
             }
             self.slide = -1
+        },
+        promptForInstall: () => {
+            window.location = '/install'
         },
         close: () => {
             window.history.back()
