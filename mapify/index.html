@@ -6,7 +6,7 @@
 		</span>
 
 		<!-- search icon -->
-		<span @click.stop="searchMap" v-long-press.stop="openDiagnostics"   :class="'search icon ' + (show_search ? 'active' : 'inactive') ">
+		<span @click.stop="searchMap"  :class="'search icon ' + (show_search ? 'active' : 'inactive') ">
 			<i class="fas fa-search"></i>
 			<span v-if="markers.length">{{ markers.length }}</span>
 		</span>

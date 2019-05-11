@@ -1,6 +1,6 @@
 <div class="app-top" v-if="show_search">	
 	<div class="app-frame menu-app-frame">
-		<div id="search-button-bar">
+		<div id="search-button-bar"  v-long-press.stop="openDiagnostics" >
 			<div class="buttons has-addons is-centered">
 				<span v-for="type in types" v-bind:class="getSearchButtonClass(type)" @click="searchFilter(type)">
 					<span>{{type.label}}</span>

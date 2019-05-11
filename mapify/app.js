@@ -311,6 +311,7 @@
         },
         promptForNewMarker: Interface.promptForNewMarker,
         openDiagnostics: () => {
+            self.show_search = false
             ctx.openOneApp('diagnostics')
         }
     }

@@ -2,9 +2,14 @@
     <div class="app-frame menu-app-frame">
         <h1>Network Diagnostics</h1>
         <ul class="menu">
-            <li>
-                <span class="tag is-dark">Nodes</span>
-                <span class="tag is-primary">{{nodeCount}}</span>
+            <li @click="printNodes">
+                <span class="tag is-dark" >Nodes</span><span class="tag is-primary">{{nodeCount}}</span>
+            </li>
+            <li @click="printPackages">
+                <span class="tag is-dark" >Packages</span><span class="tag is-primary">{{packageCount}}</span>
+            </li>
+            <li @click="printContexts">
+                <span class="tag is-dark">Contexts</span><span class="tag is-primary">{{contextCount}}</span>
             </li>
             <li class="inline-btn" @click="close">
                 Close
