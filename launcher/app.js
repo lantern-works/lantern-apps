@@ -76,6 +76,13 @@
             return
         }
 
+        if (ctx.id === id) {
+            self.slide = -1
+            self.show = false
+            console.log('(launcher) requested existing context. ignoring...')
+            return
+        }
+
         // otherwise make sure context exists before we start
         db.get('ctx').get(id).once((v, k) => {
             if (!v) {
@@ -88,15 +95,11 @@
             ctx.id = id // this causes a number of related updates within context automatically
             // console.log('(launcher) show context: ' + id)
             ctx.openOneApp('mapify')
-
             self.$root.$emit('map-reset')
-
             ctx.packages.forEach(pkg => {
                 let query = new LD.Query(db, pkg)
                 query.compose().then(Interface.sendQuery)
             })
-
-
             map.fitMapToAllMarkers(ctx.feed.activeItems)
         })
     }
