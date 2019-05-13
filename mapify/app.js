@@ -200,8 +200,11 @@
             self.markers.forEach(id => {
                 Interface.showMarker(feed.items[id])
             })
+
             map.fitMapToAllMarkers(feed.activeItems)
-            map.zoomMinimum(5)
+            setTimeout(() => {
+                map.zoomMinimum(5)
+            }, 500)
         } else if (retry) {
             setTimeout(Interface.showMarkers, 300)
         }

@@ -95,6 +95,9 @@
                 let query = new LD.Query(db, pkg)
                 query.compose().then(Interface.sendQuery)
             })
+
+
+            map.fitMapToAllMarkers(ctx.feed.activeItems)
         })
     }
 
