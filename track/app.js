@@ -79,8 +79,8 @@
                 if (!v) {
                     Interface.createNewPeerMarker(ctx.peer, geohash, pkg)
                         .then(v => {
-                            let markerNode = pkg.getOneItem(marker.id)
-                            console.log(markerNode, v)
+                            let id = v['_']['#']
+                            let markerNode = pkg.getOneItem(id)
                             netNode.put(markerNode)
                         })
                 }
