@@ -1,6 +1,7 @@
 /**
 * Reports location and safety data for users
 */
+
 (function () {
     var self, map, user, ctx
     let Interface = {}
@@ -8,24 +9,6 @@
         mounted () {
             if (self) return
             self = this
-            // // add locate control
-            L.control.locate({
-                returnToPreviousBounds: true,
-                cacheLocation: true,
-                showCompass: true,
-                flyTo: false,
-                showPopup: false,
-                setView: 'untilPanOrZoom',
-                position: 'bottomright',
-                icon: 'fa fa-location-arrow',
-                locateOptions: {
-                    enableHighAccuracy: true
-                },
-                onLocationError: (err) => {
-                    console.warn('(track) location error', err)
-                }
-            }).addTo(map.view)
-
             Interface.bindAll()
         },
         callback: (data) => {
@@ -45,87 +28,106 @@
             map.removeFromMap(self.marker)
             self.is_saving = false
             self.prompt_for_save = false
-            user.node.get('marker').put(v)
+            let userMarkerNodeId = user.username
+            let userNode = db.get('usr').get(userMarkerNodeId)
+            userNode.once((v,k) => {
+                console.log(v,k)
+                if (!v) {
+                    let userInPackageNode = self.marker.package.node.get('items').get(userMarkerNodeId)
+                    console.log('(track) storing user for first time in usr namespace', userInPackageNode)
+                    userNode.put(userInPackageNode)
+                }
+            })
         })
     }
 
     Action.skip = () => {
-        if (self.marker) {
-            self.did_skip = true
-            if (self.marker.mode === 'draft') {
-                map.removeFromMap(self.marker)
-            }
+        if (self.draft_marker) {
+            console.log('(track) removing from map')
+            map.removeFromMap(self.marker)
+            self.draft_marker = null
         }
         self.prompt_for_save = false
     }
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
-        map.view.on('locationfound', Interface.onLocationDetect)
-        map.view.once('locationfound', Interface.updatePeerMarker)
+
+        // rate limit location detection
+        const rateLimit = 5000
+        let isLimited = false
+        map.view.on('locationfound', (a) => {
+            if (!isLimited) {
+                Interface.onLocationDetect(a)
+            }
+            isLimited = true
+            setTimeout(() => {
+                isLimited = false
+            }, rateLimit)
+        })
+
+        // show icon for location controls
+        Interface.showLocateControl()
         map.on('marker-click', Action.skip)
     }
 
-    Interface.updatePeerMarker = (a) => {
-        if (ctx.cloud === true) { return }
-        let pkg = ctx.packages[0]
-        if (!pkg) { return }
-
-        let geohash = LM.Location.toGeohash(a.latlng)
-        user.onReady(() => {
-            console.log(`(track) update lantern ${ctx.peer} location`, geohash, ctx.cloud)
-            let netNode = db.get('net').get(ctx.peer)
-            netNode.once((v,k) => {
-                if (!v) {
-                    Interface.createNewPeerMarker(ctx.peer, geohash, pkg)
-                        .then(v => {
-                            let id = v['_']['#']
-                            let markerNode = pkg.getOneItem(id)
-                            netNode.put(markerNode)
-                        })
-                }
-                else {
-                    netNode.get('g').put(geohash)
-                    pkg.node.get('items').set(netNode)
-                }
-            })
-        })
+    Interface.showLocateControl = () => {
+        // add locate control
+        L.control.locate({
+            returnToPreviousBounds: true,
+            cacheLocation: true,
+            showCompass: true,
+            flyTo: false,
+            showPopup: false,
+            setView: 'untilPanOrZoom',
+            position: 'bottomright',
+            icon: 'fa fa-location-arrow',
+            locateOptions: {
+                enableHighAccuracy: true
+            },
+            onLocationError: (err) => {
+                console.warn('(track) location error', err)
+            }
+        }).addTo(map.view)
     }
 
-    Interface.createNewPeerMarker = (peer, geohash, pkg) => {
-        console.log('(track) no marker exists yet for peer', peer)
-        let marker = new LM.MarkerItem(pkg)
-        marker.tags = ['rsc', 'lnt']
-        marker.icon = 'hdd'
-        marker.geohash = geohash
-        marker.owner = user.username
-        return marker.save()
-    }
+    Interface.showUserMarker = (newGeohash) => {
+        return new Promise((resolve, reject) => {
+            console.log('(track) looking to move user marker to ' + newGeohash)
+            // @todo allow more control over which package markers are linked to
+            let firstPackage = ctx.packages[0]
+            if (!firstPackage) {
+                console.warn('(track) no available package to display marker within. ignoring location...')
+                reject()
+            }
 
-    Interface.createNewMarker = (latlng) => {
-        let firstPackage = ctx.packages[0]
-        user.onReady(() => {
-            // @todo offer choice of where to save user marker (which package from context)
-            // for now default to first package
-            if (firstPackage) {
-                console.log('(track) no marker exists yet for user')
-                self.prompt_for_save = true
-
+            // first, check if we have existing user in database
+            db.get('usr').get(user.username).then((v,k) => {
                 let marker = new LM.MarkerItem(firstPackage)
+                marker.id = user.username
                 marker.tags = ['usr', 'ctz']
                 marker.icon = 'user'
-                marker.geohash = LM.Location.toGeohash(latlng)
-                marker.owner = user.username
-                map.addToMap(marker)
-                marker.layer.dragging.enable()
-                marker.layer._icon.classList.add('lx-marker-draft')
-                self.marker = marker
-            }
-            else {
-                console.log('(track) no package defined for marker')
-            }
+                if (!v) {
+                    // ready to create a new user marker
+                    console.log('(track) prepare to create new user marker')
+                    marker.geohash = newGeohash
+                    self.prompt_for_save = true
+                    marker.owner = user.username
+                    map.addToMap(marker)
+                    marker.layer.dragging.enable()
+                    marker.layer._icon.classList.add('lx-marker-draft')
+                    self.draft_marker = marker
+                }
+                else {
+                    // use existing user marker
+                    marker.data = v
+                    marker.geohash = newGeohash
+                    console.log('(track) update existing user marker', marker)
+                    marker.update(['geohash'])
+                }
+                resolve(marker)
+            })
         })
-
     }
 
     /**
@@ -133,53 +135,24 @@
     * Often is a duplicate if we're standing still
     */
     Interface.onLocationDetect = (a) => {
-        if (self.marker) {
-            // update location
-            Interface.updateLocation(a.latlng)
-            return
-        } else if (self.prompt_for_save) {
-            console.log('(track) waiting for response')
-            return
-        } else if (self.did_skip) {
-            console.log('(track) user declined to save marker')
-            return
-        }
+        let newGeohash = LM.Location.toGeohash(a.latlng)
 
-        // look inside our user to check for status
-        user.node.get('marker').then(v => {
-            if (!v) {
-                Interface.createNewMarker(a.latlng)
-            }
-            else {
-                // make sure our package knows about the user
-                // let pkgNode = firstPackage.node
-                // pkgNode.get('items').set(user.node.get('marker'))
-
-                // marker associated with signed-in user
-                // update location
-                Interface.updateLocation(a.latlng)
-            }
+        // first we find or create dedicated user marker
+        user.authOrCreate().then(() => {
+            console.log(`(track) detected location for user ${user.username} = ${newGeohash}`)
+            Interface.showUserMarker(newGeohash).then(marker => {
+                self.marker = marker
+                console.log(`(track) working with user marker ${marker.id}`, marker)
+            })
         })
-    }
-
-    Interface.updateLocation = (latlng) => {
-        // @todo this can run repeatedly when location sensor is refreshing rapidly
-        // consider performance impact and optimize if needed
-
-        let geohash = LM.Location.toGeohash(latlng)
-        let userGeohash = user.node.get('marker').get('g')
-        userGeohash.once(v => {
-            if (v != geohash) {
-                console.log('(track) update location to: ' , geohash)
-                userGeohash.put(geohash)
-            }
-        })
+        return
     }
 
     // ------------------------------------------------------------------------
     Component.data = {
         marker: null,
         prompt_for_save: false,
+        draft_marker: null,
         is_saving: false,
         did_skip: false
     }
