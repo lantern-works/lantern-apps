@@ -9,7 +9,7 @@
     }
 
     Interface.refreshCounts = (id) => {
-        let counts = [['net', 'node'], ['pkg', 'package'], ['ctx', 'context']]
+        let counts = [['net', 'node'], ['pkg', 'package'], ['ctx', 'context'], ['usr', 'user']]
         counts.forEach(item => {
             if (id && item[0] !== id) return
             Interface.refreshOneCount(item, id ? true : false)
@@ -19,7 +19,9 @@
     Interface.refreshOneCount = (item, log) => {
         self[`${item[1]}Count`] = 0
         db.get(item[0]).map((v,k) => {
-            self[`${item[1]}Count`]++
+            if (v) {
+                self[`${item[1]}Count`]++
+            }
             if (log) {
                 console.log(`(diagnostics) ${item[1]} = ${k}`)
                 console.log(JSON.parse(JSON.stringify(v)))
@@ -44,7 +46,8 @@
     Component.data = {
         nodeCount: 0,
         packageCount: 0,
-        contextCount: 0
+        contextCount: 0,
+        userCount: 0
     }
 
     Component.computed = {
@@ -59,6 +62,9 @@
         },
         printNodes: () => {
             Interface.refreshCounts('net')
+        },
+        printUsers: () => {
+            Interface.refreshCounts('usr')
         },
         close: () => {
             ctx.closeOneApp('diagnostics')
