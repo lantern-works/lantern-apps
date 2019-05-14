@@ -3,17 +3,28 @@
 		
 		<h1>Choose A Map</h1>
 		<section>
-			<p class="intro">Maps are shared between all connected users.</p>
+			<p class="intro" v-if="contexts.length >= 1">
+				Maps are shared between all connected users.
+			</p>
+            <p v-if="contexts.length === 0" >
+            	To create your first map, please use the button below and navigate back here.
+            </p>
 		</section>
 		<section>
-			<ul class="menu" v-if="contexts.length">
+			<ul class="menu">
 				<li v-for="ctx in contexts" @click="chooseContext(ctx)" :data-context-id="ctx.id" :key="ctx.id">
 					<span class="icon is-large">
 						<i class="fas fa-angle-right"></i>
 					</span>
 					<span class="text"> {{ ctx.name }} </span>
 				</li>
+	            <li v-if="contexts.length === 0" class="inline-btn" @click="promptForInstall">
+	                Setup Now
+	            </li>
 			</ul>
+
+
+
 		</section>
 	</div>
 	<div class="app-frame" v-if="slide > -1">
