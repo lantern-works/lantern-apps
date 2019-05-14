@@ -60,9 +60,9 @@
         if (marker.constructor.name !== 'MarkerItem') {
             console.log('(mapify) skip show for non-marker', marker)
             return
-        } else if (marker.layer && marker.layer._map) {
+        } else if (marker.layer) {
             // already added to map
-            // console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
+            console.log("(mapify) skip show marker, already on map...", marker.id, marker.geohash);
             return
         }
 
@@ -158,17 +158,18 @@
                 waitForMoreMarkers -= 1
                 if (waitForMoreMarkers <= 0) {
                     clearInterval(iv)
+                                
+                    // make sure map reflects data we want to see
+                    ctx.feed.on('item-watch', (e) => {
+                        Interface.showMarker(e.item)
+                        waitForMoreMarkers = 3
+                    })
                     return Interface.showMarkers()
                 }
             }, 75)
         })
 
 
-        // make sure map reflects data we want to see
-        ctx.feed.on('item-watch', (e) => {
-            Interface.showMarker(e.item)
-            waitForMoreMarkers = 3
-        })
 
 
         ctx.feed.on('item-unwatch', (e) => {
