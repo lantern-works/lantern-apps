@@ -60,20 +60,19 @@
     Interface.dropMarker = () => {
         if (self.marker && e.id === self.marker.id) {
             // don't display a marker that has been dropped
-            self.marker = null
+            Interface.clearMarker()
         }
     }
 
     Interface.selectMarker = (marker) => {
-        self.readyForSettings = false
         self.readyToDrop = false
         self.readyForLabel = false
-        if (self.marker === marker) {
-            return
+        if (self.marker) {
+            Interface.clearMarker()
         }
         self.marker = marker
-        const tagsWithScores = ['net', 'clo', 'eat', 'tsk', 'pwr', 'wtr', 'ful']
-         self.showScore  = marker.tags.filter(value => -1 !== tagsWithScores.indexOf(value)).length >= 1
+        self.marker.layer._icon.classList.add('did-focus')
+        self.owned = user.username === self.marker.owner
     }
 
     // ------------------------------------------------------------------------
@@ -88,8 +87,8 @@
         self.pingInProgress = false
         self.readyToDrop = false
         self.readyForLabel = false
-        self.readyForSettings = false
-        self.marker = null
+        self.view = 'index'
+        Interface.clearMarker()
         self.maxZoom = false
     }
 
@@ -97,12 +96,11 @@
     * User wants to move marker
     */
     Action.relocateMarker = () => {
-        self.readyForSettings = false
+        self.view = 'index'
 
         if (!self.marker.owner) {
             self.marker.owner = user.username
         }
-
         targetMarker = self.marker
         targetMarker.layer.dragging.enable()
         let original_icon = self.marker.icon
@@ -117,7 +115,7 @@
             targetMarker.editor(user.username)
             targetMarker.update(['owner', 'editors', 'geohash'])
         })
-        self.marker = null
+        Interface.clearMarker()
     }
 
     /**
@@ -134,22 +132,26 @@
         })
     }
 
+    Interface.clearMarker = () => {
+        if (!self.marker) return
+        self.marker.layer._icon.classList.remove('did-focus')
+        self.marker = null
+        self.readyToDrop = false
+    }
+
     /**
     * User wants to drop / remove marker
     */
     Action.dropMarker = () => {
-        self.readyForSettings = false
-        self.marker.drop().then(() => {
-            self.marker = null
-            self.readyToDrop = false
-        })
+        self.view = 'index'
+        self.marker.drop().then(Interface.clearMarker)
     }
 
     /**
     * User wants to agree with accuracy of data connected with this marker
     */
     Action.approveMarker = () => {
-        self.readyForSettings = false
+        self.view = 'index'
         self.marker.approve(user.username).then(() => {
             console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)
         })
@@ -159,7 +161,7 @@
     * User wants to dispute accuracy of data connected with this marker
     */
     Action.disputeMarker = () => {
-        self.readyForSettings = false
+        self.view = 'index'
         self.marker.dispute(user.username).then(() => {
             console.log(`(xray) ${self.marker.id} approval rating is ${self.marker.signatures.length}`)
         })
@@ -195,17 +197,17 @@
     }
     // ------------------------------------------------------------------------
     Component.data = {
+        view: 'index',
         rating: null,
         marker: null,
         label: null,
         username: null,
         readyToDrop: false,
         readyForLabel: false,
-        readyForSettings: false,
         pingInProgress: false,
         isLoading: false,
         maxZoom: false,
-        showScore: false
+        owned: false
     }
     Component.methods = {
         ping: Action.pingMarker,
@@ -217,9 +219,6 @@
                 return
             }
 
-            if (!self.marker.owner) {
-                self.marker.owner = user.username
-            }
 
             if (self.marker.score > 0.9) {
                 return
@@ -232,10 +231,9 @@
                 self.marker.score = 1.0
             }
             self.marker.update(['owner', 'score'])
-            self.readyForSettings = false
         },
         promptForDrop: () => {
-            self.readyForSettings = false
+            self.view = 'index'
             self.readyForLabel = false
             self.readyToDrop = true
         },
@@ -244,7 +242,7 @@
                 console.log('(xray) skip label prompt since user is not signed in...')
                 return
             }
-            self.readyForSettings = false
+            self.view = 'index'
             // allow user to define name
             self.readyForLabel = !self.readyForLabel
             self.label = self.marker.label
@@ -268,11 +266,7 @@
                 console.log('(xray) skip score change since user is not signed in...')
                 return
             }
-
-            if (!self.marker.owner) {
-                self.marker.owner = user.username
-            }
-
+            
             if (self.marker.score < 0.10) {
                 return
             }
@@ -281,7 +275,6 @@
                 self.marker.score = 0
             }
             self.marker.update(['owner', 'score'])
-            self.readyForSettings = false
         },
         saveLabel: () => {
             self.readyForLabel = false
@@ -294,11 +287,20 @@
         approve: Action.approveMarker,
         dispute: Action.disputeMarker,
         map: Action.mapMarker,
+        showForm: () => {
+            self.view = 'form'
+        },
+        closeFormMenu: () => {
+            self.view = 'index'
+        },
+        saveFormData: () => {
+            console.log('(xray) saving form data...')
+        },
         showSettings: () => {
-            self.readyForSettings = true
+            self.view = 'settings'
         },
         closeSettingsMenu: () => {
-            self.readyForSettings = false
+            self.view = 'index'
         },
         close: Action.closeMenu,
         inspect: () => {
@@ -310,7 +312,11 @@
     Component.computed = {}
     Component.computed.marker_title = () => {
         if (!self.marker) return null
-        return self.marker.getCategory(self.categories)
+        let label = self.marker.getCategory(self.categories)
+        if (self.marker.label) {
+            label += ': ' + self.marker.label
+        }
+        return label
     }
     return Component
 }())

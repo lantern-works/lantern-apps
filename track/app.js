@@ -39,6 +39,9 @@
                 }
             })
         })
+        .then(() => {
+            self.$root.$emit('marker-focus', self.marker)
+        })
     }
 
     Action.skip = () => {
@@ -101,6 +104,17 @@
                 reject()
             }
 
+            // check if we have the marker in the feed
+            if (ctx.feed.activeItems.hasOwnProperty(user.username)) {
+                // we are watching a marker
+                let marker = ctx.feed.activeItems[user.username]
+                marker.geohash = newGeohash
+                console.log('(track) update existing user marker', marker)
+                marker.update(['geohash'])
+                self.$root.$emit('marker-focus', marker)
+                return resolve(marker)
+            }
+
             // first, check if we have existing user in database
             db.get('usr').get(user.username).then((v,k) => {
                 let marker = new LM.MarkerItem(firstPackage)
@@ -124,6 +138,7 @@
                     marker.geohash = newGeohash
                     console.log('(track) update existing user marker', marker)
                     marker.update(['geohash'])
+                    self.$root.$emit('marker-focus', marker)
                 }
                 resolve(marker)
             })

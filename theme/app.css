@@ -6,6 +6,11 @@
 	background-color: #3273dc;
 }
 
+.lx-marker.did-focus {
+	background: #323232 !important;
+	color: #FFF !important;
+	borderColor: #FFF !important;
+}
 
 #map .lx-marker {
 	background: rgba(255,255,255,0.85);

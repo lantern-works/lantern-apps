@@ -1,5 +1,5 @@
-<div class="app-bottom" v-if="marker">
-	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id" v-if="!readyForSettings">
+<div class="app-bottom" v-if="marker" >
+	<div :class="'app-frame ' + (owned ? 'owned ' : ' ') + marker.tags.join(' ')" :data-marker="marker.id" v-if="view == 'index'">
         <header @click="promptForLabel">
 	   	   <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
         </header>
@@ -14,10 +14,6 @@
         <section v-if="pingInProgress">
             <p>Sharing with connected users&hellip;</p>
         </section>
-        <section class="marker-label" v-if="!pingInProgress && !readyForLabel && marker.label" @click="promptForLabel">
-            {{ marker.label }}
-        </section>
-
         <section v-if="readyToDrop">
             Are you sure you want to remove this marker? This will impact all other users relying on this marker, too.
         </section>
@@ -29,14 +25,24 @@
                 </div>
             </div>
         </section>
+        
 
-        <section v-if="!readyToDrop && showScore" class="score">
-            <div @click="scoreUp" class="score-up">
+
+        <!-- form details -->
+        <section>
+            <h2  v-if="marker.tags.indexOf('usr') !== -1">Safety Level</h2>
+            <h2  v-if="marker.tags.indexOf('rsc') !== -1">Resource Level</h2>
+            <h2  v-if="marker.tags.indexOf('tsk') !== -1">Task Progress</h2>
+            <h2  v-if="marker.tags.indexOf('ven') !== -1">Capacity</h2>
+            <div class="score">
+                <div @click="scoreUp" class="score-up">
+                </div>
+                <div @click="scoreDown" class="score-down">
+                </div>
+                <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
             </div>
-            <div @click="scoreDown" class="score-down">
-            </div>
-            <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
         </section>
+        <!-- end form details -->
 
         <section v-if="!readyToDrop" class="actions" @click="inspect">
             <div class="buttons is-centered">
@@ -60,6 +66,12 @@
                     <i class="fa fa-ellipsis-v"/>
                 </div>
             </div>
+        </section>
+
+
+
+        <section v-if="owned" class="owned">
+            <p>You own this marker.</p>
         </section>
 	</div>
 </div>

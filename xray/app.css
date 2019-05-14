@@ -18,33 +18,6 @@
 }
 
 
-#lx-app-xray-index .score {
-    padding: 0 1em;
-}
-#lx-app-xray-index .progress {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-#lx-app-xray-index .score-up {
-    width: 50%;    
-    height: 3em;
-    position: absolute;
-    right: 0;
-}
-
-#lx-app-xray-index .score-up:hover, 
-#lx-app-xray-index .score-down:hover  {
-    cursor: pointer;
-}
-
-#lx-app-xray-index .score-down {
-    width: 50%;
-    height: 3em;
-    position: absolute;
-    left: 0;
-}
-
 #lx-app-xray-settings section {
     border-top: none;
     border-bottom: 1px solid #EEE;
@@ -66,6 +39,12 @@
 #lx-app-xray-index .buttons {
     margin: 0.25em;
 }
+
+#lx-app-xray-index .owned {
+    background: #F9F9F9;
+    font-size: small;
+}
+
 
 #lx-app-xray-index .buttons .button {
     color: #3273dc;
@@ -95,11 +74,6 @@
     }
 }
 
-
-#lx-app-xray-index progress::-webkit-progress-value {background-color: #3273dc !important;}
-#lx-app-xray-index progress::-moz-progress-bar {background-color: #3273dc !important;}
-#lx-app-xray-index progress {color: #3273dc;}
-
 #lx-app-xray-settings .rating {
     padding: 1em;
     text-align: center;
@@ -112,3 +86,62 @@
 #lx-app-xray-settings {
     z-index: 1000;
 }
+
+
+
+
+/*----------------------------------------------------------------------------*/
+
+#lx-app-xray-index h2 {
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: small;
+}
+
+#lx-app-xray-index .button-box .icon {
+    margin: auto;
+    opacity: 0.9;
+    font-size: xx-large;
+}
+
+#lx-app-xray-index .button-box p {
+    padding: 1em;
+}
+#lx-app-xray-index .button-box .button {
+    margin-top: 1em;
+    width: 100%;
+}
+
+#lx-app-xray-index .button-box section {
+    margin-bottom: 2em;
+}
+
+
+#lx-app-xray-index .progress {
+    margin-top: 0.75em;
+}
+
+#lx-app-xray-index .score-up {
+    width: 50%;    
+    height: 3em;
+    position: absolute;
+    right: 0;
+}
+
+#lx-app-xray-index .score-up:hover, 
+#lx-app-xray-index .score-down:hover  {
+    cursor: pointer;
+}
+
+#lx-app-xray-index .score-down {
+    width: 50%;
+    height: 3em;
+    position: absolute;
+    left: 0;
+}
+
+
+#lx-app-xray-index progress::-webkit-progress-value {background-color: #3273dc !important;}
+#lx-app-xray-index progress::-moz-progress-bar {background-color: #3273dc !important;}
+#lx-app-xray-index progress {color: #3273dc;}
