@@ -119,10 +119,28 @@
             })
         }
     }
+    
+    Interface.hexToRgbA = (hex) => {
+        var c
+        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+            c= hex.substring(1).split('')
+            if(c.length== 3){
+                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c= '0x'+c.join('')
+            return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.5)'
+        }
+        throw new Error('Bad Hex')
+    }
 
     Interface.bindAll = () => {
         // store context for view reference
         self.context = ctx
+
+        // wait for user auth
+        user.on('auth', () => {
+            self.borderStyle = 'border: 2px solid ' + Interface.hexToRgbA(user.color)
+        })
 
         // basic user interface setup
         Interface.setupControls()
@@ -179,9 +197,6 @@
                 marker.layer._icon.classList.remove('did-change')
             }
         })
-
-        console.log("(mapify) binding complete")
-
 
         // other marker and map-related apps
         ctx.openOneApp('sync')
@@ -324,6 +339,7 @@
         markers: [],
         show_search: false,
         snapback: false,
+        borderStyle: '',
         types: [
             {
                 'label': 'Resource',
