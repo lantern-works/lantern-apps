@@ -14,18 +14,6 @@
         <section v-if="pingInProgress">
             <p>Sharing with connected users&hellip;</p>
         </section>
-        <section v-if="readyToDrop">
-            Are you sure you want to remove this marker? This will impact all other users relying on this marker, too.
-        </section>
-
-        <section v-if="readyToDrop">     
-            <div class="buttons is-centered">
-                <div class="button"  @click="drop">
-                    <i class="fa fa-trash-alt"/>
-                </div>
-            </div>
-        </section>
-        
 
 
         <!-- form details -->
@@ -44,7 +32,7 @@
         </section>
         <!-- end form details -->
 
-        <section v-if="!readyToDrop" class="actions" @click="inspect">
+        <section class="actions" @click="inspect">
             <div class="buttons is-centered">
                 <div class="button"  @click.stop="zoomIn" v-if="!maxZoom">
                     <i class="fa fa-search-plus" />

@@ -1,0 +1,15 @@
+<div class="app-bottom" v-if="marker && view == 'remove'">
+    <div :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        <section>
+            Are you sure you want to remove this marker? This will impact all other users relying on this marker, too.
+        </section>
+        <section>     
+            <div class="buttons is-centered">
+                <div class="button"  @click="drop">
+                    <i class="fa fa-trash-alt"/>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+</div>
