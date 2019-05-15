@@ -1,4 +1,4 @@
-#lx-app-xray-index .app-frame, #lx-app-xray-settings .app-frame {
+#lx-app-xray-index .app-frame, #lx-app-xray-settings .app-frame, #lx-app-xray-remove .app-frame {
     z-index: 1001;
     width: 96%;
     min-width: 200px;
@@ -11,7 +11,7 @@
     bottom: 0;
 }
 
-#lx-app-xray-index section, #lx-app-xray-settings section, #lx-app-xray-index form {
+#lx-app-xray-index section, #lx-app-xray-settings section, #lx-app-xray-remove section {
     text-align: center;
     border-top: 1px solid #EEE;
     padding: 1em;

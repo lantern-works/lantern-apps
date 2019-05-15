@@ -65,12 +65,12 @@
     }
 
     Interface.selectMarker = (marker) => {
-        self.readyToDrop = false
         self.readyForLabel = false
         if (self.marker) {
             Interface.clearMarker()
         }
         self.marker = marker
+
         self.marker.layer._icon.classList.add('did-focus')
         self.owned = user.username === self.marker.owner
     }
@@ -85,7 +85,6 @@
             clearInterval(pingTimeout)
         }
         self.pingInProgress = false
-        self.readyToDrop = false
         self.readyForLabel = false
         self.view = 'index'
         Interface.clearMarker()
@@ -106,7 +105,7 @@
         let original_icon = self.marker.icon
         targetMarker.icon = 'arrows-alt'
         self.menu = {}
-        console.log(`(xray) ready for relocation of ${self.marker.id}`)
+        //console.log(`(xray) ready for relocation of ${self.marker.id}`)
 
         targetMarker.once('move', (val) => {
             targetMarker.icon = original_icon
@@ -134,9 +133,10 @@
 
     Interface.clearMarker = () => {
         if (!self.marker) return
-        self.marker.layer._icon.classList.remove('did-focus')
+        if (self.marker.layer._icon) {
+            self.marker.layer._icon.classList.remove('did-focus')
+        }
         self.marker = null
-        self.readyToDrop = false
     }
 
     /**
@@ -202,7 +202,6 @@
         marker: null,
         label: null,
         username: null,
-        readyToDrop: false,
         readyForLabel: false,
         pingInProgress: false,
         isLoading: false,
@@ -233,9 +232,7 @@
             self.marker.update(['owner', 'score'])
         },
         promptForDrop: () => {
-            self.view = 'index'
-            self.readyForLabel = false
-            self.readyToDrop = true
+            self.view = 'remove'
         },
         promptForLabel: () => {
             if (!user.username) {

@@ -138,7 +138,7 @@
         self.context = ctx
 
         // wait for user auth
-        user.on('auth', () => {
+        user.onReady(() => {
             self.borderStyle = 'border: 2px solid ' + Interface.hexToRgbA(user.color)
         })
 
@@ -204,6 +204,7 @@
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('track')
+        ctx.openOneApp('control')
     }
 
     Interface.showMarkers = (retry) => {

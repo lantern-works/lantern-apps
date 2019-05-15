@@ -28,16 +28,7 @@
             map.removeFromMap(self.marker)
             self.is_saving = false
             self.prompt_for_save = false
-            let userMarkerNodeId = user.username
-            let userNode = db.get('usr').get(userMarkerNodeId)
-            userNode.once((v,k) => {
-                console.log(v,k)
-                if (!v) {
-                    let userInPackageNode = self.marker.package.node.get('items').get(userMarkerNodeId)
-                    console.log('(track) storing user for first time in usr namespace', userInPackageNode)
-                    userNode.put(userInPackageNode)
-                }
-            })
+            self.marker.link(db.get('usr').get(user.username))
         })
         .then(() => {
             self.$root.$emit('marker-focus', self.marker)
@@ -96,7 +87,7 @@
 
     Interface.showUserMarker = (newGeohash) => {
         return new Promise((resolve, reject) => {
-            console.log('(track) looking to move user marker to ' + newGeohash)
+            //console.log('(track) looking to move user marker to ' + newGeohash)
             // @todo allow more control over which package markers are linked to
             let firstPackage = ctx.packages[0]
             if (!firstPackage) {
@@ -109,7 +100,7 @@
                 // we are watching a marker
                 let marker = ctx.feed.activeItems[user.username]
                 marker.geohash = newGeohash
-                console.log('(track) update existing user marker', marker)
+                //console.log('(track) update existing user marker', marker)
                 marker.update(['geohash'])
                 self.$root.$emit('marker-focus', marker)
                 return resolve(marker)
@@ -152,12 +143,14 @@
     Interface.onLocationDetect = (a) => {
         let newGeohash = LM.Location.toGeohash(a.latlng)
 
+        self.$root.$emit('user-location', newGeohash)
+
         // first we find or create dedicated user marker
         user.authOrCreate().then(() => {
             console.log(`(track) detected location for user ${user.username} = ${newGeohash}`)
             Interface.showUserMarker(newGeohash).then(marker => {
                 self.marker = marker
-                console.log(`(track) working with user marker ${marker.id}`, marker)
+                //console.log(`(track) working with user marker ${marker.id}`, marker)
             })
         })
         return
