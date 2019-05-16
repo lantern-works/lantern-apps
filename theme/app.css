@@ -6,7 +6,7 @@
 	background-color: #3273dc;
 }
 
-.lx-marker.did-focus {
+.lx-marker.did-change {
 	background: #323232 !important;
 	color: #FFF !important;
 	borderColor: #FFF !important;
@@ -21,7 +21,7 @@
 	color: #FFF !important;
 }
 
-#map .lx-marker.did-change {
+#map .lx-marker.did-focus {
 	color: #FFF !important;
 }
 
@@ -36,7 +36,7 @@
 #app-container .app .app-frame.usr {
 	border-color: #4AADDB;
 }
-#map .lx-marker.usr.did-change {
+#map .lx-marker.usr.did-focus {
 	background-color: #4AADDB;
 }
 
@@ -50,7 +50,7 @@
 #app-container .app .app-frame.ven {
 	border-color: #474646;
 }
-#map .lx-marker.ven.did-change {
+#map .lx-marker.ven.did-focus {
 	background-color: #474646;
 }
 
@@ -66,7 +66,7 @@
 #app-container .app .app-frame.tsk {
 	border-color: #1051ba;
 }
-#map .lx-marker.tsk.did-change {
+#map .lx-marker.tsk.did-focus {
 	background: #1051ba;
 }
 
@@ -83,7 +83,7 @@
 #app-container .app .app-frame.wtr {
 	border-color: #78aef9;
 }
-#map .lx-marker.wtr.did-change {
+#map .lx-marker.wtr.did-focus {
 	background: #78aef9;
 }
 
@@ -100,7 +100,7 @@
 #app-container .app .app-frame.lnt {
 	border-color: #FF9F0E;
 }
-#map .lx-marker.lnt.did-change {
+#map .lx-marker.lnt.did-focus {
 	background: #FF9F0E;
 }
 
@@ -116,7 +116,7 @@
 #app-container .app .app-frame.ful {
 	border-color: #696E8E;
 }
-#map .lx-marker.ful.did-change {
+#map .lx-marker.ful.did-focus {
 	background: #696E8E;
 }
 
@@ -133,7 +133,7 @@
 #app-container .app .app-frame.net {
 	border-color: #73cc72;
 }
-#map .lx-marker.net.did-change {
+#map .lx-marker.net.did-focus {
 	background: #73cc72;
 }
 
@@ -149,7 +149,7 @@
 #app-container .app .app-frame.eat {
 	border-color: #ffcc54;
 }
-#map .lx-marker.eat.did-change {
+#map .lx-marker.eat.did-focus {
 	background: #ffcc54;
 }
 
@@ -163,7 +163,7 @@
 #app-container .app .app-frame.clo {
 	border-color: #50c1b6;
 }
-#map .lx-marker.clo.did-change {
+#map .lx-marker.clo.did-focus {
 	background: #50c1b6;
 }
 
@@ -177,7 +177,7 @@
 #app-container .app .app-frame.pwr {
 	border-color: #f45d90;
 }
-#map .lx-marker.pwr.did-change {
+#map .lx-marker.pwr.did-focus {
 	background: #f45d90;
 }
 
@@ -190,7 +190,7 @@
 #app-container .app .app-frame.med {
 	border-color: #9478EA;
 }
-#map .lx-marker.med.did-change {
+#map .lx-marker.med.did-focus {
 	background: #9478EA;
 }
 
@@ -204,7 +204,7 @@
 #app-container .app .app-frame.sit {
 	border-color: #FFB000;
 }
-#map .lx-marker.sit.did-change {
+#map .lx-marker.sit.did-focus {
 	background-color: #FFB000;
 }
 
@@ -221,7 +221,7 @@
 	border-color: #ff844d;
 }
 
-#map .lx-marker.rdb.did-change {
+#map .lx-marker.rdb.did-focus {
 	background: #ff844d;
 }
 
@@ -235,6 +235,6 @@
 #app-container .app .app-frame.pwr {
 	border-color: #c075c9;
 }
-#map .lx-marker.pwr.did-change {
+#map .lx-marker.pwr.did-focus {
 	background: #c075c9;
 }
