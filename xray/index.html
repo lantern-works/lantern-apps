@@ -1,15 +1,24 @@
 <div class="app-bottom" v-if="marker" >
 	<div :class="'app-frame ' + (owned ? 'owned ' : ' ') + marker.tags.join(' ')" :data-marker="marker.id" v-if="view == 'index'">
+
+
+        <section v-if="owned" class="owned">
+            <p>You own this marker.</p>
+        </section>
+
+
         <header @click="promptForLabel">
 	   	   <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
         </header>
 
-        <form class="marker-label-form" v-if="readyForLabel" v-on:submit.prevent="saveLabel">
-            <input class="input" type="text" placeholder="Marker label" v-model="label">
-            <div class="button is-primary"  @click="saveLabel">
-                Save
-            </div>
-        </form>
+        <section  v-if="readyForLabel">
+            <form class="marker-label-form" v-on:submit.prevent="saveLabel">
+                <input class="input" type="text" placeholder="Marker label" v-model="label">
+                <div class="button is-primary"  @click="saveLabel">
+                    Save
+                </div>
+            </form>
+        </section>
 
         <section v-if="pingInProgress">
             <p>Sharing with connected users&hellip;</p>
@@ -18,17 +27,23 @@
 
         <!-- form details -->
         <section>
-            <h2  v-if="marker.tags.indexOf('usr') !== -1">Safety Level</h2>
-            <h2  v-if="marker.tags.indexOf('rsc') !== -1">Resource Level</h2>
-            <h2  v-if="marker.tags.indexOf('tsk') !== -1">Task Progress</h2>
-            <h2  v-if="marker.tags.indexOf('ven') !== -1">Capacity</h2>
-            <div class="score">
+            <h2>{{scoreLabel}}</h2>
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="showScoreMenu">
+                <span>{{score_label}}</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </button>
+
+      <!--       <div class="score">
                 <div @click="scoreUp" class="score-up">
                 </div>
                 <div @click="scoreDown" class="score-down">
                 </div>
                 <progress class="progress" v-bind:value="100*marker.score" max="100">{{marker.score*100}}%</progress>
-            </div>
+            </div> -->
+
+
         </section>
         <!-- end form details -->
 
@@ -57,9 +72,5 @@
         </section>
 
 
-
-        <section v-if="owned" class="owned">
-            <p>You own this marker.</p>
-        </section>
 	</div>
 </div>

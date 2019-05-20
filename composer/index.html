@@ -24,7 +24,7 @@
 
 		<!-- multi-purpose menu -->
 		<ul class="menu" v-if="!prompt_draft_save">
-			<li v-for="item in menu.items" @click="chooseFromBottomMenu(item)" >
+			<li v-for="item in menu.items" v-if="item.tag != 'lnt'" @click="chooseFromBottomMenu(item)" >
 				<div v-if="item.icon_class" :class="item.tag_class"> 
 					<i :class="item.icon_class"></i>
 				</div>

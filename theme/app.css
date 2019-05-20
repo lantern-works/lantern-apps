@@ -6,10 +6,8 @@
 	background-color: #3273dc;
 }
 
-.lx-marker.did-change {
-	background: #323232 !important;
-	color: #FFF !important;
-	borderColor: #FFF !important;
+.lx-marker.did-focus {
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.2) !important;
 }
 
 #map .lx-marker {
@@ -21,7 +19,7 @@
 	color: #FFF !important;
 }
 
-#map .lx-marker.did-focus {
+#map .lx-marker.did-change {
 	color: #FFF !important;
 }
 
@@ -36,7 +34,7 @@
 #app-container .app .app-frame.usr {
 	border-color: #4AADDB;
 }
-#map .lx-marker.usr.did-focus {
+#map .lx-marker.usr.did-change {
 	background-color: #4AADDB;
 }
 
@@ -50,7 +48,7 @@
 #app-container .app .app-frame.ven {
 	border-color: #474646;
 }
-#map .lx-marker.ven.did-focus {
+#map .lx-marker.ven.did-change {
 	background-color: #474646;
 }
 
@@ -66,7 +64,7 @@
 #app-container .app .app-frame.tsk {
 	border-color: #1051ba;
 }
-#map .lx-marker.tsk.did-focus {
+#map .lx-marker.tsk.did-change {
 	background: #1051ba;
 }
 
@@ -83,7 +81,7 @@
 #app-container .app .app-frame.wtr {
 	border-color: #78aef9;
 }
-#map .lx-marker.wtr.did-focus {
+#map .lx-marker.wtr.did-change {
 	background: #78aef9;
 }
 
@@ -100,7 +98,7 @@
 #app-container .app .app-frame.lnt {
 	border-color: #FF9F0E;
 }
-#map .lx-marker.lnt.did-focus {
+#map .lx-marker.lnt.did-change {
 	background: #FF9F0E;
 }
 
@@ -116,7 +114,7 @@
 #app-container .app .app-frame.ful {
 	border-color: #696E8E;
 }
-#map .lx-marker.ful.did-focus {
+#map .lx-marker.ful.did-change {
 	background: #696E8E;
 }
 
@@ -133,7 +131,7 @@
 #app-container .app .app-frame.net {
 	border-color: #73cc72;
 }
-#map .lx-marker.net.did-focus {
+#map .lx-marker.net.did-change {
 	background: #73cc72;
 }
 
@@ -149,7 +147,7 @@
 #app-container .app .app-frame.eat {
 	border-color: #ffcc54;
 }
-#map .lx-marker.eat.did-focus {
+#map .lx-marker.eat.did-change {
 	background: #ffcc54;
 }
 
@@ -163,7 +161,7 @@
 #app-container .app .app-frame.clo {
 	border-color: #50c1b6;
 }
-#map .lx-marker.clo.did-focus {
+#map .lx-marker.clo.did-change {
 	background: #50c1b6;
 }
 
@@ -177,7 +175,7 @@
 #app-container .app .app-frame.pwr {
 	border-color: #f45d90;
 }
-#map .lx-marker.pwr.did-focus {
+#map .lx-marker.pwr.did-change {
 	background: #f45d90;
 }
 
@@ -190,7 +188,7 @@
 #app-container .app .app-frame.med {
 	border-color: #9478EA;
 }
-#map .lx-marker.med.did-focus {
+#map .lx-marker.med.did-change {
 	background: #9478EA;
 }
 
@@ -204,7 +202,7 @@
 #app-container .app .app-frame.sit {
 	border-color: #FFB000;
 }
-#map .lx-marker.sit.did-focus {
+#map .lx-marker.sit.did-change {
 	background-color: #FFB000;
 }
 
@@ -221,7 +219,7 @@
 	border-color: #ff844d;
 }
 
-#map .lx-marker.rdb.did-focus {
+#map .lx-marker.rdb.did-change {
 	background: #ff844d;
 }
 
@@ -235,6 +233,6 @@
 #app-container .app .app-frame.pwr {
 	border-color: #c075c9;
 }
-#map .lx-marker.pwr.did-focus {
+#map .lx-marker.pwr.did-change {
 	background: #c075c9;
 }

@@ -1,0 +1,24 @@
+<div class="app-bottom" v-if="marker && view == 'score'">
+
+    <div v-if="!username" class="app-frame">
+        <h1 class="button-box-title">Sign-In Required</h1>
+        <div class="button-box">
+            <p>To modify a marker, please sign-in first.</p>
+            <div :class="(isLoading ? 'is-loading' : '') + ' button is-primary'" @click="signIn"> Sign In </div>
+            <div class="button is-secondary" @click="closeSettingsMenu">Cancel</div>
+        </div>
+    </div>
+    <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+
+        <h1>Choose {{scoreLabel}}</h1>
+
+        <ul class="menu">
+            <li v-for="item in menu" @click="selectMenuItem(item)">
+                <span>{{item.label}}</span>
+            </li>
+            <li class="inline-btn" @click="closeSettingsMenu">
+                Back
+            </li>
+        </ul>
+    </div>
+</div>

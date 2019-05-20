@@ -1,4 +1,7 @@
-#lx-app-xray-index .app-frame, #lx-app-xray-settings .app-frame, #lx-app-xray-remove .app-frame {
+#lx-app-xray-index .app-frame, 
+#lx-app-xray-settings .app-frame, 
+#lx-app-xray-remove .app-frame, 
+#lx-app-xray-score .app-frame {
     z-index: 1001;
     width: 96%;
     min-width: 200px;
@@ -9,6 +12,15 @@
     border-top: 1.5em solid #FFF;
     position: absolute;
     bottom: 0;
+}
+
+#lx-app-xray-index button {
+    min-width: 10em;
+    margin-top: 0.5em;
+}
+
+#lx-app-xray-index .button.is-primary {
+    padding: 1.75em 1em;
 }
 
 #lx-app-xray-index section, #lx-app-xray-settings section, #lx-app-xray-remove section {
@@ -40,8 +52,9 @@
     margin: 0.25em;
 }
 
-#lx-app-xray-index .owned {
-    background: #F9F9F9;
+#lx-app-xray-index section.owned {
+    background: rgba(255,255,255,0.8);
+    border-bottom: 1px solid #EEE;
     font-size: small;
 }
 

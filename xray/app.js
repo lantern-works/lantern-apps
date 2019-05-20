@@ -21,7 +21,7 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
-        user.on('auth', () => {
+        user.onReady(() => {
             self.username = user.username
         })
 
@@ -71,6 +71,61 @@
         }
         self.marker = marker
 
+        if (marker.tags.indexOf('rsc') !== -1) {
+            self.scoreLabel = 'Resource Level'
+            if (marker.tags.indexOf('net') !== -1) {
+                self.menu = [
+                    {label: 'Working Fully', value: 1.0},
+                    {label: 'Partial Connectivity', value: 0.3 },
+                    {label: 'Limited Connectivity ', value: 0.2},
+                    {label: 'No Internet', value: 0.1}
+                ]
+            }
+            if (marker.tags.indexOf('pwr') !== -1) {
+                self.menu = [
+                    {label: 'Plenty Available', value: 1.0},
+                    {label: 'Some Available ', value: 0.3 },
+                    {label: 'Limited Power', value: 0.2},
+                    {label: 'No Power', value: 0.1}
+                ]
+            }
+            else {
+
+                self.menu = [
+                    {label: 'Full Supply', value: 1.0},
+                    {label: 'Partial Supply', value: 0.3 },
+                    {label: 'Almost Empty ', value: 0.2},
+                    {label: 'Empty', value: 0.1}
+                ]   
+            }
+        }
+        else if (marker.tags.indexOf('usr') !== -1) {
+            self.scoreLabel = 'Safety Level'
+            self.menu = [
+                {label: 'Unreported', value: 0.1},
+                {label: 'Need Help', value: 0.2},
+                {label: 'Safe', value: 0.3 },
+                {label: 'Ready to Help Others', value: 1.0}
+            ]
+        }
+        if (marker.tags.indexOf('tsk') !== -1) {
+            self.scoreLabel = 'Task Progress'
+            self.menu = [
+                {label: 'New', value: 0.1},
+                {label: 'Assigned', value: 0.2},
+                {label: 'In Progress', value: 0.3 },
+                {label: 'Complete', value: 1.0}
+            ]
+        }
+        if (marker.tags.indexOf('ven') !== -1) {
+            self.scoreLabel = 'Capacity'
+            self.menu = [
+                {label: 'Just Opened', value: 0.1},
+                {label: 'Space Available', value: 0.2},
+                {label: 'Nearing Capacity', value: 0.3 },
+                {label: 'At Capacity', value: 1.0}
+            ]
+        }
         self.marker.layer._icon.classList.add('did-focus')
         self.owned = user.username === self.marker.owner
     }
@@ -206,19 +261,28 @@
         pingInProgress: false,
         isLoading: false,
         maxZoom: false,
-        owned: false
+        owned: false,
+        scoreLabel: 'Score',
+        menu: []
     }
     Component.methods = {
         ping: Action.pingMarker,
         move: Action.relocateMarker,
         drop: Action.dropMarker,
+        selectMenuItem: (item) => {
+            self.marker.score = item.value
+            self.marker.update(['owner', 'score']).then(() => {
+                self.view = 'index'
+            })
+        },
+        showScoreMenu: () => {
+           self.view = 'score'
+        },
         scoreUp: () => {
             if (!user.username) {
                 console.log('(xray) skip score change since user is not signed in...')
                 return
             }
-
-
             if (self.marker.score > 0.9) {
                 return
             }
@@ -307,6 +371,10 @@
     }
     // compute marker titles
     Component.computed = {}
+    Component.computed.marker_category = () => {
+        if (!self.marker) return null
+        return self.marker.getCategory(self.categories)
+    }
     Component.computed.marker_title = () => {
         if (!self.marker) return null
         let label = self.marker.getCategory(self.categories)
@@ -314,6 +382,18 @@
             label += ': ' + self.marker.label
         }
         return label
+    }
+
+    Component.computed.score_label = () => {
+        if (!self.marker) return
+        for (var idx in self.menu) {
+            let item = self.menu[idx]
+            if (self.marker.score === item.value) {
+                return item.label
+            }
+        }
+        // if no score exists, default to use first item 
+        return self.menu[0].label
     }
     return Component
 }())

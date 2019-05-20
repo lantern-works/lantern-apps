@@ -10,6 +10,7 @@
 
 
     <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        
         <ul class="menu">
             <li @click="ping">
                 <span> Ping </span>
@@ -30,5 +31,6 @@
                 Close
             </li>
         </ul>
+
     </div>
 </div>
