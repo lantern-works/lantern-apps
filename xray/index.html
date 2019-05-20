@@ -2,10 +2,6 @@
 	<div :class="'app-frame ' + (owned ? 'owned ' : ' ') + marker.tags.join(' ')" :data-marker="marker.id" v-if="view == 'index'">
 
 
-        <section v-if="owned" class="owned">
-            <p>You own this marker.</p>
-        </section>
-
 
         <header @click="promptForLabel">
 	   	   <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
@@ -46,6 +42,11 @@
 
         </section>
         <!-- end form details -->
+
+        <section v-if="owned" class="owned">
+            <p>You own this marker.</p>
+        </section>
+
 
         <section class="actions" @click="inspect">
             <div class="buttons is-centered">
