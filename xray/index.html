@@ -43,7 +43,12 @@
         </section>
         <!-- end form details -->
 
-        <section v-if="owned" class="owned">
+        <section v-for="note in marker._data.notes" class="note">
+            <i class="fa fa-minus-circle" @click="removeNote(note)" /> 
+            <p><i class="fa fa-comment" /> {{note}}</p>
+        </section>
+
+        <section v-if="owned" class="note owned">
             <p>You own this marker.</p>
         </section>
 

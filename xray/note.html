@@ -1,0 +1,29 @@
+<div class="app-bottom" v-if="marker && view == 'note'">
+    <div v-if="!username" class="app-frame">
+        <h1 class="button-box-title">Sign-In Required</h1>
+        <div class="button-box">
+            <p>To add a note for a marker, please sign-in first.</p>
+            <div :class="(isLoading ? 'is-loading' : '') + ' button is-primary'" @click="signIn"> Sign In </div>
+            <div class="button is-secondary" @click="closeSettingsMenu">Cancel</div>
+        </div>
+    </div>
+
+
+    <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        <section>
+            <form class="marker-note-form" v-on:submit.prevent="saveNote">
+                <input class="input" type="text" placeholder="Note" v-model="note">
+                <div class="button is-primary"  @click="saveNote">
+                    Add Note
+                </div>
+            </form>
+        </section>
+
+        <div class="buttons is-centered">
+            <div class="button is-secondary"  @click="showIndex">
+                Cancel
+            </div>
+        </div>
+
+    </div>
+</div>

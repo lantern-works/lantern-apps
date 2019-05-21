@@ -1,7 +1,12 @@
+
+#lx-app-xray-index .button.is-primary, #lx-app-xray-note .button.is-primary {
+    padding: 1.75em 1em;
+}
 #lx-app-xray-index .app-frame, 
 #lx-app-xray-settings .app-frame, 
 #lx-app-xray-remove .app-frame, 
-#lx-app-xray-score .app-frame {
+#lx-app-xray-score .app-frame,
+#lx-app-xray-note .app-frame {
     z-index: 1001;
     width: 96%;
     min-width: 200px;
@@ -14,13 +19,11 @@
     bottom: 0;
 }
 
+
+/*----------------------------------------------------------------------------*/
 #lx-app-xray-index button {
     min-width: 10em;
     margin-top: 0.5em;
-}
-
-#lx-app-xray-index .button.is-primary {
-    padding: 1.75em 1em;
 }
 
 #lx-app-xray-index section, #lx-app-xray-settings section, #lx-app-xray-remove section {
@@ -52,13 +55,25 @@
     margin: 0.25em;
 }
 
-#lx-app-xray-index section.owned {
-    background: rgba(245,245,245,0.8);
+#lx-app-xray-index section.note .fa-minus-circle {
+    float: right;
+    opacity: 0.25;
+}
+#lx-app-xray-index section.note .fa-minus-circle:hover {
+    opacity: 1.0;
+}
 
+#lx-app-xray-index section.note {
+    background: rgba(245,245,245,0.85);
+    text-align: left;
     font-size: small;
 }
 
 
+#lx-app-xray-index section.owned {
+    text-align: center;
+    background: #FFF;
+}
 #lx-app-xray-index .buttons .button {
     color: #3273dc;
     border-color: #ECECEC;
@@ -158,3 +173,17 @@
 #lx-app-xray-index progress::-webkit-progress-value {background-color: #3273dc !important;}
 #lx-app-xray-index progress::-moz-progress-bar {background-color: #3273dc !important;}
 #lx-app-xray-index progress {color: #3273dc;}
+
+/*----------------------------------------------------------------------------*/
+#lx-app-xray-note .app-frame {
+    padding: 1em;
+}
+#lx-app-xray-note section {
+    border-top: none;
+    border-bottom: 1px solid #EEE;
+}
+
+#lx-app-xray-note form .button {
+    width: 100%;
+    margin-top: 1em;
+}

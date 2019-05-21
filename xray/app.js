@@ -70,7 +70,6 @@
             Interface.clearMarker()
         }
         self.marker = marker
-
         if (marker.tags.indexOf('rsc') !== -1) {
             self.scoreLabel = 'Resource Level'
             if (marker.tags.indexOf('net') !== -1) {
@@ -256,6 +255,7 @@
         rating: null,
         marker: null,
         label: null,
+        note: null,
         username: null,
         readyForLabel: false,
         pingInProgress: false,
@@ -348,14 +348,31 @@
         approve: Action.approveMarker,
         dispute: Action.disputeMarker,
         map: Action.mapMarker,
+        showNoteForm: () => {
+            self.view = 'note'
+        },
         showForm: () => {
             self.view = 'form'
+        },
+        showIndex: () => {
+            self.view = 'index'
         },
         closeFormMenu: () => {
             self.view = 'index'
         },
-        saveFormData: () => {
-            console.log('(xray) saving form data...')
+        saveNote: () => {
+            if (!self.note) return
+            console.log('(xray) save note...', self.note)
+            self.marker.note(self.note)
+            self.marker.update('notes').then(() => {
+                self.note = null
+                self.view = 'index'
+            })
+        },
+        removeNote: (txt) => {
+            console.log('(xray) remove note...', txt)
+            self.marker.removeNote(txt)
+            self.marker.update('notes')
         },
         showSettings: () => {
             self.view = 'settings'
