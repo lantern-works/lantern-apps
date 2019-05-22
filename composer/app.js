@@ -13,6 +13,9 @@
         map.on('marker-click', Action.closeBottomMenu)
         self.$root.$on('marker-focus', Action.closeBottomMenu)
         self.$root.$on('marker-draft', Interface.createDraftMarker)
+        user.onReady(() => {
+            self.username = user.username
+        })
         user.on('auth', () => {
             self.username = user.username
         })
