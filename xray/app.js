@@ -25,6 +25,10 @@
             self.username = user.username
         })
 
+        user.on('auth', () => {
+            self.username = user.username
+        })
+
         user.on('leave', () => {
             self.username = null
         })
@@ -126,7 +130,6 @@
             ]
         }
         self.marker.layer._icon.classList.add('did-focus')
-        self.owned = user.username === self.marker.owner
     }
 
     // ------------------------------------------------------------------------
@@ -261,7 +264,6 @@
         pingInProgress: false,
         isLoading: false,
         maxZoom: false,
-        owned: false,
         scoreLabel: 'Score',
         menu: []
     }

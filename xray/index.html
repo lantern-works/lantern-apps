@@ -1,5 +1,5 @@
 <div class="app-bottom" v-if="marker" >
-	<div :class="'app-frame ' + (owned ? 'owned ' : ' ') + marker.tags.join(' ')" :data-marker="marker.id" v-if="view == 'index'">
+	<div :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id" v-if="view == 'index'">
 
 
 
@@ -24,12 +24,20 @@
         <!-- form details -->
         <section>
             <h2>{{scoreLabel}}</h2>
-            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="showScoreMenu">
+
+
+            <button  class="score-label button" v-if="username" aria-haspopup="true" aria-controls="dropdown-menu" @click="showScoreMenu">
                 <span>{{score_label}}</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
             </button>
+
+            <div class="score-label" v-if="!username">
+                <span>{{score_label}}</span>
+            </div>
+
+
 
       <!--       <div class="score">
                 <div @click="scoreUp" class="score-up">
@@ -44,11 +52,11 @@
         <!-- end form details -->
 
         <section v-for="note in marker._data.notes" class="note">
-            <i class="fa fa-minus-circle" @click="removeNote(note)" /> 
+            <i v-if="username" class="fa fa-minus-circle" @click="removeNote(note)" /> 
             <p><i class="fa fa-comment" /> {{note}}</p>
         </section>
 
-        <section v-if="owned" class="note owned">
+        <section v-if="username && username === marker.owner" class="note owned">
             <p>You own this marker.</p>
         </section>
 

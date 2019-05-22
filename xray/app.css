@@ -1,5 +1,5 @@
 
-#lx-app-xray-index .button.is-primary, #lx-app-xray-note .button.is-primary {
+#lx-app-xray-index .button.is-primary, #lx-app-xray-note .button.is-primary, .button-box .button {
     padding: 1.75em 1em;
 }
 #lx-app-xray-index .app-frame, 
@@ -60,6 +60,7 @@
     opacity: 0.25;
 }
 #lx-app-xray-index section.note .fa-minus-circle:hover {
+    cursor: pointer;
     opacity: 1.0;
 }
 
@@ -157,6 +158,9 @@
     right: 0;
 }
 
+#lx-app-xray-index .score-label {
+    margin: 1em;
+}
 #lx-app-xray-index .score-up:hover, 
 #lx-app-xray-index .score-down:hover  {
     cursor: pointer;

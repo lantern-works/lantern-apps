@@ -142,6 +142,11 @@
             self.borderStyle = 'border: 2px solid ' + Interface.hexToRgbA(user.color)
         })
 
+
+        user.on('leave', () => {
+            self.borderStyle = 'border: none'
+        })
+
         // basic user interface setup
         Interface.setupControls()
         Interface.defineIconClasses()
