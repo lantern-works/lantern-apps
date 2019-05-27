@@ -1,5 +1,5 @@
 
-#lx-app-xray-index .button.is-primary, #lx-app-xray-note .button.is-primary, .button-box .button {
+#lx-app-xray-index .button.is-primary, #lx-app-xray-note .button, .button-box .button {
     padding: 1.75em 1em;
 }
 #lx-app-xray-index .app-frame, 
@@ -190,4 +190,24 @@
 #lx-app-xray-note form .button {
     width: 100%;
     margin-top: 1em;
+}
+
+
+/*----------------------------------------------------------------------------*/
+#lx-app-xray-users .tag {
+    margin-right: 1em;
+}
+
+#lx-app-xray-users .dot {
+    border-radius: 10em;
+    width: 1em;
+    height: 1em;
+    float: left;
+    margin-right: 0.5em;
+}
+
+#lx-app-xray-users .no-users h2  {
+    text-align: center;
+    margin: auto;
+    padding: 1em;
 }

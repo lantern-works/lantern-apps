@@ -72,12 +72,12 @@
                 </div>
 
 
-                <div class="button"  @click.stop="map">
-                    <i class="fa fa-route"/>
+                <div class="button"  @click.stop="showViewers">
+                    <i class="fa fa-users"/>
                 </div>            
 
-                <div class="button"  @click.stop="move" v-if="username">
-                    <i class="fa fa-arrows-alt"/>
+                <div class="button"  @click.stop="showNoteForm" v-if="username">
+                    <i class="fa fa-sticky-note"/>
                 </div>            
                 <div class="button"  @click.stop="showSettings">
                     <i class="fa fa-ellipsis-v"/>

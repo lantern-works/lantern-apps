@@ -12,7 +12,7 @@
     <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
         <section>
             <form class="marker-note-form" v-on:submit.prevent="saveNote">
-                <input class="input" type="text" placeholder="Note" v-model="note">
+                <textarea class="textarea" placeholder="Note" v-model="note"/>
                 <div class="button is-primary"  @click="saveNote">
                     Add Note
                 </div>

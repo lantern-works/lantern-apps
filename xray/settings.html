@@ -12,20 +12,20 @@
     <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
         
         <ul class="menu">
-            <li @click="showNoteForm">
-                <span> Add Note </span>
-            </li>
             <li @click="ping">
                 <span> Ping </span>
+            </li>
+            <li @click="map">
+                <span> Route </span>
+            </li>
+            <li @click="move">
+                <span> Relocate</span>
             </li>
             <li @click="approve" v-if="!marker.hasSignature(username)">
                 <span> Verify</span>
             </li>
             <li @click="dispute" v-if="marker.hasSignature(username)">
                 <span>Dispute</span>
-            </li>
-            <li @click="move">
-                <span> Relocate</span>
             </li>
             <li @click="promptForDrop">
                 <span> Delete</span>

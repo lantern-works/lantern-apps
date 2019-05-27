@@ -68,6 +68,19 @@
         }
     }
 
+    Interface.color = (username) => {
+        var hash = 0
+        for (var i = 0; i < username.length; i++) {
+            hash = username.charCodeAt(i) + ((hash << 5) - hash)
+        }
+        var color = '#'
+        for (var i = 0; i < 3; i++) {
+            var value = (hash >> (i * 8)) & 0xFF
+            color += ('00' + value.toString(16)).substr(-2)
+        }
+        return color
+    }
+
     Interface.selectMarker = (marker) => {
         self.readyForLabel = false
         if (self.marker) {
@@ -194,6 +207,8 @@
             self.marker.layer._icon.classList.remove('did-focus')
         }
         self.marker = null
+        self.note = null
+        self.view = 'index'
     }
 
     /**
@@ -252,6 +267,17 @@
             }, 1550)
         })
     }
+
+
+    /**
+    * User wants to list viewers
+    */
+    Action.showViewers = () => {
+        self.view = 'users'
+
+
+    }
+
     // ------------------------------------------------------------------------
     Component.data = {
         view: 'index',
@@ -386,7 +412,18 @@
         inspect: () => {
             self.marker.inspect()
         },
-        signIn: Action.signIn
+        signIn: Action.signIn,
+        follow: () => {
+            console.log('(xray) follow')            
+            self.marker.viewer(user.username)
+            self.marker.update('viewers')
+        },
+        unfollow: (username) => {
+            self.marker.removeViewer(username)
+            self.marker.update('viewers')
+        },
+        showViewers: Action.showViewers,
+        color: Interface.color
     }
     // compute marker titles
     Component.computed = {}
