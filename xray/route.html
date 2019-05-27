@@ -1,0 +1,25 @@
+<div class="app-bottom" v-if="marker && view == 'users'">
+    <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        <h1>En Route</h1>
+        <div class="button-box">
+            <h2 v-if="!marker.viewers.length">
+                No users are heading here yet.
+            </h2>
+            <h2 v-if="marker.viewers.length">
+                {{ marker.viewers.length }}  {{ 'user' | pluralize(marker.viewers.length) }} heading to this location.
+            </h2>
+
+            <section>
+                <span class="tag"  v-for='id in marker._data.viewers' v-long-press="() => unfollow(id)">
+                    <span class="dot"  :style="'background-color: ' + color(id)"></span>
+                    {{id}}
+                </span>
+            </section>
+
+            <div v-if="marker.viewers.indexOf(username) === -1" class="button is-primary" @click="follow">On My Way</div>
+            <div v-if="online && marker.viewers.indexOf(username) !== -1" class="button is-primary" @click="map">Directions</div>
+            <div class="button is-secondary" @click="closeSettingsMenu">Close</div>
+        </div>
+
+    </div>
+</div>

@@ -21,6 +21,9 @@
 
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
+
+        self.online = ctx.online
+        
         user.onReady(() => {
             self.username = user.username
         })
@@ -69,6 +72,7 @@
     }
 
     Interface.color = (username) => {
+        if (!username) return
         var hash = 0
         for (var i = 0; i < username.length; i++) {
             hash = username.charCodeAt(i) + ((hash << 5) - hash)
@@ -291,6 +295,7 @@
         isLoading: false,
         maxZoom: false,
         scoreLabel: 'Score',
+        online: false,
         menu: []
     }
     Component.methods = {
@@ -416,9 +421,11 @@
         follow: () => {
             console.log('(xray) follow')            
             self.marker.viewer(user.username)
+            console.log(self.marker)
             self.marker.update('viewers')
         },
         unfollow: (username) => {
+            console.log(this)
             self.marker.removeViewer(username)
             self.marker.update('viewers')
         },

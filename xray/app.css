@@ -194,19 +194,24 @@
 
 
 /*----------------------------------------------------------------------------*/
-#lx-app-xray-users .tag {
-    margin-right: 1em;
+
+#lx-app-xray-route section {
+    padding: 1em;
 }
 
-#lx-app-xray-users .dot {
+#lx-app-xray-route .tag {
+    margin-right: 1em;
+    padding: 1em;
+}
+
+#lx-app-xray-route .dot {
     border-radius: 10em;
     width: 1em;
     height: 1em;
     float: left;
     margin-right: 0.5em;
 }
-
-#lx-app-xray-users .no-users h2  {
+#lx-app-xray-route  h2  {
     text-align: center;
     margin: auto;
     padding: 1em;

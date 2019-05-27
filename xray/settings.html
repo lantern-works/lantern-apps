@@ -15,14 +15,11 @@
             <li @click="ping">
                 <span> Ping </span>
             </li>
-            <li @click="map">
-                <span> Route </span>
+            <li @click="approve" v-if="!marker.hasSignature(username)">
+                <span> Verify</span>
             </li>
             <li @click="move">
                 <span> Relocate</span>
-            </li>
-            <li @click="approve" v-if="!marker.hasSignature(username)">
-                <span> Verify</span>
             </li>
             <li @click="dispute" v-if="marker.hasSignature(username)">
                 <span>Dispute</span>
