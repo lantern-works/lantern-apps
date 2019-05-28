@@ -146,7 +146,10 @@
                 {label: 'At Capacity', value: 1.0}
             ]
         }
-        self.marker.layer._icon.classList.add('did-focus')
+
+        if (self.marker.layer) {
+            self.marker.layer._icon.classList.add('did-focus')
+        }
     }
 
     // ------------------------------------------------------------------------

@@ -334,11 +334,7 @@
                 return 'button'
             }
         },
-        promptForNewMarker: Interface.promptForNewMarker,
-        openDiagnostics: () => {
-            self.show_search = false
-            ctx.openOneApp('diagnostics')
-        }
+        promptForNewMarker: Interface.promptForNewMarker
     }
 
     Component.data = {

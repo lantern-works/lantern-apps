@@ -1,4 +1,6 @@
+
 #lx-app-diagnostics-index .app-frame {
+    z-index: 100;
 }
 
 #lx-app-diagnostics-index .tag.is-dark {
@@ -12,4 +14,9 @@
     min-width: 3em;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+#lx-app-diagnostics-index .app-mask {
+    opacity: 0.5;
+    z-index: -100;
 }

@@ -1,10 +1,7 @@
-<div class="app-center">   
+<div class="app-full-screen">   
     <div class="app-frame menu-app-frame">
         <h1>Network Diagnostics</h1>
         <ul class="menu">
-            <li @click="printNodes">
-                <span class="tag is-dark" >Nodes</span><span class="tag is-primary">{{nodeCount}}</span>
-            </li>
             <li @click="printPackages">
                 <span class="tag is-dark" >Packages</span><span class="tag is-primary">{{packageCount}}</span>
             </li>
@@ -14,9 +11,15 @@
             <li @click="printUsers">
                 <span class="tag is-dark">Users</span><span class="tag is-primary">{{userCount}}</span>
             </li>
+            <li @click="printNodes">
+                <span class="tag is-dark" >Devices</span><span class="tag is-primary">{{nodeCount}}</span>
+            </li>
             <li class="inline-btn" @click="close">
                 Close
             </li>
         </ul>
     </div>
+    <transition name="fade">
+        <div class="app-mask" @click="close"></div>
+     </transition>
 </div>          

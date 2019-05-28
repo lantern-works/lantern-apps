@@ -1,7 +1,7 @@
 <div class="app-top" v-if="show" v-cloak>
 	<div class="app-frame menu-app-frame" v-if="slide === -1">
 		
-		<h1>Choose A Map</h1>
+		<h1 v-long-press.stop="openDiagnostics">Choose A Map</h1>
 		<section>
 			<p class="intro" v-if="contexts.length >= 1">
 				Maps are shared between all connected users.

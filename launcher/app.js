@@ -178,7 +178,11 @@
         close: () => {
             window.history.back()
         },
-        chooseContext: Action.chooseContext
+        chooseContext: Action.chooseContext,
+        openDiagnostics: () => {
+            window.history.back()
+            ctx.openOneApp('diagnostics')
+        }
     }
 
     return Component
