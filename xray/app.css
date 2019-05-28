@@ -179,9 +179,7 @@
 #lx-app-xray-index progress {color: #3273dc;}
 
 /*----------------------------------------------------------------------------*/
-#lx-app-xray-note .app-frame {
-    padding: 1em;
-}
+
 #lx-app-xray-note section {
     border-top: none;
     border-bottom: 1px solid #EEE;

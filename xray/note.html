@@ -9,21 +9,21 @@
     </div>
 
 
-    <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
-        <section>
+    <div v-if="username" :class="'app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+        <section class="button-box">
             <form class="marker-note-form" v-on:submit.prevent="saveNote">
                 <textarea class="textarea" placeholder="Note" v-model="note"/>
                 <div class="button is-primary"  @click="saveNote">
                     Add Note
                 </div>
             </form>
+            <div class="buttons is-centered">
+                <div class="button is-secondary"  @click="showIndex">
+                    Cancel
+                </div>
+            </div>
         </section>
 
-        <div class="buttons is-centered">
-            <div class="button is-secondary"  @click="showIndex">
-                Cancel
-            </div>
-        </div>
 
     </div>
 </div>
