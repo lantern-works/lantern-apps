@@ -171,7 +171,7 @@
                     })
                     return Interface.showMarkers()
                 }
-            }, 75)
+            }, 175)
         })
 
 
@@ -226,9 +226,9 @@
             map.fitMapToAllMarkers(feed.activeItems)
             setTimeout(() => {
                 map.zoomMinimum(5)
-            }, 500)
+            }, 1000)
         } else if (retry) {
-            setTimeout(Interface.showMarkers, 300)
+            setTimeout(() => Interface.showMarkers(true), 750)
         }
 
         setTimeout(() => {
