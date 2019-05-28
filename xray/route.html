@@ -1,5 +1,5 @@
 <div class="app-bottom" v-if="marker && view == 'users'">
-    <div v-if="username" :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
+    <div :class="'app-frame menu-app-frame ' + marker.tags.join(' ')" :data-marker="marker.id">
         <h1>En Route</h1>
         <div class="button-box">
             <h2 v-if="!marker.viewers.length">

@@ -419,15 +419,19 @@
         },
         signIn: Action.signIn,
         follow: () => {
-            console.log('(xray) follow')            
-            self.marker.viewer(user.username)
-            console.log(self.marker)
-            self.marker.update('viewers')
+            user.authOrCreate().then(() => {
+                console.log('(xray) follow from', user.username)            
+                self.marker.viewer(user.username)
+                console.log(self.marker)
+                self.marker.update('viewers')
+            })
         },
         unfollow: (username) => {
-            console.log(this)
-            self.marker.removeViewer(username)
-            self.marker.update('viewers')
+            // required to be signed-in
+            if (user.username) {
+                self.marker.removeViewer(username)
+                self.marker.update('viewers')                
+            }
         },
         showViewers: Action.showViewers,
         color: Interface.color
