@@ -93,15 +93,15 @@
         self.marker = marker
         if (marker.tags.indexOf('rsc') !== -1) {
             self.scoreLabel = 'Resource Level'
-            if (marker.tags.indexOf('net') !== -1) {
+            if (marker.tags.indexOf('net') !== -1 || marker.tags.indexOf('lnt') !== -1) {
                 self.menu = [
                     {label: 'Working Fully', value: 1.0},
                     {label: 'Partial Connectivity', value: 0.3 },
                     {label: 'Limited Connectivity ', value: 0.2},
-                    {label: 'No Internet', value: 0.1}
+                    {label: 'No Connectivity', value: 0.1}
                 ]
             }
-            if (marker.tags.indexOf('pwr') !== -1) {
+            else if (marker.tags.indexOf('pwr') !== -1) {
                 self.menu = [
                     {label: 'Plenty Available', value: 1.0},
                     {label: 'Some Available ', value: 0.3 },
