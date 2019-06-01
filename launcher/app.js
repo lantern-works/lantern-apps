@@ -93,12 +93,12 @@
                 ctx.openOneApp('mapify')
             }
             
-            self.show = false
             self.slide = -1
             ctx.id = id // this causes a number of related updates within context automatically
             // console.log('(launcher) show context: ' + id)
             self.$root.$emit('map-reset')
             map.fitMapToAllMarkers(ctx.feed.activeItems)
+            self.show = false
         })
     }
 
