@@ -33,6 +33,11 @@
                 self.show = true
             }
         }
+        // always ask for updates over-the-air when reloading page or picking new context
+        ctx.feed.on('watch', (event) => {
+            let query = new LD.Query(db, event.package)
+            query.compose().then(Interface.sendQuery)
+        })
     }
 
     Interface.chooseTopPriorityContext = () => {
@@ -76,6 +81,10 @@
             return
         }
 
+        if (ctx && ctx.id === id ) {
+            return
+        }
+
         // otherwise make sure context exists before we start
         db.get('ctx').get(id).once((v, k) => {
             if (!v) {
@@ -83,16 +92,16 @@
                 window.location.hash = '#'
                 return
             }
+
+            if (ctx.apps.hasOwnProperty('mapify') && !ctx.apps.mapify.isOpen()) {
+                ctx.openOneApp('mapify')
+            }
+            
             self.show = false
             self.slide = -1
             ctx.id = id // this causes a number of related updates within context automatically
             // console.log('(launcher) show context: ' + id)
-            ctx.openOneApp('mapify')
             self.$root.$emit('map-reset')
-            ctx.packages.forEach(pkg => {
-                let query = new LD.Query(db, pkg)
-                query.compose().then(Interface.sendQuery)
-            })
             map.fitMapToAllMarkers(ctx.feed.activeItems)
         })
     }
