@@ -81,10 +81,6 @@
             return
         }
 
-        if (ctx && ctx.id === id ) {
-            return
-        }
-
         // otherwise make sure context exists before we start
         db.get('ctx').get(id).once((v, k) => {
             if (!v) {
