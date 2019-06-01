@@ -455,7 +455,8 @@
     }
 
     Component.computed.score_label = () => {
-        if (!self.marker) return
+        if (!self.marker || self.menu.length === 0 ) return
+
         for (var idx in self.menu) {
             let item = self.menu[idx]
             if (self.marker.score === item.value) {
