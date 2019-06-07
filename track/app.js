@@ -50,11 +50,14 @@
         // rate limit location detection
         const rateLimit = 30000
         let isLimited = false
+
         map.view.on('locationfound', (a) => {
+            console.log("is limited", isLimited)
             if (!isLimited) {
                 Interface.onLocationDetect(a)
             }
             isLimited = true
+
             setTimeout(() => {
                 isLimited = false
             }, rateLimit)
@@ -141,7 +144,11 @@
     * Often is a duplicate if we're standing still
     */
     Interface.onLocationDetect = (a) => {
-        let newGeohash = LM.Location.toGeohash(a.latlng)
+        let newGeohash = LM.Location.toGeohash(a.latlng, 8)
+
+        if (self.marker && self.marker.geohash === newGeohash) {
+            return
+        }
 
         self.$root.$emit('user-location', newGeohash)
 

@@ -53,7 +53,10 @@
             Action.closeMenu()
         })
 
-        map.on('marker-click', Interface.selectMarker)
+        map.on('marker-click', (marker) => {
+            if (!marker.id) return
+            Interface.selectMarker(marker)
+        })
 
         if (ctx.feed) {
             ctx.feed.on('drop', Interface.dropMarker)
@@ -86,6 +89,7 @@
     }
 
     Interface.selectMarker = (marker) => {
+
         self.readyForLabel = false
         if (self.marker) {
             Interface.clearMarker()

@@ -1,12 +1,13 @@
 
 #lx-app-xray-index .button.is-primary, #lx-app-xray-note .button, .button-box .button {
-    padding: 1.75em 1em;
+    padding: 1.75em 0.5em;
 }
 #lx-app-xray-index .app-frame, 
 #lx-app-xray-settings .app-frame, 
 #lx-app-xray-remove .app-frame, 
 #lx-app-xray-score .app-frame,
-#lx-app-xray-note .app-frame {
+#lx-app-xray-note .app-frame, 
+#lx-app-xray-route .app-frame{
     z-index: 1001;
     width: 96%;
     min-width: 200px;
@@ -21,6 +22,22 @@
 
 
 /*----------------------------------------------------------------------------*/
+#lx-app-xray-index h1 {
+    padding: 0.75em;
+}
+
+#lx-app-xray-index .is-secondary {
+    text-align: center;
+    color: #3273dc;
+    border: none;
+    font-weight: 600;
+    margin-top: none;
+    padding-right: 1.25em;
+    font-size: smaller;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
 #lx-app-xray-index button {
     min-width: 10em;
     margin-top: 0.5em;
@@ -29,7 +46,7 @@
 #lx-app-xray-index section, #lx-app-xray-settings section, #lx-app-xray-remove section {
     text-align: center;
     border-top: 1px solid #EEE;
-    padding: 1em;
+    padding: 0.5em;
 }
 
 
@@ -40,7 +57,11 @@
 
 #lx-app-xray-index form .button {
     width: 100%;
-    margin-top: 1em;
+    margin-top: 0.5em;
+}
+#lx-app-xray-index header i {    
+    font-size: small;
+    color: #999;
 }
 
 #lx-app-xray-index header:hover, #lx-app-xray-index .marker-label {
@@ -98,13 +119,13 @@
         padding: 0.5em;
     }
     #lx-app-xray-index .buttons .button {
-            padding: 1em;
+            padding: 0.5em;
             max-width: 3em;
     }
 }
 
 #lx-app-xray-settings .rating {
-    padding: 1em;
+    padding: 0.5em;
     text-align: center;
     border-bottom: 1px solid #EEE;
 }
@@ -135,10 +156,10 @@
 }
 
 #lx-app-xray-index .button-box p {
-    padding: 1em;
+    padding: 0.5em;
 }
 #lx-app-xray-index .button-box .button {
-    margin-top: 1em;
+    margin-top: 0.5em;
     width: 100%;
 }
 
@@ -159,7 +180,7 @@
 }
 
 #lx-app-xray-index .score-label {
-    margin: 1em;
+    margin: 0.5em;
 }
 #lx-app-xray-index .score-up:hover, 
 #lx-app-xray-index .score-down:hover  {
@@ -187,30 +208,30 @@
 
 #lx-app-xray-note form .button {
     width: 100%;
-    margin-top: 1em;
+    margin-top: 0.5em;
 }
 
 
 /*----------------------------------------------------------------------------*/
 
 #lx-app-xray-route section {
-    padding: 1em;
+    padding: 0.5em;
 }
 
 #lx-app-xray-route .tag {
-    margin-right: 1em;
-    padding: 1em;
+    margin-right: 0.5em;
+    padding: 0.5em;
 }
 
 #lx-app-xray-route .dot {
     border-radius: 10em;
-    width: 1em;
-    height: 1em;
+    width: 0.5em;
+    height: 0.5em;
     float: left;
     margin-right: 0.5em;
 }
 #lx-app-xray-route  h2  {
     text-align: center;
     margin: auto;
-    padding: 1em;
+    padding: 0.5em;
 }

@@ -43,11 +43,11 @@
         "tag": "tsk"
       },
       {
-        "label": "Report",
+        "label": "Situation",
         "tag": "sit"
       },
       {
-        "label": "Site",
+        "label": "Venue",
         "tag": "ven"
       }
     ],

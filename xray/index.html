@@ -4,7 +4,13 @@
 
 
         <header @click="promptForLabel">
-	   	   <h1><i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}</h1>
+	   	   <h1>
+                <i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}
+                <span class="icon is-small">
+                  <i class="fas fa-edit"></i>
+                </span>
+            </h1>
+
         </header>
 
         <section  v-if="readyForLabel">
@@ -55,13 +61,13 @@
             <i v-if="username" class="fa fa-minus-circle" @click="removeNote(note)" /> 
             <p><i class="fa fa-comment" /> {{note}}</p>
         </section>
-
+<!-- 
         <section v-if="username && username === marker.owner" class="note owned">
             <p>You own this marker.</p>
-        </section>
+        </section> -->
 
 
-        <section class="actions" @click="inspect">
+        <section class="actions">
             <div class="buttons is-centered">
                 <div class="button"  @click.stop="zoomIn" v-if="!maxZoom">
                     <i class="fa fa-search-plus" />
@@ -83,8 +89,16 @@
                     <i class="fa fa-ellipsis-v"/>
                 </div>
             </div>
+
+
         </section>
 
+        <section>
+            <div class="is-secondary"  @click="close">
+                Close
+            </div>
+        </section>
+       
 
 	</div>
 </div>

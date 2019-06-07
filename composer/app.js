@@ -10,7 +10,19 @@
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
         Interface.defineIconClasses()
-        map.on('marker-click', Action.closeBottomMenu)
+        map.on('marker-click', (marker) => {
+            if (marker.id !== null) return
+            if (Object.keys(self.menu).length) {
+                self.menu = {}
+            }
+            else {
+                        
+                self.menu = {
+                    title: "What's here?"
+                }
+                self.menu.items = self.categories.main
+            }
+        })
         self.$root.$on('marker-focus', Action.closeBottomMenu)
         self.$root.$on('marker-draft', Interface.createDraftMarker)
         user.onReady(() => {
@@ -58,6 +70,7 @@
         self.draft_marker.on('untag', () => {
             self.draft_marker.icon = null
         })
+
 
         self.menu = {
             title: "What's here?"

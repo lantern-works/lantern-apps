@@ -51,6 +51,8 @@
 
 #lx-app-mapify-index .new.icon {
 	float: right;
+	padding: 0.4em 0.1em;
+	font-size: medium;
 }
 #lx-app-mapify-index .icon.active, #lx-app-mapify-index .icon:hover {
 	background: #3273dc;
