@@ -48,7 +48,7 @@
     Interface.bindAll = () => {
 
         // rate limit location detection
-        const rateLimit = 5000
+        const rateLimit = 30000
         let isLimited = false
         map.view.on('locationfound', (a) => {
             if (!isLimited) {
