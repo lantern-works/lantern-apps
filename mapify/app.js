@@ -209,7 +209,6 @@
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('track')
-        ctx.openOneApp('control')
     }
 
     Interface.showMarkers = (retry) => {

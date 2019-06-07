@@ -101,9 +101,10 @@
                 let marker = ctx.feed.activeItems[user.username]
                 marker.geohash = newGeohash
                 //console.log('(track) update existing user marker', marker)
-                marker.update(['geohash'])
-                self.$root.$emit('marker-focus', marker)
-                return resolve(marker)
+                marker.update(['geohash']).then(() => {
+                    return resolve(marker)
+                })
+
             }
 
             // first, check if we have existing user in database
@@ -124,12 +125,11 @@
                     self.draft_marker = marker
                 }
                 else {
-                    // use existing user marker
-                    marker.data = v
-                    marker.geohash = newGeohash
+                    let userObj = db.get('usr').get(user.username)
+                    userObj.get('g').put(newGeohash)
+                    // do link
+                    firstPackage.node.get('items').get(user.username).put(userObj)
                     console.log('(track) update existing user marker', marker)
-                    marker.update(['geohash'])
-                    self.$root.$emit('marker-focus', marker)
                 }
                 resolve(marker)
             })
