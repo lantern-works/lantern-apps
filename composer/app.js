@@ -10,6 +10,7 @@
     // ------------------------------------------------------------------------
     Interface.bindAll = () => {
         Interface.defineIconClasses()
+
         map.on('marker-click', (marker) => {
             if (marker.id !== null) return
             if (Object.keys(self.menu).length) {

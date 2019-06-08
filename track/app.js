@@ -4,6 +4,9 @@
 
 (function () {
     var self, map, user, ctx
+
+    let didPrompt = false
+
     let Interface = {}
     let Component = {
         mounted () {
@@ -31,7 +34,7 @@
             self.marker.link(db.get('usr').get(user.username))
         })
         .then(() => {
-            self.$root.$emit('marker-focus', self.marker)
+            tryPromptForUser(self.marker)
         })
     }
 
@@ -65,7 +68,15 @@
 
         // show icon for location controls
         Interface.showLocateControl()
-        map.on('marker-click', Action.skip)
+    }
+
+    const tryPromptForUser = (marker) => {
+        if (!didPrompt) {
+            didPrompt = true
+            setTimeout(() => {
+                self.$root.$emit('marker-focus', marker)
+            }, 1000)
+        }
     }
 
     Interface.showLocateControl = () => {
@@ -100,15 +111,17 @@
 
             // check if we have the marker in the feed
             if (ctx.feed.activeItems.hasOwnProperty(user.username)) {
+                console.log('(track) in feed already')
                 // we are watching a marker
                 let marker = ctx.feed.activeItems[user.username]
                 marker.geohash = newGeohash
                 //console.log('(track) update existing user marker', marker)
-                marker.update(['geohash']).then(() => {
+                return marker.update(['geohash']).then(() => {
+                    tryPromptForUser(marker)
                     return resolve(marker)
                 })
-
             }
+
 
             // first, check if we have existing user in database
             db.get('usr').get(user.username).then((v,k) => {
@@ -133,6 +146,8 @@
                     // do link
                     firstPackage.node.get('items').get(user.username).put(userObj)
                     console.log('(track) update existing user marker', marker)
+                    map.addToMap(marker)
+                    tryPromptForUser(marker)
                 }
                 resolve(marker)
             })

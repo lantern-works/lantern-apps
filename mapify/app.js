@@ -177,8 +177,6 @@
                 waitForMoreMarkers -= 1
                 if (waitForMoreMarkers <= 0) {
                     clearInterval(iv)
-                    console.log("FIT")
-
                     map.fitMapToAllMarkers(feed.activeItems)
                     setTimeout(() => {
                         map.zoomMinimum(5)
@@ -346,11 +344,11 @@
                 'match': ['tsk']
             },
             {
-                'label': 'Report',
+                'label': 'Situation',
                 'match': [ 'sit', 'usr']
             },
             {
-                'label': 'Site',
+                'label': 'Venue',
                 'match': ['ven']
             }
         ],

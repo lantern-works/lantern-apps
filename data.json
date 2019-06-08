@@ -49,6 +49,10 @@
       {
         "label": "Venue",
         "tag": "ven"
+      },
+      {
+        "label": "Person",
+        "tag": "usr"
       }
     ],
     "tsk": [

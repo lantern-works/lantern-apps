@@ -89,7 +89,7 @@
     }
 
     Interface.selectMarker = (marker) => {
-
+        console.log("(xray) select marker", marker)
         self.readyForLabel = false
         if (self.marker) {
             Interface.clearMarker()
