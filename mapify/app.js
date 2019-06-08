@@ -136,6 +136,9 @@
     Interface.bindAll = () => {
         // store context for view reference
         self.context = ctx
+        let feed = ctx.feed
+        self.markers = []
+        self.markers = feed.itemsList
 
         // wait for user auth
         user.onReady(() => {
@@ -157,21 +160,38 @@
         })
 
         let waitForMoreMarkers = 3
-    
+        let didFit = false
+
         // make sure map reflects data we want to see
-        ctx.feed.on('item-watch', (e) => {
+        feed.on('item-watch', (e) => {
             Interface.showMarker(e.item)
             waitForMoreMarkers = 3
+            if (!didFit) {
+                didFit = true
+                map.fitMapToAllMarkers(feed.activeItems)
+            }
         })
         
-        ctx.feed.on('watch', () => {
+        feed.on('watch', () => {
             let iv = setInterval(() => {
                 waitForMoreMarkers -= 1
                 if (waitForMoreMarkers <= 0) {
                     clearInterval(iv)
-                    return Interface.showMarkers()
+                    console.log("FIT")
+
+                    map.fitMapToAllMarkers(feed.activeItems)
+                    setTimeout(() => {
+                        map.zoomMinimum(5)
+                    }, 1000)
+
+                    setTimeout(() => {
+                        if (ctx.online) {
+                            Interface.backgroundCacheTiles()
+                        }
+                    }, 450)
+                    //return Interface.showMarkers()
                 }
-            }, 175)
+            }, 150)
         })
 
 
@@ -209,32 +229,6 @@
         ctx.openOneApp('composer')
         ctx.openOneApp('xray')
         ctx.openOneApp('track')
-    }
-
-    Interface.showMarkers = (retry) => {
-        let feed = ctx.feed
-        self.markers = []
-        self.markers = feed.itemsList
-
-        if (self.markers.length) {
-            //console.log(`(mapify) show ${self.markers.length} markers`)
-            self.markers.forEach(id => {
-                Interface.showMarker(feed.items[id])
-            })
-
-            map.fitMapToAllMarkers(feed.activeItems)
-            setTimeout(() => {
-                map.zoomMinimum(5)
-            }, 1000)
-        } else if (retry) {
-            setTimeout(() => Interface.showMarkers(true), 750)
-        }
-
-        setTimeout(() => {
-            if (ctx.online) {
-                Interface.backgroundCacheTiles()
-            }
-        }, 450)
     }
 
     /**

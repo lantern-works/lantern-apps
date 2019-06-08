@@ -6,7 +6,7 @@
         <header @click="promptForLabel">
 	   	   <h1>
                 <i v-if="marker.signatures.length" class="fa fa-check-circle"/> {{marker_title}}
-                <span class="icon is-small">
+                <span v-if="username" class="icon is-small">
                   <i class="fas fa-edit"></i>
                 </span>
             </h1>

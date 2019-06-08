@@ -415,6 +415,7 @@
             self.marker.update('notes')
         },
         showSettings: () => {
+            Action.signIn()
             self.view = 'settings'
         },
         closeSettingsMenu: () => {
