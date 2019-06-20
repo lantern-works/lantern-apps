@@ -95,6 +95,16 @@
             Interface.clearMarker()
         }
         self.marker = marker
+
+
+        // default menu
+        self.menu = [
+            {label: 'Full Supply', value: 1.0},
+            {label: 'Partial Supply', value: 0.3 },
+            {label: 'Almost Empty ', value: 0.2},
+            {label: 'Empty', value: 0.1}
+        ]   
+
         if (marker.tags.indexOf('rsc') !== -1) {
             self.scoreLabel = 'Resource Level'
             if (marker.tags.indexOf('net') !== -1 || marker.tags.indexOf('lnt') !== -1) {
@@ -113,15 +123,15 @@
                     {label: 'No Power', value: 0.1}
                 ]
             }
-            else {
-
-                self.menu = [
-                    {label: 'Full Supply', value: 1.0},
-                    {label: 'Partial Supply', value: 0.3 },
-                    {label: 'Almost Empty ', value: 0.2},
-                    {label: 'Empty', value: 0.1}
-                ]   
-            }
+        }
+        else if (marker.tags.indexOf('sit') !== -1) {
+            self.scoreLabel = 'Safety Level'
+            self.menu = [
+                {label: 'Unknown', value: 0.1},
+                {label: 'High Priority', value: 0.2},
+                {label: 'Low Priority', value: 0.3 },
+                {label: 'Resolved', value: 1.0}
+            ]
         }
         else if (marker.tags.indexOf('usr') !== -1) {
             self.scoreLabel = 'Safety Level'
