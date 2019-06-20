@@ -3,7 +3,7 @@
 * Also offers a search-box to find relevant markers
 */
 (function () {
-    var self, ctx, map
+    var self, ctx, feed, map
     let Interface = {}
     let Component = {
         mounted () {
@@ -14,6 +14,7 @@
         callback: (data) => {
             if (ctx) return
             ctx = data.app.context
+            feed = ctx.feed
             map = data.app.context.map
             map.render(ctx.cloud)
         }
@@ -66,7 +67,7 @@
             return
         }
 
-        // console.log(`(mapify) show marker ${marker.id} (${marker.tags})`);
+        console.log(`(mapify) show marker ${marker.id} (${marker.tags})`);
 
         marker.tags.forEach((tag) => {
             if (self.icons.hasOwnProperty(tag)) {
@@ -80,6 +81,9 @@
 
         if (self.markers.length == 1) {
             map.panToPoint(marker.latlng)
+        }
+        else {
+            map.fitMapToAllMarkers(feed.activeItems)
         }
 
         marker.on('change', (key) => {
@@ -133,81 +137,36 @@
         throw new Error('Bad Hex')
     }
 
-    Interface.bindAll = () => {
-        // store context for view reference
-        self.context = ctx
-        let feed = ctx.feed
+    Interface.showActiveMarkers = () => {
+        feed.itemsList.forEach(Interface.showMarker)
+    }
+
+
+    Interface.bindMarkers = () => {
         self.markers = []
         self.markers = feed.itemsList
 
-        // wait for user auth
-        user.onReady(() => {
-            self.borderStyle = 'border: 2px solid ' + Interface.hexToRgbA(user.color)
-        })
+        // initial marker data load-in
+        Interface.showActiveMarkers()
 
+        // show any new markers added to our context
+        feed.on('item-watch', (e) =>  Interface.showMarker(e.item))
 
-        user.on('leave', () => {
-            self.borderStyle = 'border: none'
-        })
-
-        // basic user interface setup
-        Interface.setupControls()
-        Interface.defineIconClasses()
-
-        // try to save center location after the map moves
-        map.view.on('moveend', (e) => {
-            storeCenterLocation()
-        })
-
-        let waitForMoreMarkers = 3
-        let didFit = false
-
-        // make sure map reflects data we want to see
-        feed.on('item-watch', (e) => {
-            Interface.showMarker(e.item)
-            waitForMoreMarkers = 3
-            if (!didFit) {
-                didFit = true
-                map.fitMapToAllMarkers(feed.activeItems)
-            }
-        })
-        
-        feed.on('watch', () => {
-            let iv = setInterval(() => {
-                waitForMoreMarkers -= 1
-                if (waitForMoreMarkers <= 0) {
-                    clearInterval(iv)
-                    map.fitMapToAllMarkers(feed.activeItems)
-                    setTimeout(() => {
-                        map.zoomMinimum(5)
-                    }, 1000)
-
-                    setTimeout(() => {
-                        if (ctx.online) {
-                            Interface.backgroundCacheTiles()
-                        }
-                    }, 450)
-                    //return Interface.showMarkers()
-                }
-            }, 150)
-        })
-
-
-
-
-        ctx.feed.on('item-unwatch', (e) => {
+        // hide markers when they are removed from context
+        feed.on('item-unwatch', (e) => {
             if (e.item && e.item.layer) {
                 Interface.hideMarker(e.item)
             }
         })
 
-
-        // handle marker selection and focus
+        // handle marker selection
         map.on('marker-click', (marker) => {
             if (marker.layer._icon) {
                 marker.layer._icon.classList.remove('did-change')
             }
         })
+
+        // handle marker focus
         self.$root.$on('marker-focus', (marker) => {
             // center the marker on the map and make sure we have some basic zoom
             if (marker.latlng) {
@@ -222,6 +181,39 @@
             }
         })
 
+    }
+
+    Interface.bindAll = () => {
+        // store context for view reference
+        self.context = ctx
+
+        Interface.bindMarkers()
+
+        setTimeout(() => {
+            if (ctx.online) {
+                Interface.backgroundCacheTiles()
+            }
+        }, 450)
+
+
+        // wait for user auth
+        user.onReady(() => {
+            self.borderStyle = 'border: 2px solid ' + Interface.hexToRgbA(user.color)
+        })
+
+        user.on('leave', () => {
+            self.borderStyle = 'border: none'
+        })
+
+        // basic user interface setup
+        Interface.setupControls()
+        Interface.defineIconClasses()
+
+        // try to save center location after the map moves
+        map.view.on('moveend', (e) => {
+            storeCenterLocation()
+        })
+
         // other marker and map-related apps
         ctx.openOneApp('sync')
         ctx.openOneApp('composer')
@@ -234,8 +226,8 @@
     */
     Interface.backgroundCacheTiles = () => {
         let delay = 1000
-        ctx.feed.itemsList.forEach(key => {
-            let marker = ctx.feed.items[key]
+        feed.itemsList.forEach(key => {
+            let marker = feed.items[key]
             setTimeout(() => {
                 map.cacheTilesFromMarker(marker)
             }, delay += 10000)
@@ -283,7 +275,7 @@
                 self.snapback = null
             } else {
                 self.snapback = map.getCenterAsString()
-                map.fitMapToAllMarkers(ctx.feed.activeItems)
+                map.fitMapToAllMarkers(feed.activeItems)
             }
         },
         chooseMap: () => {
@@ -364,7 +356,7 @@
         let list = []
         if (self.markers) {
             self.markers.forEach(key => {
-                let item = ctx.feed.items[key]
+                let item = feed.items[key]
                 if (item) {
                     let intersection = filter.match.filter(x => item.tags.includes(x))
                     if (intersection.length) {

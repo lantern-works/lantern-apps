@@ -82,7 +82,7 @@
     Interface.showLocateControl = () => {
         // add locate control
         L.control.locate({
-            returnToPreviousBounds: true,
+            //returnToPreviousBounds: true,
             cacheLocation: true,
             showCompass: true,
             flyTo: false,
