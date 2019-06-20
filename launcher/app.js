@@ -89,15 +89,19 @@
                 return
             }
 
-            if (ctx.apps.hasOwnProperty('mapify') && !ctx.apps.mapify.isOpen()) {
-                ctx.openOneApp('mapify')
+            if (ctx.apps.hasOwnProperty('map') && !ctx.apps.map.isOpen()) {
+                ctx.openOneApp('map')
+                ctx.openOneApp('sync')
+                ctx.openOneApp('markers')
+                //other marker and map-related apps
+                ctx.openOneApp('composer')
+                ctx.openOneApp('xray')
+                ctx.openOneApp('track')
             }
             
             self.slide = -1
             ctx.id = id // this causes a number of related updates within context automatically
             // console.log('(launcher) show context: ' + id)
-            self.$root.$emit('map-reset')
-            map.fitMapToAllMarkers(ctx.feed.activeItems)
             self.show = false
         })
     }
@@ -143,7 +147,9 @@
                     let username = creds[0]
                     let pass = creds[1]
                     console.log(`(launcher) authenticate as user ${username}`)
-                    user.authenticate(username, pass)
+                    setTimeout(() => {
+                        user.authenticate(username, pass)
+                    }, 400)
                 } catch (e) {
                     console.log('(launcher) unable to read credentials from storage to authenticate...')
                 }

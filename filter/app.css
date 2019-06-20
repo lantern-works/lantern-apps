@@ -1,0 +1,188 @@
+/*----------------------------------------------------------------------------*/
+#lx-app-filter-index {
+	max-width: 24em;
+	font-size: small;
+	text-transform: uppercase;
+	font-weight: 600;
+	min-width: 250px;
+	box-sizing: unset;
+}
+
+#lx-app-filter-index .top-badge {
+	line-height: 2.5em;
+	margin-left: 4em;
+	margin-right: 4em;
+	font-size: 10pt;
+	border-radius: 100px;
+}
+
+#lx-app-filter-index .app-frame {
+	text-align: center;
+	border-radius: 100px;
+	padding: 0.25em;
+}
+
+#lx-app-filter-index .top-badge:hover, #lx-app-filter-index .icon:hover {
+	cursor: pointer;
+}
+
+.lx-marker span {
+	border-radius: 100em;
+}
+
+
+#lx-app-filter-index .icon {
+	background: #EEE;
+	border-radius: 3em;
+	border-color: #EEE;
+	min-width: 3em;
+	padding: 0.5em;
+}
+
+#lx-app-filter-index .search.icon {
+	float: left;
+}
+
+/* marker counter */
+#lx-app-filter-index .search.icon span {
+	margin-left: 0.15em;
+	margin-right: 0.15em;
+}
+
+#lx-app-filter-index .new.icon {
+	float: right;
+	padding: 0.4em 0.1em;
+	font-size: medium;
+}
+#lx-app-filter-index .icon.active, #lx-app-filter-index .icon:hover {
+	background: #3273dc;
+	border-color: #3273dc;
+	color: #FFF;
+}
+
+#lx-app-filter-index .app-frame div{
+	padding-top: 0.15rem;
+}
+
+/*----------------------------------------------------------------------------*/
+#lx-app-filter-search {
+	height: 100%;
+	overflow: hidden;
+	background: none;	
+	z-index: 1000;
+	margin-top: -2px;
+}
+
+#lx-app-filter-search #search-button-bar {
+	background: #FFF;
+}
+
+#lx-app-filter-search h1 {
+	border-bottom: 1px solid #FFF;
+}
+
+#lx-app-filter-search .app-mask {
+	opacity: 0.5;
+	z-index: -100;
+}
+
+#lx-app-filter-search .menu li span {
+	white-space: nowrap;
+}
+
+#lx-app-filter-search #search-button-bar {
+	padding: 1em 0.25em;
+	border-bottom: 1px solid #EEE;
+}+
+#lx-app-filter-search #search-button-bar .button {
+	padding: 1.5em 1em;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: #4a4a4a;
+	font-size: small;
+}
+
+#lx-app-filter-search #search-button-bar .button.is-selected {
+	color: #FFF;
+} 
+
+#lx-app-filter-search .empty-set {
+	text-align: center;
+	padding: 1em;
+	border-bottom: 1px solid #EEE;
+}
+
+@media only screen and (max-width: 400px) {
+	#lx-app-filter-search #search-button-bar .button {
+		padding: 1.5em 0.75em;
+	}
+}
+
+@media only screen and (max-width: 350px) {
+	#lx-app-filter-search #search-button-bar .button {
+		padding: 1.25em 0.5em;
+	}
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+#lx-app-sync-index {
+    z-index: 1000000;
+}
+#lx-app-sync-index .app-frame {
+    border-radius: 0;
+    border-top: 0;
+    margin: 0;
+    text-align: center;
+}
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg); } 
+}
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg); } 
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } 
+}
+
+#status-footer {
+    background: rgba(255, 255, 255, 0.9);
+    border-top: 1px solid #f2f2f2;
+    border-bottom: 0px; 
+}
+
+#status-footer span {
+    font-size: small;
+    padding: 0em 1em; 
+}
+
+#status-footer .icon i {
+    transition-duration: 1s;
+    transition-property: transform;
+    color: #595959; 
+}
+
+#status-footer.is-syncing {
+    background: #3273dc;
+}
+
+
+#status-footer.is-syncing .navbar-item {
+    margin: auto;
+    display: block;
+    color: #FFF;
+} 
+
+#status-footer.is-syncing .navbar-item .icon i {
+    color: #FFF;
+    -webkit-animation: spin 1.5s linear infinite;
+    -moz-animation: spin 1.5s linear infinite;
+    animation: spin 1.5s linear infinite; 
+}

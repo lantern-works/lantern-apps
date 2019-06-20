@@ -11,7 +11,7 @@
 			<span v-if="markers.length">{{ markers.length }}</span>
 		</span>
 
-
+ 
 		<!-- loading text -->
 		<div class="marker-count" v-if="markers === null">
 			Loading&hellip;
@@ -26,6 +26,5 @@
 		<div class="top-badge" v-if="context" @click="chooseMap">
 			{{ context.name }}
 		</div>
-
 	</div>
 </div>          
