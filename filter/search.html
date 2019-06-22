@@ -1,12 +1,10 @@
 <div class="app-top" v-if="show_search">	
 	<div class="app-frame menu-app-frame">
-		<div id="search-button-bar">
-			<div class="buttons has-addons is-centered">
-				<span v-for="type in types" v-bind:class="getSearchButtonClass(type)" @click="searchFilter(type)">
-					<span>{{type.label}}</span>
-				</span>
-			</div>
-		</div>
+	
+		<h2>
+			{{ markers.length }} {{ 'Marker' | pluralize(markers.length) }}
+		</h2>
+
 		<section class="empty-set" v-if="filtered_markers.length == 0">
 			<p>No {{filter.label.toLowerCase()}} markers yet.</p>
 		</section>
@@ -20,11 +18,12 @@
 				</span>
 				<span class="text"> {{ item.label || getCategory(item)}} </span>
 			</li>
-
-			<li class="inline-btn"  @click="closeMenu">
-				Close
-			</li>
 		</ul>
+		<section>
+			<div class="button is-secondary"  @click="closeMenu">
+				Close
+			</div>
+		</section>
 	</div>
 	<transition name="fade">
         <div class="app-mask" @click.stop="searchMap"></div>

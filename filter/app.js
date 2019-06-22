@@ -144,17 +144,21 @@
         latlng: null
     }
 
-    Component.data.filter = Component.data.types[0]
+    Component.data.filter = null
 
     Component.computed = {}
 
     Component.computed.filtered_markers = () => {
-        let filter = self.filter || self.types[0]
+        let filter = self.filter
         let list = []
         if (self.markers) {
             self.markers.forEach(key => {
                 let item = feed.items[key]
                 if (item) {
+                    if (!filter) {
+                        // no filter, show everything...
+                        return list.push(item)
+                    }
                     let intersection = filter.match.filter(x => item.tags.includes(x))
                     if (intersection.length) {
                         list.push(item)

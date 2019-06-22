@@ -16,9 +16,13 @@
             <li v-for="item in menu" @click="selectMenuItem(item)">
                 <span>{{item.label}}</span>
             </li>
-            <li class="inline-btn" @click="closeSettingsMenu">
-                Back
-            </li>
         </ul>
+        
+        <section>
+            <div class="button is-secondary" @click="closeSettingsMenu">
+                Back
+            </div>
+        </section>
+        
     </div>
 </div>
